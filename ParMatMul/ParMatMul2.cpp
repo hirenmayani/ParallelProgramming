@@ -23,7 +23,11 @@
 #include <unistd.h>
 using namespace std;
 
-unsigned int nthreads;
+unsigned int nthreads = 4;
+unsigned int freeT;
+tbb::mutex l1,l2,l3,l4,l5,l6;
+time_t t;
+
 struct mmArgs{
         int zi;
         int zj;
@@ -31,225 +35,279 @@ struct mmArgs{
         int xj;
         int yi;
         int yj;
-        int currSize;
+        int currSize = -1;
         int minSize;
         int** Z;
         int** X;
         int** Y;
-
 };
 
 void parRecMM_SC(mmArgs a);
 std::deque< mmArgs > ddq;
+int emptyQs;
 
 struct task_queue
 {
-    void push_back( mmArgs mma)
+
+	mmArgs cpop_back()
     {
-                pending.push_back( mma) ;
+		mmArgs mma;
+
+		l1.lock();
+		if (!pending.empty())
+		{
+			mma = pending.back() ;
+			pending.pop_back() ;
+		}
+		l1.unlock();
+
+		return mma;
     }
+
+	mmArgs cpop_front()
+    {
+		mmArgs mma;
+
+		l2.lock();
+			if (!pending.empty())
+			{
+				mma = pending.front() ;
+				pending.pop_front() ;
+			}
+		l2.unlock();
+
+		return mma;
+    }
+
+	mmArgs back()
+    {
+                return pending.back() ;
+    }
+
+	void pop_back()
+    {
+		l3.lock();
+			pending.pop_back() ;
+		l3.unlock();
+    }
+
+
+	mmArgs front()
+    {
+                return pending.front() ;
+    }
+
+	void pop_front()
+    {
+		l4.lock();
+          pending.pop_front() ;
+         l4.unlock();
+    }
+
+	void push_back( mmArgs mma)
+    {
+		l5.lock();
+			pending.push_back( mma) ;
+		l5.unlock();
+    }
+
     void push_front( mmArgs mma )
     {
-                pending.push_front( mma) ;
+    		l6.lock();
+    			pending.push_front( mma) ;
+    		l6.unlock();
     }
 
-    void execute_all_front(task_queue tqs[])
+    bool empty(){
+    		return pending.empty();
+    }
+
+	std::deque< mmArgs > pending ;
+	int tid;
+ };
+
+task_queue *tqs;
+
+void DRSteal(task_queue tqs[], int myid)
         {
-                cout <<" not definded \n";
-        }
 
-
-        void DRSteal(task_queue tqs[])
-                {
-                tbb::mutex m1,m2;
-
-                set <int, greater <int> > emptyQs;
-                while(true)
-                {
-                        if (!pending.empty()){
-                        m1.lock();
-                                        mmArgs mma = pending.back();
-                                        pending.pop_back();
-                        m1.unlock();
-                                        parRecMM_SC(mma);
-                        }
-                        else{
-                                int victim = rand()%nthreads;
-                                if (!tqs[victim].pending.empty()){
-                                        m2.lock();
-                                                mmArgs mma = tqs[victim].pending.front();
-                                                tqs[victim].pending.pop_front();
-                                        m2.unlock();
-                                                parRecMM_SC(mma);
-                                }else{
-                                        emptyQs.insert(victim);
-                                        if (emptyQs.size() == nthreads)
-                                        {
-                                                break;
-                                        }
-                                }
-
-                        }
-                }
-        }
-        void DRShare(task_queue tqs[])
-                    {
-                    tbb::mutex m1,m2;
-                    unsigned int emptyC = 0;
-                    set <int, greater <int> > emptyQs;
-                    while(true)
-                    {
-
-                            if (!pending.empty()){
-                            emptyC = 0;
-                                    m1.lock();
-                                            mmArgs mma = pending.back();
-                                            pending.pop_back();
-                                    m1.unlock();
-                                    parRecMM_SC(mma);
-                            }
-                            else{
-                                    emptyC +=1;
-                                    sleep(1);
-                                    if (emptyC ==5){
-                                            break;
-                                    }
-                            }
-                    }
-            }
-
-            void CShare(){
-                    while (!ddq.empty()){
-                            mmArgs mma = ddq.front();
-                            ddq.pop_front();
-                            parRecMM_SC(mma);
-                    }
-            }
-
-        std::deque< mmArgs > pending ;
-        int tid;
-    };
-
-    task_queue *tqs;
-
-
-    void indexMM(int zi, int zj, int xi, int xj, int yi, int yj, int currSize, int** Z, int** X, int** Y)
-    {
-        int i,j,k;
-        int n = pow(2,currSize);
-        for(i=0;i<n;i++)
-                    for(j=0;j<n;j++)
-                            for(k=0;k<n;k++)
-                                    Z[zi+i][zj+j] += X[xi+i][xj+k]*Y[yi+k][yj+j];
-
-    }
-
-
-    void parRecMM_SC(mmArgs mma)
-    {
-
-            if(mma.currSize == mma.minSize){
-                            indexMM(mma.zi, mma.zj, mma.xi, mma.xj, mma.yi, mma.yj, mma.currSize, mma.Z, mma.X, mma.Y);
-            }
-            else{
-                            mma.currSize-=1;
-                int n = pow(2,mma.currSize);
-                mmArgs mma1 = mma;
-                tqs[rand()%nthreads].push_front(mma1);
-
-                mmArgs mma2 = mma;
-                mma2.zj+=n;
-                mma2.yj+=n;
-                tqs[rand()%nthreads].push_front(mma2);
-
-                mmArgs mma3 = mma;
-                mma3.zi+=n;
-                mma3.xi+=n;
-                tqs[rand()%nthreads].push_front(mma3);
-
-
-                mmArgs mma4 = mma;
-                mma4.zi+=n;
-                mma4.zj+=n;
-                mma4.xi+=n;
-                mma4.yj+=n;
-
-                    ddq.push_front(mma1);
-                    ddq.push_front(mma2);
-                    ddq.push_front(mma3);
-
-                    parRecMM_SC(mma4);
-
-                    mmArgs mma5 = mma;
-                    mma5.xj+=n;
-                    mma5.yi+=n;
-                        tqs[rand()%nthreads].push_front(mma5);
-
-
-                    mmArgs mma6 = mma;
-                    mma6.xj+=n;
-                    mma6.yi+=n;
-                    mma6.yj+=n;
-                    mma6.zj+=n;
-                                tqs[rand()%nthreads].push_front(mma6);
-
-
-                    mmArgs mma7 = mma;
-                    mma7.xi+=n;
-                    mma7.xj+=n;
-                    mma7.yi+=n;
-                    mma7.zi+=n;
-                                tqs[rand()%nthreads].push_front(mma7);
-
-                    mmArgs mma8 = mma;
-                    mma8.xi+=n;
-                    mma8.xj+=n;
-                    mma8.yi+=n;
-                    mma8.yj+=n;
-                    mma8.zi+=n;
-                    mma8.zj+=n;
-
-                        ddq.push_front(mma5);
-                        ddq.push_front(mma6);
-                        ddq.push_front(mma7);
-                                parRecMM_SC(mma8);
+        int atmps = 0;
+        while(true)
+        {
+			mmArgs mma = tqs[myid].cpop_back();
+			if (mma.currSize >  0){
+				atmps = 0;
+				parRecMM_SC(mma);
+			}
+			else{
+					int victim = rand()%nthreads;
+					mmArgs mma = tqs[victim].cpop_front();
+					if (mma.currSize > 0){
+						atmps = 0;
+						parRecMM_SC(mma);
+					}else{
+						atmps +=1;
+						if (atmps == 1000){
+							break;
+						}
+					}
 
                 }
         }
+}
+
+void DRShare(task_queue tqs[], int myid)
+{
+	int emptyc = 0;
+	while(true)
+	{
+		mmArgs mma = tqs[myid].cpop_back();
+		if (mma.currSize > 0 ){
+			emptyc = 0;
+			parRecMM_SC(mma);
+		}
+		else{
+			sleep(1);
+			if (emptyc == 5){
+					break;
+			}
+		}
+	}
+}
+
+void CShare(){
+		while (!ddq.empty()){
+				mmArgs mma = ddq.front();
+				ddq.pop_front();
+				parRecMM_SC(mma);
+		}
+}
 
 
-        void scheduler( int r, int** Z, int** X, int** Y, int minSize){
-            nthreads = std::thread::hardware_concurrency();
-            printf("total processor : %d \n", nthreads);
+void indexMM(int zi, int zj, int xi, int xj, int yi, int yj, int currSize, int** Z, int** X, int** Y)
+{
+	int i,j,k;
+	int n = pow(2,currSize);
+	for(i=0;i<n;i++)
+				for(j=0;j<n;j++)
+						for(k=0;k<n;k++)
+								Z[zi+i][zj+j] += X[xi+i][xj+k]*Y[yi+k][yj+j];
 
-            tqs = new task_queue[nthreads];
-
-        for(int i = 0; i < nthreads; i++){
-                    tqs[i].tid = i;
-        }
-        mmArgs a ;
-            a.zi = 0;
-            a.zj = 0;
-            a.xi = 0;
-            a.xj = 0;
-            a.yi = 0;
-            a.yj = 0;
-            a.currSize = r;
-            a.minSize = minSize;
-             a.X = X;
-             a.Y = Y;
-             a.Z = Z;
-            //ddq = {0};
-            //ddq = tqs[0].pending;
-            ddq.push_back(a);
-        for(int i = 0; i < nthreads; i++){
-                    cilk_spawn tqs[i].CShare() ;
-        }
-
-        cilk_sync;
+}
 
 
-    }
+void parRecMM_SC(mmArgs mma)
+{
+
+		if(mma.currSize == mma.minSize){
+						indexMM(mma.zi, mma.zj, mma.xi, mma.xj, mma.yi, mma.yj, mma.currSize, mma.Z, mma.X, mma.Y);
+		}
+		else{
+						mma.currSize-=1;
+			int n = pow(2,mma.currSize);
+			mmArgs mma1 = mma;
+			tqs[rand()%nthreads].push_front(mma1);
+
+			mmArgs mma2 = mma;
+			mma2.zj+=n;
+			mma2.yj+=n;
+			tqs[rand()%nthreads].push_front(mma2);
+
+			mmArgs mma3 = mma;
+			mma3.zi+=n;
+			mma3.xi+=n;
+			tqs[rand()%nthreads].push_front(mma3);
+
+
+			mmArgs mma4 = mma;
+			mma4.zi+=n;
+			mma4.zj+=n;
+			mma4.xi+=n;
+			mma4.yj+=n;
+
+			/*
+				ddq.push_front(mma1);
+				ddq.push_front(mma2);
+				ddq.push_front(mma3);
+*/
+				parRecMM_SC(mma4);
+
+				mmArgs mma5 = mma;
+				mma5.xj+=n;
+				mma5.yi+=n;
+					tqs[rand()%nthreads].push_front(mma5);
+
+
+				mmArgs mma6 = mma;
+				mma6.xj+=n;
+				mma6.yi+=n;
+				mma6.yj+=n;
+				mma6.zj+=n;
+							tqs[rand()%nthreads].push_front(mma6);
+
+
+				mmArgs mma7 = mma;
+				mma7.xi+=n;
+				mma7.xj+=n;
+				mma7.yi+=n;
+				mma7.zi+=n;
+							tqs[rand()%nthreads].push_front(mma7);
+
+				mmArgs mma8 = mma;
+				mma8.xi+=n;
+				mma8.xj+=n;
+				mma8.yi+=n;
+				mma8.yj+=n;
+				mma8.zi+=n;
+				mma8.zj+=n;
+
+				/*
+					ddq.push_front(mma5);
+					ddq.push_front(mma6);
+					ddq.push_front(mma7);
+					*/
+							parRecMM_SC(mma8);
+
+			}
+		return;
+	}
+
+
+void scheduler( int r, int** Z, int** X, int** Y, int minSize){
+/*	nthreads = std::thread::hardware_concurrency();*/
+	printf("total processor : %d \n", nthreads);
+
+	tqs = new task_queue[nthreads];
+
+	for(int i = 0; i < nthreads; i++){
+				tqs[i].tid = i;
+	}
+	mmArgs a ;
+	a.zi = 0;
+	a.zj = 0;
+	a.xi = 0;
+	a.xj = 0;
+	a.yi = 0;
+	a.yj = 0;
+	a.currSize = r;
+	a.minSize = minSize;
+	 a.X = X;
+	 a.Y = Y;
+	 a.Z = Z;
+	ddq.push_back(a);
+	tqs[0].push_back(a);
+
+	for(int i = 0; i < nthreads; i++){
+		cilk_spawn DRShare(tqs,i) ;
+		/*cilk_spawn CShare() ;
+		/*cilk_spawn DRShare(tqs,i) ;
+		/cilk_spawn DRSteal(tqs, i) ;*/
+	}
+
+cilk_sync;
+
+
+}
 
 
     void parRecMM(int zi, int zj, int xi, int xj, int yi, int yj, int currSize, int** Z, int** X, int** Y, int minSize)
@@ -260,16 +318,18 @@ struct task_queue
             else{
                 int n = pow(2,currSize-1);
 
-                            parRecMM(zi, zj, xi, xj, yi, yj, currSize -1, Z, X, Y, minSize);
+                            cilk_spawn parRecMM(zi, zj, xi, xj, yi, yj, currSize -1, Z, X, Y, minSize);
                             parRecMM(zi, zj+n, xi, xj, yi, yj+n, currSize - 1, Z, X, Y, minSize);
                             parRecMM(zi+n, zj, xi+n, xj, yi, yj, currSize - 1, Z, X, Y, minSize);
                             parRecMM(zi+n, zj+n, xi+n, xj, yi, yj+n, currSize - 1, Z, X, Y, minSize);
+                            cilk_sync;
 
-                            parRecMM(zi, zj, xi, xj+n, yi+n, yj, currSize - 1, Z, X, Y, minSize);
+
+                            cilk_spawn parRecMM(zi, zj, xi, xj+n, yi+n, yj, currSize - 1, Z, X, Y, minSize);
                             parRecMM(zi, zj+n, xi, xj+n, yi+n, yj+n, currSize - 1, Z, X, Y, minSize);
                             parRecMM(zi+n, zj, xi+n, xj+n, yi+n, yj, currSize - 1, Z, X, Y, minSize);
                             parRecMM(zi+n, zj+n, xi+n, xj+n, yi+n, yj+n, currSize - 1, Z, X, Y, minSize);
-                                                                                                                                                                    270,1-8       63%
+                            cilk_sync;
             }
     }
 

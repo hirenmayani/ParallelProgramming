@@ -5,9 +5,7 @@
  *      Author: hiren
  */
 
-
-
-
+s
 #include <thread>
 #include <iostream>
 #include<stdlib.h>
@@ -168,6 +166,4 @@ int main ()
 	    for(int i = 0; i < nthreads; i++){
 	    		 tqs[i].execute_all_back(tqs) ;
 	    }
-
-
 }

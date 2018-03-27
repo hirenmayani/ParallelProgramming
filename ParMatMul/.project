@@ -17,4 +17,11 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.cmake.core.cmakeNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>111481749_111432637</name>
+			<type>2</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Desktop/111481749_111432637</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
