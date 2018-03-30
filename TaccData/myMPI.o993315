@@ -1,0 +1,35 @@
+/tmp/slurmd/job993315/slurm_script: line 12: export: `=': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 12: export: `1': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 13: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 14: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 15: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 18: export: `=': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 18: export: `2': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 19: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 20: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 21: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 23: export: `=': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 23: export: `4': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 24: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 25: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 26: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 28: export: `=': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 28: export: `8': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 29: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 30: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 31: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 34: export: `=': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 34: export: `16': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 35: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 36: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 37: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 40: export: `=': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 40: export: `32': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 41: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 42: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 43: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 46: export: `=': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 46: export: `64': not a valid identifier
+/tmp/slurmd/job993315/slurm_script: line 47: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 48: para31: command not found
+/tmp/slurmd/job993315/slurm_script: line 49: para31: command not found

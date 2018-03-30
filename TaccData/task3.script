@@ -1,0 +1,54 @@
+#!/bin/bash
+#SBATCH -J myMPI           # job name
+#SBATCH -o myMPI.o%j       # output and error file name (%j expands to jobID)
+#SBATCH -n 68              # total number of mpi tasks requested
+#SBATCH -p normal     # queue (partition) -- normal, development, etc.
+#SBATCH -t 05:30:00        # run time (hh:mm:ss) - 1.5 hours
+#SBATCH --mail-user=hmayani@cs.stonybrook.edu
+#SBATCH --mail-type=begin  # email me when the job starts
+#SBATCH --mail-type=end    # email me when the job finishes
+
+module load papi/5.6.0
+export CILK_NWORKERS=1
+para3 11 1 1
+para3 11 2 1
+para3 11 3 1
+
+
+export CILK_NWORKERS = 2
+para3 11 1 2
+para3 11 2 2
+para3 11 3 2
+ 
+export CILK_NWORKERS = 4
+para3 11 1 4
+para3 11 2 4
+para3 11 3 4
+
+export CILK_NWORKERS = 8
+para3 11 1 8
+para3 11 2 8
+para3 11 3 8
+
+
+export CILK_NWORKERS = 16
+para3 11 1 16
+para3 11 2 16
+para3 11 3 16
+
+
+export CILK_NWORKERS = 32
+para3 11 1 32
+para3 11 2 32
+para3 11 3 32
+
+
+export CILK_NWORKERS = 64
+para3 11 1 64
+para3 11 2 64
+para3 11 3 64
+
+
+
+
+

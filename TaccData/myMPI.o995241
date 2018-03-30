@@ -1,0 +1,180 @@
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 1 
+
+L1_TCM:	908392037	 L2_TCM:	857937540
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 1 
+
+L1_TCM:	910500249	 L2_TCM:	859316572
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 1 
+
+L1_TCM:	918201475	 L2_TCM:	868736235
+
+invalid
+/tmp/slurmd/job995241/slurm_script: line 18: export: `=': not a valid identifier
+/tmp/slurmd/job995241/slurm_script: line 18: export: `2': not a valid identifier
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 2 
+
+L1_TCM:	877064677	 L2_TCM:	826474320
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 2 
+
+L1_TCM:	250055465	 L2_TCM:	235177539
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 2 
+
+L1_TCM:	879755102	 L2_TCM:	830305475
+
+invalid
+/tmp/slurmd/job995241/slurm_script: line 23: export: `=': not a valid identifier
+/tmp/slurmd/job995241/slurm_script: line 23: export: `4': not a valid identifier
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 4 
+
+L1_TCM:	903842887	 L2_TCM:	853293455
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 4 
+
+L1_TCM:	152883332	 L2_TCM:	143549409
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 4 
+
+L1_TCM:	894871147	 L2_TCM:	845551482
+
+invalid
+/tmp/slurmd/job995241/slurm_script: line 28: export: `=': not a valid identifier
+/tmp/slurmd/job995241/slurm_script: line 28: export: `8': not a valid identifier
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 8 
+
+L1_TCM:	911747320	 L2_TCM:	861105413
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 8 
+
+L1_TCM:	60906635	 L2_TCM:	56865401
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 8 
+
+L1_TCM:	895679439	 L2_TCM:	846050129
+
+invalid
+/tmp/slurmd/job995241/slurm_script: line 34: export: `=': not a valid identifier
+/tmp/slurmd/job995241/slurm_script: line 34: export: `16': not a valid identifier
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 16 
+
+L1_TCM:	913027922	 L2_TCM:	862332900
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 16 
+
+L1_TCM:	62005607	 L2_TCM:	57757153
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 16 
+
+L1_TCM:	957191925	 L2_TCM:	907596903
+
+invalid
+/tmp/slurmd/job995241/slurm_script: line 40: export: `=': not a valid identifier
+/tmp/slurmd/job995241/slurm_script: line 40: export: `32': not a valid identifier
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 32 
+
+L1_TCM:	914996086	 L2_TCM:	864549559
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 32 
+
+L1_TCM:	67773280	 L2_TCM:	63258981
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 32 
+
+L1_TCM:	922489972	 L2_TCM:	873106861
+
+invalid
+/tmp/slurmd/job995241/slurm_script: line 46: export: `=': not a valid identifier
+/tmp/slurmd/job995241/slurm_script: line 46: export: `64': not a valid identifier
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	881354934	 L2_TCM:	830783276
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	89624918	 L2_TCM:	83785625
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	902963591	 L2_TCM:	853583549
+
+invalid

@@ -1,0 +1,123 @@
+/tmp/slurmd/job993314/slurm_script: line 12: export: `=': not a valid identifier
+/tmp/slurmd/job993314/slurm_script: line 12: export: `68': not a valid identifier
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	6127388	 L2_TCM:	4523695
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	4250833	 L2_TCM:	3402715
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	4299462	 L2_TCM:	1754751
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	3865298	 L2_TCM:	2709451
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	4287937	 L2_TCM:	3463980
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	4616732	 L2_TCM:	2452047
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	22291208	 L2_TCM:	18302395
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	22408422	 L2_TCM:	17285191
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	26842067	 L2_TCM:	24141524
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	24919380	 L2_TCM:	19035547
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	25901247	 L2_TCM:	21828741
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	182133845	 L2_TCM:	125516119
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	135230384	 L2_TCM:	116635797
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	147561782	 L2_TCM:	120431413
+
+invalid
+scheduler.cpp:549	 ERROR
+scheduler.cpp:557	 ERROR
+scheduler.cpp:569	 ERROR -7
+total processor : 64 
+
+L1_TCM:	132491664	 L2_TCM:	106607820
+
+invalid
+slurmstepd: error: *** JOB 993314 ON c421-021 CANCELLED AT 2018-03-25T17:45:04 ***
