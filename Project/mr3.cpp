@@ -80,7 +80,7 @@ here flatten is used for optimizing, so that all functions are inline if possibl
 		/*Yey..mapping begins
 		 * note that iterators are always pointers
 		 * refer unordered map example in main()*/
-		cilk_for(ipiter it=begin;it!=end;it++)
+		cilk_for(InputIterator it=begin;it!=end;it++)
 		{
 			/*Note about view
 			 * Cilk Plus reducers provide a number of useful properties:

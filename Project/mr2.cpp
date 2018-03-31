@@ -2,8 +2,8 @@
 #include<string>
 #include<unordered_map>
 #include<vector>
-#include<cilk/cilk.h>
-#include<cilk/reducer.h>
+#include "/Users/hiren/Downloads/cilkplus-rtl-src-004516/include/cilk/cilk.h"//<cilk/cilk.h>
+#include "/Users/hiren/Downloads/cilkplus-rtl-src-004516/include/cilk/reducer.h"//<cilk/reducer.h>
 
 using namespace std;
 
@@ -59,10 +59,12 @@ struct Monoid:cilk::monoid_base<mr>
   }
 };
 
+
+
 /* this class is the backend of mr sys
  * it takes a map func, a reducing monoid and an iterator on the input
  * */
-template <class Monoid,class mapFun,class ipiter>
+template <class Monoid,class mapFun,class InputIterator>
 /* A note about attribute
  * It's run when a shared library is loaded, typically during program startup.
 That's how all GCC attributes are; presumably to distinguish them from function calls.(like macro or sthg)
@@ -71,14 +73,14 @@ here flatten is used for optimizing, so that all functions are inline if possibl
  *
  * We can most probably get rid of value_type, it just talks about the type of template in Monoid
  * */
-	__attribute__((flatten))
-	void map_reduce(ipiter begin,ipiter end, mapFun mf,Monoid &op)
+	void __attribute__((flatten))
+	map_reduce(InputIterator begin,InputIterator end, mapFun mf, typename Monoid::value_type &op)
 	{
 		cilk::reducer<Monoid> reduce;
 		/*Yey..mapping begins
 		 * note that iterators are always pointers
 		 * refer unordered map example in main()*/
-		cilk_for(ipiter it=begin;it!=end;it++)
+		for(InputIterator it=begin; it!=end; ++it)
 		{
 			/*Note about view
 			 * Cilk Plus reducers provide a number of useful properties:
@@ -87,34 +89,30 @@ here flatten is used for optimizing, so that all functions are inline if possibl
 				 The views are combined by the Cilk runtime by calling the reduce() function of the reducer's
 				 monoid when views sync.
 				*/
-			mf(*it,reduce.view());
+			mf(*it);//,reduce.view());
 
 		}
 		std::swap(op,reduce.view());
 
 	}
 
-//class Mapper
-//{
-//	map(vector<T> sentence)
-//	{
-//
-//
-//	}
-//};
-auto mapper(iterator* it<string>, auto v)
+template <class T>
+class mapFun
 {
-	unordered_map<string,int> u1 = (*it,0);
-	return u1;
+public:
+	unordered_map<string,int> operator()(typename T::iterator it) const {
+		unordered_map<string,int> u1 = (*it,0);
+					return u1;
 
-
-}
+	    }
+};
 
 int main()
 {
 	vector<string> words;
 	words.push_back("a");
 	words.push_back("b");
+	mapFun<string> obj;
 
 	// = {"a","a","b","b","c","abc"};
 //	for(auto it=words.begin();it!=words.end();it++)
@@ -133,6 +131,6 @@ int main()
 //	cout<<u1["a"];
     Monoid<unordered_map<string,int>> m1;
 //    m1.reduce(&u1,&u2);
-	map_reduce(words.begin(),words.end(),&mapper,&m1);
+	map_reduce(words.begin(),words.end(),&obj,m1);
 }
 
