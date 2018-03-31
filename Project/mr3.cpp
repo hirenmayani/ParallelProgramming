@@ -64,7 +64,7 @@ struct Monoid:cilk::monoid_base<mr,mr>
 /* this class is the backend of mr sys
  * it takes a map func, a reducing monoid and an iterator on the input
  * */
-template <class Monoid,class mapFun,class ipiter>
+template <class Monoid,class mapFun,class InputIterator>
 /* A note about attribute
  * It's run when a shared library is loaded, typically during program startup.
 That's how all GCC attributes are; presumably to distinguish them from function calls.(like macro or sthg)
@@ -74,7 +74,7 @@ here flatten is used for optimizing, so that all functions are inline if possibl
  * We can most probably get rid of value_type, it just talks about the type of template in Monoid
  * */
 	__attribute__((flatten))
-	void map_reduce(ipiter begin,ipiter end, mapFun mf,typename Monoid::value_type & op)
+	void map_reduce(InputIterator begin,InputIterator end, mapFun mf,typename Monoid::value_type & op)
 	{
 		cilk::reducer<Monoid> reduce;
 		/*Yey..mapping begins
