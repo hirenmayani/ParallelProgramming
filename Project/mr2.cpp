@@ -2,8 +2,8 @@
 #include<string>
 #include<unordered_map>
 #include<vector>
-#include "/Users/hiren/Downloads/cilkplus-rtl-src-004516/include/cilk/cilk.h"//<cilk/cilk.h>
-#include "/Users/hiren/Downloads/cilkplus-rtl-src-004516/include/cilk/reducer.h"//<cilk/reducer.h>
+#include<cilk/cilk.h>
+#include<cilk/reducer.h>
 
 using namespace std;
 
@@ -55,7 +55,7 @@ struct Monoid:cilk::monoid_base<mr>
   /*Monoid must define identity
    * I am doubtful why do we need it?
    * We are not returning anything although*/
-  static void identity(mr *p) const
+  static void identity(mr *p)
   {
 	  new (p) mr();
   }
