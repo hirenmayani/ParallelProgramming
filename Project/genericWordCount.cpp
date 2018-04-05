@@ -7,6 +7,9 @@
 #include <typeinfo>
 #include <fstream>
 #include <cstdint>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+using namespace cv;
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 using namespace std;
@@ -157,18 +160,10 @@ auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 	cout<<u1["a"];
 //	cout<<u1["b"]; 
 hist_Monoid m2;
-	ifstream myfile;
-	myfile.open("poster.jpg");
-
-	if (myfile.is_open()) {
-		myfile.close();
-		cout<< "function success";
-	} else {
-		cout<< "unable to open file";
-	}
-	byte_array = myfile ;
-cout<<byte_array.tellg();
-cout<<myfile;
+Mat byte_array;
+byte_array = imread("poster.jpg", CV_LOAD_IMAGE_COLOR);
+cout << "Width : " << byte_array.cols << endl;
+cout << "Height: " << byte_array.rows << endl;
 auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map);
 
 
