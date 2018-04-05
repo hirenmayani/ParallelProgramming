@@ -4,7 +4,10 @@
 #include<vector>
 #include<cilk/cilk.h>
 #include<cilk/reducer.h>
+#include <typeinfo>
 
+
+///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 using namespace std;
 
 
@@ -22,6 +25,7 @@ using namespace std;
  * */
 template <class mr>
 //using Value_Type = typedef value_type<mr>::type;
+
 struct Monoid:cilk::monoid_base<mr>
 {
   static void reduce(mr* left, mr* right)
@@ -46,6 +50,7 @@ struct Monoid:cilk::monoid_base<mr>
 			in order to call functions of a class using its pointer use ->
 		* What are we doing in reducer
 		* for each word in right pointer we are adding its count in the left list where that word is present
+		* -> accesses views, leftmost view accummulator
 	   */
 	  for(typename mr::const_iterator start=right->cbegin(),end = right->cend();start != end;++start)
 		  (*left)[start->first] += start->second;
@@ -74,11 +79,12 @@ here flatten is used for optimizing, so that all functions are inline if possibl
  *
  * We can most probably get rid of value_type, it just talks about the type of template in Monoid
  * */
-template <class Monoid, class InputIterator, class MapFun>
-void __attribute__((flatten))
-map_reduce(InputIterator ibegin,InputIterator iend, MapFun mf, typename Monoid::value_type &op)
+template <class Monoid, typename InputIterator>, class MapFun>
+//void __attribute__((flatten))
+map_reduce(InputIterator ibegin,InputIterator iend,Monoid b)//typename Monoid::value_type &op)
 	{
-		cilk::reducer<Monoid> reduce;
+		cilk::reducer<Monoid> redr;
+//		Monoid<unordered_map<string,int> > m1;
 		/*Yey..mapping begins
 		 * note that iterators are always pointers
 		 * refer unordered map example in main()*/
@@ -91,10 +97,14 @@ map_reduce(InputIterator ibegin,InputIterator iend, MapFun mf, typename Monoid::
 				 The views are combined by the Cilk runtime by calling the reduce() function of the reducer's
 				 monoid when views sync.
 				*/
-			mf(*it, reduce.view());
+			redr->insert({{*it:1}})
+					mf(*it,redr.view())
+
+
 
 		}
-		std::swap(op,reduce.view());
+//		std::swap(op,redr.view());
+		return redr.view()
 
 	}
 
@@ -102,8 +112,10 @@ template <class T>
 class MapFun
 {
 public:
-	unordered_map<string,int> operator()(typename T::iterator it) const {
-		unordered_map<string,int> u1 = (*it,0);
+	unordered_map<string,int> operator()(string it,reducer::view_type v) const {
+		unordered_map<string,int> u1;
+		u1[it] = 0;
+		cout<<u1[it]<<it;
 					return u1;
 
 	    }
@@ -114,13 +126,16 @@ int main()
 	vector<string> words;
 	words.push_back("a");
 	words.push_back("b");
-	MapFun<string> obj;
-
+	words.push_back("a");
+	words.push_back("b");
+//	MapFun<string> obj;
+	std::vector<string>::iterator it = words.begin();
+//	obj(it,7);
 	// = {"a","a","b","b","c","abc"};
 //	for(auto it=words.begin();it!=words.end();it++)
 //		cout<<*it;
 
-//	unordered_map<string,int> u1;
+	unordered_map<string,int> u1;
 //	unordered_map<string,int> u2;
 //	u1["a"] = 1;
 //	u2["b"] = 2;
@@ -131,8 +146,26 @@ int main()
 //	for(auto start=u2.begin();start!=u2.end();start++)
 //		u1[start->first] += start->second;
 //	cout<<u1["a"];
-    Monoid<unordered_map<string,int>> m1;
+    Monoid<unordered_map<string,int> > m1;
+//    cilk_for(InputIterator it=words.begin(), ed = words.end(); it!=ed; ++it)
+//    		{
+//    			/*Note about view
+//    			 * Cilk Plus reducers provide a number of useful properties:
+//    				Each strand has a private view of the reducer,
+//    				so we don't need to use mutexes to serialize access to the reducer.
+//    				 The views are combined by the Cilk runtime by calling the reduce() function of the reducer's
+//    				 monoid when views sync.
+//    				*/
+////    			auto v = m1.view();
+////    			v[*it] = 0;
+//
+//    	m1->insert({{*it:1}})
+//
+//
+//    		}
+
 //    m1.reduce(&u1,&u2);
-	map_reduce(words.begin(),words.end(),&obj,m1);
+	map_reduce(words.begin(),words.end(),m1);
+	cout<<u1["a"];
 }
 

@@ -9,7 +9,9 @@
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 using namespace std;
-
+/****
+ * REDUCERS / MONOIDS
+ * ***/
 
 /*
  * HashMap monoid
@@ -23,6 +25,8 @@ using namespace std;
  * While using our template class mr, the user must specify the type
  *
  * */
+
+/*WORD COUNT REDUCER*/
 template <class mr>
 //using Value_Type = typedef value_type<mr>::type;
 
@@ -66,7 +70,13 @@ struct Monoid:cilk::monoid_base<mr>
   }
 };
 
-
+/* HISTOGRAM REDUCER*/
+//struct Monoid:cilk::monoid_base<uint64_t[768]>
+//{
+//	typedef uint64_t value_type[768];
+//
+//
+//}*
 
 /* this class is the backend of mr sys
  * it takes a map func, a reducing monoid and an iterator on the input
@@ -79,11 +89,12 @@ here flatten is used for optimizing, so that all functions are inline if possibl
  *
  * We can most probably get rid of value_type, it just talks about the type of template in Monoid
  * */
-template <typename InputIterator>//, class MapFun>
+template <typename InputIterator,typename Monoid,class MapFun,class out_ds>
 //void __attribute__((flatten))
- unordered_map<string,int> map_reduce(InputIterator ibegin,InputIterator iend)//,Monoid &b)//typename Monoid::value_type &op)
+ unordered_map<string,int> map_reduce(InputIterator ibegin,InputIterator iend, Monoid m1,MapFun mapper,out_ds &op)
 	{
-cilk::reducer<Monoid<unordered_map<string,int>>> redr;
+//cilk::reducer<Monoid<unordered_map<string,int>>> redr;
+	cilk::reducer<Monoid> redr;
 /*Yey..mapping begins
 		 * note that iterators are always pointers
 		 * refer unordered map example in main()*/
@@ -97,14 +108,23 @@ cilk::reducer<Monoid<unordered_map<string,int>>> redr;
 				 monoid when views sync.
 				*/
 			redr->insert({{*it,1}});
-
+			mapper(*it,redr.view());
 
 
 		}
 //		std::swap(op,redr.view());
-		return redr.view();
+//		return redr.view();
+		op = redr.view();
 
 	}
+template <class Monoid>
+class MapFun
+{
+public:
+	void operator()(string it,Monoid v) const {
+		v->insert({{it,1}});
+	    }
+};
 
 
 int main()
@@ -114,9 +134,12 @@ int main()
 	words.push_back("b");
 	words.push_back("a");
 	words.push_back("b");
+	unordered_map<string,int>  word_count;
  Monoid<unordered_map<string,int> > m1;	
-auto u1 = map_reduce(words.begin(),words.end());//,m1);
-	cout<<u1["a"];
+ MapFun<unordered_map<string,int>>  mf;
+map_reduce(words.begin(),words.end(),m1,mf,word_count);
+	cout<<word_count["a"];
+	cout<<word_count["b"];
 }
 
 
