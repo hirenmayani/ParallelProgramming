@@ -6,6 +6,7 @@
 #include<cilk/reducer.h>
 #include <typeinfo>
 #include <fstream>
+#include <cstdint>
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 using namespace std;
@@ -77,14 +78,7 @@ struct hist_Monoid:cilk::monoid_base<uint64_t[768]>
 		  (*left)[i] = (*right)[i];
   }
 
-  /*Monoid must define identity
-   * I am doubtful why do we need it?
-   * We are not returning anything although*/
-  static void identity(mr *p)
-  {
-	  new (p) mr();
-  }
-};
+  };
 
 
 /* this class is the backend of mr sys
@@ -140,7 +134,7 @@ public:
 /*HISTOGRAM MAPPER*/
 struct histogram_map
 {
-	void operator()(const char* pix, uint64_t & histogram[768])
+	void operator()(const char* pix, uint64_t& histogram[768])
 	{
 		histogram[(size_t)pix[0]]++;
 		histogram[256+(size_t)pix[1]]++;
@@ -158,11 +152,11 @@ int main()
 	words.push_back("a");
 	words.push_back("b");
  Monoid<unordered_map<string,int> > m1;	
-MapFun<string,unordered_map<string,int>>  mf;// MapFun<int,m1.type()> mf;
+MapFun<string,unordered_map<string,int>>  mf;
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 	cout<<u1["a"];
 	cout<<u1["b"]; 
-hist_Monoid m2;
+hist_Monoid<> m2;
 	ifstream myfile;
 	myfile.open("poster.jpg");
 
