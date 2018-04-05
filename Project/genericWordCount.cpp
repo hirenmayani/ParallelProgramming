@@ -23,6 +23,7 @@ using namespace std;
  * While using our template class mr, the user must specify the type
  *
  * */
+/*WORD COUNT REDUCER*/
 template <class mr>
 //using Value_Type = typedef value_type<mr>::type;
 
@@ -65,7 +66,25 @@ struct Monoid:cilk::monoid_base<mr>
 	  new (p) mr();
   }
 };
+/*HISTOGTRAM REDUCER*/
 
+struct hist_Monoid:cilk::monoid_base<uint64_t[768]>
+{
+	typedef uint_t value_type[768];
+  static void reduce(value_type* left, value_type* right)
+  {
+	  for(size_t i=0;i<768;i++)
+		  (*left)[i] = (*right)[i];
+  }
+
+  /*Monoid must define identity
+   * I am doubtful why do we need it?
+   * We are not returning anything although*/
+  static void identity(mr *p)
+  {
+	  new (p) mr();
+  }
+};
 
 
 /* this class is the backend of mr sys
@@ -79,7 +98,8 @@ here flatten is used for optimizing, so that all functions are inline if possibl
  *
  * We can most probably get rid of value_type, it just talks about the type of template in Monoid
  * */
-template <typename InputIterator,typename Monoid,class MapFun>
+
+template <typename InputIterator,typename Monoid,class MapFun,class DS>
 //void __attribute__((flatten))
  typename Monoid::value_type  map_reduce(InputIterator ibegin,InputIterator iend, Monoid m1,MapFun mapper)
 	{
@@ -107,13 +127,26 @@ cilk_sync;
 		return redr.view();
 
 	}
+/*WORD COUNT MAPPER*/
 template <class keys,class Monoid>
+
 class MapFun
 {
 public:
 	void operator()(keys it,Monoid* v) const {
 		v->insert({{it,1}});
 	    }
+};
+/*HISTOGRAM MAPPER*/
+struct histogram_map
+{
+	void operator()(const char* pix, uint64_t & histogram[768])
+	{
+		histogram[(size_t)pix[0]]++;
+		histogram[256+(size_t)pix[1]]++;
+		histogram[512+(size_t)pix[2]]++;
+
+	}
 };
 
 
@@ -128,7 +161,11 @@ int main()
 MapFun<string,unordered_map<string,int>>  mf;// MapFun<int,m1.type()> mf;
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 	cout<<u1["a"];
-	cout<<u1["b"];
+	cout<<u1["b"]; 
+hist_Monoi m2;
+auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map)
+
+
 }
 
 
