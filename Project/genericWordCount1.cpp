@@ -7,7 +7,7 @@
 #include <typeinfo>
 #include <fstream>
 #include <cstdint>
-
+#include <sstream> 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 using namespace std;
 
@@ -67,18 +67,6 @@ struct Monoid:cilk::monoid_base<mr>
 	  new (p) mr();
   }
 };
-/*HISTOGTRAM REDUCER*/
-
-struct hist_Monoid:cilk::monoid_base<uint64_t[768]>
-{
-	typedef uint64_t value_type[768];
-  static void reduce(value_type* left, value_type* right)
-  {
-	  for(size_t i=0;i<768;i++)
-		  (*left)[i] = (*right)[i];
-  }
-
-  };
 
 
 /* this class is the backend of mr sys
@@ -128,45 +116,43 @@ class MapFun
 {
 public:
 	void operator()(keys it,Monoid* v) const {
-		v->insert({{it,1}});
+		
+		//v->insert({{it,1}});
+		(*v)[it] +=1;
 	    }
 };
-/*HISTOGRAM MAPPER*/
-struct histogram_map
-{
-	void operator()(const char* pix, uint64_t* histogram[768])
+
+void readFile(string path,vector<string> &words){
+	std::ifstream dict_file(path);
+	std::string line;
+
+	while(std::getline(dict_file, line))
 	{
-		histogram[(size_t)pix[0]]++;
-		histogram[256+(size_t)pix[1]]++;
-		histogram[512+(size_t)pix[2]]++;
+	    std::istringstream iss(line);
 
+	    for(std::string line; iss >> line; )
+	    		words.push_back(line);
 	}
-};
-
+}
 
 int main()
 {
 	vector<string> words;
+	readFile("corpus", words);
+/*
+for(int i=0; i<words.size(); ++i)
+  std::cout << words[i] << ' ';
+
 	words.push_back("a");
 	words.push_back("b");
 	words.push_back("a");
 	words.push_back("b");
+*/
  Monoid<unordered_map<string,int> > m1;	
-MapFun<string,unordered_map<string,int>>  mf;
+MapFun<string,unordered_map<string,int>>  mf;// MapFun<int,m1.type()> mf;
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
-	cout<<u1["a"];
-//	cout<<u1["b"]; 
-hist_Monoid m2;
-	ifstream myfile;
-	myfile.open("poster.jpg");
 
-	if (myfile.is_open()) {
-		myfile.close();
-		cout<< "function success";
-	} else {
-		cout<< "unable to open file";
-	}
-
+cout <<u1["the"];
 //auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map);
 
 
