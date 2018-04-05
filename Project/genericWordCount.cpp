@@ -166,8 +166,10 @@ hist_Monoid m2;
 	} else {
 		cout<< "unable to open file";
 	}
-
-//auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map);
+	byte_array = myfile ;
+cout<<byte_array.tellg();
+cout<<myfile;
+auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map);
 
 
 }
