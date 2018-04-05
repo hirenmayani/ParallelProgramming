@@ -5,7 +5,7 @@
 #include<cilk/cilk.h>
 #include<cilk/reducer.h>
 #include <typeinfo>
-
+#include <fstream>
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 using namespace std;
@@ -99,7 +99,7 @@ here flatten is used for optimizing, so that all functions are inline if possibl
  * We can most probably get rid of value_type, it just talks about the type of template in Monoid
  * */
 
-template <typename InputIterator,typename Monoid,class MapFun,class DS>
+template <typename InputIterator,typename Monoid,class MapFun>
 //void __attribute__((flatten))
  typename Monoid::value_type  map_reduce(InputIterator ibegin,InputIterator iend, Monoid m1,MapFun mapper)
 	{
@@ -162,8 +162,18 @@ MapFun<string,unordered_map<string,int>>  mf;// MapFun<int,m1.type()> mf;
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 	cout<<u1["a"];
 	cout<<u1["b"]; 
-hist_Monoi m2;
-auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map)
+hist_Monoid m2;
+	ifstream myfile;
+	myfile.open("poster.jpg");
+
+	if (myfile.is_open()) {
+		myfile.close();
+		cout<< "function success";
+	} else {
+		cout<< "unable to open file";
+	}
+
+//auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map);
 
 
 }
