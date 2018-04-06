@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+
 using namespace cv;
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
@@ -70,8 +71,8 @@ struct Monoid:cilk::monoid_base<mr>
 	  new (p) mr();
   }
 };
-/*HISTOGTRAM REDUCER*/
 
+/*HISTOGTRAM REDUCER*/
 struct hist_Monoid:cilk::monoid_base<uint64_t[768]>
 {
 	typedef uint64_t value_type[768];
@@ -160,11 +161,12 @@ auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 	cout<<u1["a"];
 //	cout<<u1["b"]; 
 hist_Monoid m2;
-Mat byte_array;
-byte_array = imread("poster.jpg", CV_LOAD_IMAGE_COLOR);
-cout << "Width : " << byte_array.cols << endl;
-cout << "Height: " << byte_array.rows << endl;
-auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map);
+CImg<unsigned char> src("poster.jpg");
+int width = src.width();
+int height = src.height();
+unsigned char* ptr = src.data(10,10); // get pointer to pixel @ 10,10
+unsigned char pixel = *ptr;
+//auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map);
 
 
 }
