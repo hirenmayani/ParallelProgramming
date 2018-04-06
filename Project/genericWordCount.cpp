@@ -176,10 +176,14 @@ for (int r = 0; r < height; r++)
         }
 cout<<width<<endl;
 cout<<height<<endl;
-unsigned char* ptr = src.data(10,10); // get pointer to pixel @ 10,10
-unsigned char pixel = *ptr;
-cout<<*ptr<<endl;
-auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,histogram_map);
+cilk_for(InputIterator it=pixelData.begin, ed = pixelData.begin; it!=ed; ++it)
+		{
+			cout<<*it;
+
+
+		}
+histogram_map hm;
+auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
 
 
 }
