@@ -144,7 +144,10 @@ struct histogram_map
 
 	}
 };
-
+struct pixel
+{
+	int arr[3];
+};
 
 int main()
 {
@@ -162,19 +165,19 @@ hist_Monoid m2;
 CImg<unsigned char> src("poster.jpg");
 int width = src.width();
 int height = src.height();
-
+vector<struct> pixelData;
 for (int r = 0; r < height; r++)
         for (int c = 0; c < width; c++)
-            cout << "(" << r << "," << c << ") ="
-                 << " R" << (int)src(c,r,0,0)
-                 << " G" << (int)src(c,r,0,1)
-                 << " B" << (int)src(c,r,0,2) << endl;
+        		pixelData.arr[0] = (int)src(c,r,0,0);
+			pixelData.arr[1] = (int)src(c,r,0,1);
+			pixelData.arr[2] = (int)src(c,r,0,2);
+
 cout<<width<<endl;
 cout<<height<<endl;
 unsigned char* ptr = src.data(10,10); // get pointer to pixel @ 10,10
 unsigned char pixel = *ptr;
 cout<<*ptr<<endl;
-//auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map);
+auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,histogram_map);
 
 
 }
