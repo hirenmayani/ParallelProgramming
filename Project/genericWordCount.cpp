@@ -165,13 +165,15 @@ hist_Monoid m2;
 CImg<unsigned char> src("poster.jpg");
 int width = src.width();
 int height = src.height();
-vector<struct> pixelData;
+vector<pixel> pixelData;
+pixel pix;
 for (int r = 0; r < height; r++)
-        for (int c = 0; c < width; c++)
-        		pixelData.arr[0] = (int)src(c,r,0,0);
-			pixelData.arr[1] = (int)src(c,r,0,1);
-			pixelData.arr[2] = (int)src(c,r,0,2);
-
+        for (int c = 0; c < width; c++){
+        		pix.arr[0] = (int)src(c,r,0,0);
+			pix.arr[1] = (int)src(c,r,0,1);
+			pix.arr[2] = (int)src(c,r,0,2);
+			pixelData.push_back(pix);
+        }
 cout<<width<<endl;
 cout<<height<<endl;
 unsigned char* ptr = src.data(10,10); // get pointer to pixel @ 10,10
