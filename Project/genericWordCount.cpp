@@ -8,9 +8,8 @@
 #include <fstream>
 #include <cstdint>
 #include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
-using namespace cv;
+#include "CImg.h"
+using namespace cimg_library;
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 using namespace std;
