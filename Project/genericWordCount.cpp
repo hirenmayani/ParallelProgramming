@@ -30,7 +30,7 @@ using namespace std;
 template <class mr>
 //using Value_Type = typedef value_type<mr>::type;
 
-struct Monoid:cilk::monoid_base<mr>
+struct map_Monoid:cilk::monoid_base<mr>
 {
   static void reduce(mr* left, mr* right)
   {
@@ -156,7 +156,7 @@ int main()
 	words.push_back("b");
 	words.push_back("a");
 	words.push_back("b");
- Monoid<unordered_map<string,int> > m1;	
+ map_Monoid<unordered_map<string,int> > m1;
 MapFun<string,unordered_map<string,int>>  mf;
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 	cout<<u1["a"];
