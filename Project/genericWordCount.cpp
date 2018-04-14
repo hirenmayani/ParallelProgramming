@@ -11,6 +11,7 @@
 using namespace cimg_library;
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
+//icpc -o h.out genericWordCount.cpp -O2 -lm -lpthread -I/usr/X11R6/include -L/usr/X11R6/lib -lm -lpthread -lX11 -std=c++11 -nostartfiles
 using namespace std;
 
 
@@ -177,7 +178,7 @@ for (int r = 0; r < height; r++)
         }
 cout<<width<<endl;
 cout<<height<<endl;
-cilk_for(InputIterator it=pixelData.begin, ed = pixelData.begin; it!=ed; ++it)
+cilk_for(InputIterator it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
 		{
 			cout<<*it;
 
