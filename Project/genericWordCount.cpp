@@ -187,7 +187,8 @@ cilk_for(InputIterator it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++i
 histogram_map hm;
 auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
 
-
+for(size_t i=0;i<768;i++)
+		  cout<<hist[i];
 }
 
 
