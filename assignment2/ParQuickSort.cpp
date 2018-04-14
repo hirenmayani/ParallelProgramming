@@ -92,12 +92,12 @@ int* parPrefixSum(int* x,int n){
 		y = createArr(n, 0);
 
 		int nb2 = int(n/2);
-		for(int i=0; i <nb2;i++){
+		cilk_for(int i=0; i <nb2;i++){
 			y[i]=x[2*i+1]+x[2*i];
 		}
 		int* z = parPrefixSum(y, nb2);
 
-		for(int i=0; i <n;i++){
+		cilk_for(int i=0; i <n;i++){
 			if(i==0){
 				s[0] = x[0];
 			}
@@ -131,7 +131,7 @@ int parPartition(int* arr,int q, int r, int x){
 	lt = createArr(n, 0);
 	gt = createArr(n, 0);
 
-	parallel_for(int i=0;i<n;i++){
+	cilk_for(int i=0;i<n;i++){
 		b[i] = arr[q+i];
 		if (b[i]<x){
 			lt[i] = 1;
@@ -152,7 +152,7 @@ int parPartition(int* arr,int q, int r, int x){
 	int k = q + lt[n-1];
 	arr[k] = x;
 
-	for(int i=0;i<n;i++){
+	cilk_for(int i=0;i<n;i++){
 		if (b[i]<x)
 			arr[q+lt[i]-1] = b[i];
 		else if(b[i]>x)
@@ -172,8 +172,9 @@ void parQuick(int* arr,int q, int r){
 //		printf("pi=%d r=%d q=%d\n",pI, q,r);
 		int x = arr[pI];
 		int k = parPartition(arr, q, r, x);
-		parQuick(arr, q, k-1);
+		cilk_spawn parQuick(arr, q, k-1);
 		parQuick(arr, k+1, r);
+		cilk_sync;
 	}
 }
 
