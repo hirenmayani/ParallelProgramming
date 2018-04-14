@@ -95,9 +95,9 @@ here flatten is used for optimizing, so that all functions are inline if possibl
  * We can most probably get rid of value_type, it just talks about the type of template in Monoid
  * */
 
-template <typename InputIterator,typename Monoid,class MapFun>
+template <typename InputIterator,typename Monoid,class Mapper>
 //void __attribute__((flatten))
- typename Monoid::value_type  map_reduce(InputIterator ibegin,InputIterator iend, Monoid m1,MapFun mapper)
+ typename Monoid::value_type  map_reduce(InputIterator ibegin,InputIterator iend, Monoid m1,Mapper mapper)
 	{
 //cilk::reducer<Monoid<unordered_map<string,int>>> redr;
 	cilk::reducer<Monoid> redr;
@@ -133,6 +133,10 @@ public:
 		v->insert({{it,1}});
 	    }
 };
+struct pixel
+{
+	int arr[3];
+};
 /*HISTOGRAM MAPPER*/
 struct histogram_map
 {
@@ -144,10 +148,7 @@ struct histogram_map
 
 	}
 };
-struct pixel
-{
-	int arr[3];
-};
+
 
 int main()
 {
