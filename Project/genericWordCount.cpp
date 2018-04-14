@@ -136,11 +136,11 @@ public:
 /*HISTOGRAM MAPPER*/
 struct histogram_map
 {
-	void operator()(const char* pix, uint64_t* histogram[768])
+	void operator()(pixel pix, uint64_t* histogram[768]) const
 	{
-		histogram[(size_t)pix[0]]++;
-		histogram[256+(size_t)pix[1]]++;
-		histogram[512+(size_t)pix[2]]++;
+		histogram[(size_t)pix.arr[0]]++;
+		histogram[256+(size_t)pix.arr[1]]++;
+		histogram[512+(size_t)pix.arr[2]]++;
 
 	}
 };
