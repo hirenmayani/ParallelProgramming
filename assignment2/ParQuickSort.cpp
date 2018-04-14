@@ -1,3 +1,4 @@
+#include <cilk/cilk.h>
 #include<stdlib.h>
 #include<stdio.h>
 #include<math.h>
