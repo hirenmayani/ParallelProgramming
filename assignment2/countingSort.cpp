@@ -115,13 +115,13 @@ int* parPrefixSum(int* x,int n){
 
 			int nb2 = int(n/2);
 			//TODO
-			for(int i=0; i <nb2;i++){
+			cilk_for(int i=0; i <nb2;i++){
 //				printf(" %d ",(2*i+1));
 				y[i]=x[2*i+1]+x[2*i];
 			}
 			int* z = parPrefixSum(y, nb2);
 //TODO
-			for(int i=0; i <n;i++){
+			cilk_for(int i=0; i <n;i++){
 				if(i==0){
 					s[0] = x[0];
 				}
@@ -156,7 +156,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	int *ofset = createArr(p+1,0);
 	int i=0,j=0;
 	//TODO cilk_for
-	cilk_for(i=0;i<=p;i++)
+	cilk_for(int i=0;i<=p;i++)
 	{
 		for(j=0;j<buckets;j++)
 //			f[index(j, i, buckets)] = 0;
