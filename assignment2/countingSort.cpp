@@ -178,17 +178,15 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 			f[S[j]][i] = f[S[j]][i] + 1;
 		//TODO sync
 //		cilk_sync;
-		for(j=0;j<buckets;j++)
-		{
-			
-			printf("j=%d  \n",j)
-			printArr(f[j],p);
-			PrefixSum(f[j],p);
-			printArr(f[j],p);
-//		}	
 		
 		
 	}
+	for(j=0;j<buckets;j++)
+	{
+		f[j] = parPrefixSum(f[j],p);
+				
+			}	
+			
 	printArr(jstart,p);
 	printArr(jend,p);
 //			
