@@ -24,12 +24,22 @@ bool arraySortedOrNot(int* arr, int n)
         }
     return true;
 }
+void free(matrix,row)
+{
+	for( int i = 0 ; i < row ; i++ )
+	{
+	    delete[] matrix[i]; // delete array within matrix
+	}
+	// delete actual matrix
+	delete[] matrix;
+	
+}
 
 int* createArr(int size,int init)
 {
   int i=0;
-  int b = ((int)log2(size))+1;
-  b = pow(2,b-1);
+  int b = ((int)log2(size));
+  b = pow(2,b);
 
   int *arr;
   arr = (int*)calloc(sizeof(int), size);
@@ -175,6 +185,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	int *jend = createArr(p,0);
 	int *ofset = createArr(p,0);
 	int i=0,j=0;
+	
 	//TODO cilk_for
 	cilk_for(int i=0;i<p;i++)
 	{
@@ -222,6 +233,11 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		}
 		
 	}
+free(f,buckets);
+free(r1,buckets);
+free(jstart,0);
+free(jend,0);
+free(ofset,0);
 }
 
 int extractBitSegment(int value,int left, int right)
@@ -240,6 +256,7 @@ void parRadixSort(int* A, int n, int b,int p)
 	int d = ceil( log2( n/( p*log2(n) ) ) );
 	int bucket_size = ceil((b-1)/d); //number of d-bit segments
 	int q = 0;
+	printf("\nbs=%d,d=%d,b=%d\n",bucket_size,d,b);
 	for(int k=0;k<bucket_size;k++)
 	{
 		q = (k+d<=b)?d:b-k;
@@ -255,7 +272,9 @@ void parRadixSort(int* A, int n, int b,int p)
 			
 	}
 	
-	
+	free(S,0);
+	free(r,0);
+	free(B,0);
 }
 
 int main(int argc,char* argv[])
@@ -265,14 +284,17 @@ int main(int argc,char* argv[])
 	int p = __cilkrts_get_nworkers();
 	printf("PE=%d\n",p);
 	int b = floor(log2(n))+1;
-	printf("%d",b);
+	printf("b=%d",b);
 	int *arr = createArr(n,1);
 	printf("random array");
 	printArr(arr,n);
 	int* sorted = createArr(n,0);
+	printf("testing extract bit segment");
+	printf("\n%d",extractBitSegment(255,5,6));
 	parCountingRank(arr,n,b,sorted,p);
 	printArr(sorted,n);
 	parRadixSort(arr, n, b, p);
 	printArr(arr,n);
+	free(arr,0);
 	return 0;
 }
