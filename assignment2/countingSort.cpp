@@ -222,7 +222,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	}
 }
 
-int extractBitSegment(int a,int left, int right)
+int extractBitSegment(int value,int left, int right)
 {
 	
 	int mask = ((1 << (right-left)) - 1) << left;
@@ -242,14 +242,14 @@ void parRadixSort(int* A, int n, int b,int p)
 	{
 		q = (k+d<=b)?d:b-k
 	    cilk_for(int i=0;i<n;i++)
-			S[i] = extractBitSegment(A[i],k,k+q-1);
-		
+			{S[i] = extractBitSegment(A[i],k,k+q-1);
+			}
 		parCountingRank(S,n,q, r,p);
 		
 		cilk_for(int i=0;i<n;i++)
-			B[r[i]] = A[i];
+			{B[r[i]] = A[i];}
 		cilk_for(int i=0;i<n;i++)
-			A[i] = B[i];
+			{A[i] = B[i];}
 			
 	}
 	
