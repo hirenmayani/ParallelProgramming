@@ -154,16 +154,16 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	 * r - sorted array container
 	 * p - processing elements
 	 * */
-	int buckets = pow(2,d);
+	int buckets = pow(2,d-1);
 	int b = floor(log2(n))+1;
 	int **f = createArr2d(buckets,p);
 	int **r1 = createArr2d(buckets,p);
 	int *jstart =  createArr(p,0);
-	int *jend = createArr(p+1,0);
-	int *ofset = createArr(p+1,0);
+	int *jend = createArr(p,0);
+	int *ofset = createArr(p,0);
 	int i=0,j=0;
 	//TODO cilk_for
-	cilk_for(int i=0;i<=p;i++)
+	cilk_for(int i=0;i<p;i++)
 	{
 		for(j=0;j<buckets;j++)
 //			f[index(j, i, buckets)] = 0;
@@ -187,7 +187,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 				printArr(f[j],p);
 			}	
 	
-	cilk_for(int i=0;i<=p;i++)
+	cilk_for(int i=0;i<p;i++)
 	{
 		ofset[i] = 1;
 		for(j=0;j<buckets;j++)
@@ -197,6 +197,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		}
 		for(j=jstart[i];j<=jend[i];j++)
 		{
+			printArr(r,n);
 			r[j] = r1[S[j]][i];
 			r1[S[j]][i] = r1[S[j]][i] + 1 ;
 		}
