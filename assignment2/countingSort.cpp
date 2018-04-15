@@ -165,6 +165,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	 * r - sorted array container
 	 * p - processing elements
 	 * */
+	printf("%d received p",p);
 	int buckets = pow(2,d-1);
 	int b = floor(log2(n))+1;
 	int **f = createArr2d(buckets,p);
@@ -195,21 +196,21 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 				printf("j=%d  \n",j);
 //				printArr(f[j],p);  
 				f[j] = parPrefixSum(f[j],p);
-//				printArr(f[j],p);
+//				 printArr(f[j],p);
 			}	
-	
+	printMat(f,buckets,p);
 	cilk_for(int i=0;i<p;i++)
 	{
 		ofset[i] = 1;
 		for(j=0;j<buckets;j++)
 		{
-			r1[j][i] = (i=0)?ofset[i]:(ofset[i] + f[j][i-1]);
+			r1[j][i] = (i==0)?ofset[i]:(ofset[i] + f[j][i-1]);
 			ofset[i] = ofset[i] + f[j][p-1];
-			printf("\nlast processor prefix sum = %d",f[j][p-1]);
-			printf("\nf");
-			printMat(f,p,buckets);
-			printf("\nr");
-			printMat(r,p,buckets);
+ //			printf("\nlast processor prefix sum = %d\n",f[j][p-1]);
+//			printf("\nf\n");
+//			printMat(f,buckets,p);
+			printf("\nr1\n");
+			printMat(r1,buckets,p);
 		}
 		for(j=jstart[i];j<=jend[i];j++)
 		{
@@ -219,15 +220,41 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		}
 		
 	}
+}
+
+int extractBitSegment(int a,int left, int right)
+{
 	
-			
-//	printArr(jstart,p);
-//	printArr(jend,p);
-////			
+	mask = ((1 << (right-left)) - 1) << left;
+	isolatedXbits = value & mask;
+	return isolatedXbits;
+}
+
+void parRadixSort(int* A, int n, int b,int p)
+{
+	int *S = createArr(n,0);
+	int *r = createArr(n,0);
+	int *B = createArr(n,0);
+	int d = ceil( log2( n/( plog2(n) ) ) );
+	int bucket_size = (b-1)/d; //number of d-bit segments
+	for(int k=0;k<bucket_size;k++)
+	{
+		q = (k+d<=b)?d:b-k
+	    cilk_for(int i=0;i<n;i++)
+			S[i] = extractBitSegment(A[i],k,k+q-1);
 		
+		parCountingRank(S,n,q, r,p);
+		
+		cilk_for(int i=0;i<n;i++)
+			B[r[i]] = A[i];
+		cilk_for(int i=0;i<n;i++)
+			A[i] = B[i];
+			
+	}
 	
 	
 }
+
 int main(int argc,char* argv[])
 {
 	
@@ -242,5 +269,6 @@ int main(int argc,char* argv[])
 	int* sorted = createArr(n,0);
 	parCountingRank(arr,n,b,sorted,p);
 	printArr(sorted,n);
+	parRadixSort(arr, n, b, p)
 	return 0;
 }
