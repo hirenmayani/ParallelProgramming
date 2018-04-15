@@ -24,13 +24,18 @@ bool arraySortedOrNot(int* arr, int n)
         }
     return true;
 }
-void free(matrix,row)
+void free(int** matrix,int row)
 {
 	for( int i = 0 ; i < row ; i++ )
 	{
 	    delete[] matrix[i]; // delete array within matrix
 	}
 	// delete actual matrix
+	delete[] matrix;
+	
+}
+void free(int* matrix,int row)
+{
 	delete[] matrix;
 	
 }
