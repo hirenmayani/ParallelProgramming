@@ -193,9 +193,9 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	for(j=0;j<buckets;j++)
 	{
 				printf("j=%d  \n",j);
-				printArr(f[j],p);  
+//				printArr(f[j],p);  
 				f[j] = parPrefixSum(f[j],p);
-				printArr(f[j],p);
+//				printArr(f[j],p);
 			}	
 	
 	cilk_for(int i=0;i<p;i++)
@@ -205,8 +205,11 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		{
 			r1[j][i] = (i=0)?ofset[i]:(ofset[i] + f[j][i-1]);
 			ofset[i] = ofset[i] + f[j][p-1];
-			printf("\n%d",f[j][p-1]);
+			printf("\nlast processor prefix sum = %d",f[j][p-1]);
+			printf("\nf");
 			printMat(f,p,buckets);
+			printf("\nr");
+			printMat(r,p,buckets);
 		}
 		for(j=jstart[i];j<=jend[i];j++)
 		{
