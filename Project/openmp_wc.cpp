@@ -8,6 +8,7 @@
 #include <fstream>
 #include <cstdint>
 #include "CImg.h"
+#include <op>
 using namespace cimg_library;
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
@@ -105,7 +106,8 @@ template <typename InputIterator,typename Monoid,class Mapper>
 /*Yey..mapping begins
 		 * note that iterators are always pointers
 		 * refer unordered map example in main()*/
-		cilk_for(InputIterator it=ibegin, ed = iend; it!=ed; ++it)
+		#pragma omp parallel for
+		for(InputIterator it=ibegin, ed = iend; it!=ed; ++it)
 		{
 			/*Note about view
 			 * Cilk Plus reducers provide a number of useful properties:
@@ -178,7 +180,8 @@ for (int r = 0; r < height; r++)
         }
 cout<<width<<endl;
 cout<<height<<endl;
-cilk_for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
+#pragma omp parallel for
+for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
 		{
 			cout<<*it;
 
