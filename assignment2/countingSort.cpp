@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<cilk/cilk.h>
+#include<cilk/cilk_api.h>
 inline int index(int rows, int cols, int m_width)
 {
 	 return cols + m_width * rows; 
@@ -155,8 +156,8 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	 * */
 	int buckets = pow(2,d-1);
 	int b = floor(log2(n))+1;
-	int **f = createArr2d(buckets,p+1);
-	int **r1 = createArr2d(buckets,p+1);
+	int **f = createArr2d(buckets,p);
+	int **r1 = createArr2d(buckets,p);
 	int *jstart =  createArr(p,0);
 	int *jend = createArr(p+1,0);
 	int *ofset = createArr(p+1,0);
@@ -178,10 +179,13 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		//TODO sync
 //		cilk_sync;
 		for(j=0;j<buckets;j++)
+		{
+			
+			printf("j=%d  \n",j)
 			printArr(f[j],p);
 			PrefixSum(f[j],p);
 			printArr(f[j],p);
-//			
+//		}	
 		
 		
 	}
