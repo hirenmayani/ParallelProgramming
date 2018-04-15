@@ -154,7 +154,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	 * r - sorted array container
 	 * p - processing elements
 	 * */
-	int buckets = pow(2,d-1);
+	int buckets = pow(2,d);
 	int b = floor(log2(n))+1;
 	int **f = createArr2d(buckets,p);
 	int **r1 = createArr2d(buckets,p);
@@ -198,7 +198,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		for(j=jstart[i];j<=jend[i];j++)
 		{
 			r[j] = r1[S[j]][i];
-			r1[S[j]][i] = r1[S[j]][i] + 1 
+			r1[S[j]][i] = r1[S[j]][i] + 1 ;
 		}
 		
 	}
@@ -224,6 +224,6 @@ int main(int argc,char* argv[])
 	printArr(arr,n);
 	int* sorted = createArr(n,0);
 	parCountingRank(arr,n,b,sorted,p);
-	
+	printArr(sorted,n);
 	return 0;
 }
