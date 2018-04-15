@@ -198,8 +198,9 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 				f[j] = parPrefixSum(f[j],p);
 //				 printArr(f[j],p);
 			}	
-	printMat(f,buckets,p);
-	cilk_for(int i=0;i<p;i++)
+//	printMat(f,buckets,p);
+	//TODO cilk
+	for(int i=0;i<p;i++)
 	{
 		ofset[i] = 1;
 		for(j=0;j<buckets;j++)
@@ -209,7 +210,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
  //			printf("\nlast processor prefix sum = %d\n",f[j][p-1]);
 //			printf("\nf\n");
 //			printMat(f,buckets,p);
-			printf("\nr1\n");
+//			printf("\nr1\n");
 			printMat(r1,buckets,p);
 		}
 		for(j=jstart[i];j<=jend[i];j++)
@@ -242,14 +243,14 @@ void parRadixSort(int* A, int n, int b,int p)
 	{
 		q = (k+d<=b)?d:b-k
 	    cilk_for(int i=0;i<n;i++)
-			{S[i] = extractBitSegment(A[i],k,k+q-1);
-			}
+			S[i] = extractBitSegment(A[i],k,k+q-1);
+			
 		parCountingRank(S,n,q, r,p);
 		
 		cilk_for(int i=0;i<n;i++)
-			{B[r[i]] = A[i];}
+			B[r[i]] = A[i];
 		cilk_for(int i=0;i<n;i++)
-			{A[i] = B[i];}
+			A[i] = B[i];
 			
 	}
 	
@@ -271,5 +272,6 @@ int main(int argc,char* argv[])
 	parCountingRank(arr,n,b,sorted,p);
 	printArr(sorted,n);
 	parRadixSort(arr, n, b, p);
+	printArr(arr,n);
 	return 0;
 }
