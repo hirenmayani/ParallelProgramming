@@ -238,17 +238,17 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		}
 		
 	}
-free(f,buckets);
-free(r1,buckets);
-free(jstart,0);
-free(jend,0);
-free(ofset,0);
+//free(f,buckets);
+//free(r1,buckets);
+//free(jstart,0);
+//free(jend,0);
+//free(ofset,0);
 }
 
 int extractBitSegment(int value,int left, int right)
 {
 	
-	int mask = ((1 << (right)) - 1) << left;
+	int mask = ((1 << (right-left)) - 1) << left;
 	int isolatedXbits = (value & mask)>>left;
 	return isolatedXbits;
 }
@@ -277,9 +277,9 @@ void parRadixSort(int* A, int n, int b,int p)
 			
 	}
 	
-	free(S,0);
-	free(r,0);
-	free(B,0);
+//	free(S,0);
+//	free(r,0);
+//	free(B,0);
 }
 
 int main(int argc,char* argv[])
@@ -295,11 +295,11 @@ int main(int argc,char* argv[])
 	printArr(arr,n);
 	int* sorted = createArr(n,0);
 	printf("testing extract bit segment");
-	printf("\n%d",extractBitSegment(255,5,6));
+	printf("\n%d\n",extractBitSegment(255,5,6));
 	parCountingRank(arr,n,b,sorted,p);
 	printArr(sorted,n);
 	parRadixSort(arr, n, b, p);
 	printArr(arr,n);
-	free(arr,0);
+//	free(arr,0);
 	return 0;
 }
