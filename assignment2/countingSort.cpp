@@ -235,8 +235,9 @@ void parRadixSort(int* A, int n, int b,int p)
 	int *S = createArr(n,0);
 	int *r = createArr(n,0);
 	int *B = createArr(n,0);
-	int d = ceil( log2( n/( plog2(n) ) ) );
+	int d = ceil( log2( n/( p*log2(n) ) ) );
 	int bucket_size = (b-1)/d; //number of d-bit segments
+	int q = 0;
 	for(int k=0;k<bucket_size;k++)
 	{
 		q = (k+d<=b)?d:b-k
@@ -269,6 +270,6 @@ int main(int argc,char* argv[])
 	int* sorted = createArr(n,0);
 	parCountingRank(arr,n,b,sorted,p);
 	printArr(sorted,n);
-	parRadixSort(arr, n, b, p)
+	parRadixSort(arr, n, b, p);
 	return 0;
 }
