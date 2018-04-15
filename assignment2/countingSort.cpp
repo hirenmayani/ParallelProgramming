@@ -29,6 +29,7 @@ int* createArr(int size,int init)
 {
   int i=0;
   int b = ((int)log2(size))+1;
+  b = pow(2,b-1);
 
   int *arr;
   arr = (int*)calloc(sizeof(int), size);
@@ -193,7 +194,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	}
 	for(j=0;j<buckets;j++)
 	{
-				printf("j=%d  \n",j);
+//				printf("j=%d  \n",j);
 //				printArr(f[j],p);  
 				f[j] = parPrefixSum(f[j],p);
 //				 printArr(f[j],p);
@@ -211,11 +212,11 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 //			printf("\nf\n");
 //			printMat(f,buckets,p);
 //			printf("\nr1\n");
-			printMat(r1,buckets,p);
+//			printMat(r1,buckets,p);
 		}
 		for(j=jstart[i];j<=jend[i];j++)
 		{
-			printArr(r,n);
+//			printArr(r,n);
 			r[j] = r1[S[j]][i];
 			r1[S[j]][i] = r1[S[j]][i] + 1 ;
 		}
@@ -237,11 +238,11 @@ void parRadixSort(int* A, int n, int b,int p)
 	int *r = createArr(n,0);
 	int *B = createArr(n,0);
 	int d = ceil( log2( n/( p*log2(n) ) ) );
-	int bucket_size = (b-1)/d; //number of d-bit segments
+	int bucket_size = ceil((b-1)/d); //number of d-bit segments
 	int q = 0;
 	for(int k=0;k<bucket_size;k++)
 	{
-		q = (k+d<=b)?d:b-k
+		q = (k+d<=b)?d:b-k;
 	    cilk_for(int i=0;i<n;i++)
 			S[i] = extractBitSegment(A[i],k,k+q-1);
 			
