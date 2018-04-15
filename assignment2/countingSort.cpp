@@ -107,7 +107,18 @@ void PrefixSum(int* arr, int n){
 		arr[i] = arr[i]+arr[i-1];
 	}
 }
+void printMat(int** mat,int m,int n)
+{
+  int i,j;
+printf("\n" );
 
+  for(i=0;i<m;i++)
+  {
+    for(j=0;j<n;j++)
+      printf("%d ",mat[i][j]);
+    printf("\n");
+    }
+}
 
 int* parPrefixSum(int* x,int n){
 	int* s;
@@ -182,7 +193,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	for(j=0;j<buckets;j++)
 	{
 				printf("j=%d  \n",j);
-				printArr(f[j],p);
+				printArr(f[j],p);  
 				f[j] = parPrefixSum(f[j],p);
 				printArr(f[j],p);
 			}	
@@ -193,7 +204,9 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		for(j=0;j<buckets;j++)
 		{
 			r1[j][i] = (i=0)?ofset[i]:(ofset[i] + f[j][i-1]);
-			ofset[i] = ofset[i] + f[j][p];
+			ofset[i] = ofset[i] + f[j][p-1];
+			printf("\n%d",f[j][p-1]);
+			printMat(f,p,buckets);
 		}
 		for(j=jstart[i];j<=jend[i];j++)
 		{
