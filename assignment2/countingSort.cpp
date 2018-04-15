@@ -170,10 +170,10 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 //			f[index(S[j], i, buckets)] = f[index(S[j], i, buckets)] + 1;
 			f[S[j]][i] = f[S[j]][i] + 1;
 		//TODO sync
-		cilk_sync;
+//		cilk_sync;
 		for(j=0;j<buckets;j++)
 			printArr(f[j],p);
-			f[j] = parPrefixSum(f[j],p);
+			parPrefixSum(f[j],p);
 			printArr(f[j],p);
 //			
 		
@@ -186,9 +186,10 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	
 	
 }
-int main()
+int main(int argc,char* argv[])
 {
-	int n = 5;
+	
+	int n = atoi(argv[1]);
 	int p = 2;
 	int b = floor(log2(n))+1;
 	printf("%d",b);
@@ -197,5 +198,6 @@ int main()
 	printArr(arr,n);
 	int* sorted = createArr(5,0);
 	parCountingRank(arr,n,b,sorted,3);
+	
 	return 0;
 }
