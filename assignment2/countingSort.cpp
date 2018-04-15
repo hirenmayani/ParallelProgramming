@@ -225,8 +225,8 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 int extractBitSegment(int a,int left, int right)
 {
 	
-	mask = ((1 << (right-left)) - 1) << left;
-	isolatedXbits = value & mask;
+	int mask = ((1 << (right-left)) - 1) << left;
+	int isolatedXbits = value & mask;
 	return isolatedXbits;
 }
 
