@@ -101,6 +101,12 @@ void printArr(int* arr,int size)
   }
   printf("\n");
 }
+void PrefixSum(int* arr, int n){
+	for(int i=1; i <n;i++){
+		arr[i] = arr[i]+arr[i-1];
+	}
+}
+
 
 int* parPrefixSum(int* x,int n){
 	int* s;
@@ -173,7 +179,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 //		cilk_sync;
 		for(j=0;j<buckets;j++)
 			printArr(f[j],p);
-			parPrefixSum(f[j],p);
+			PrefixSum(f[j],p);
 			printArr(f[j],p);
 //			
 		
@@ -190,14 +196,15 @@ int main(int argc,char* argv[])
 {
 	
 	int n = atoi(argv[1]);
-	int p = 2;
+	int p = __cilkrts_get_nworkers();
+	printf("PE=%d\n",p);
 	int b = floor(log2(n))+1;
 	printf("%d",b);
-	int *arr = createArr(5,1);
+	int *arr = createArr(n,1);
 	printf("random array");
 	printArr(arr,n);
-	int* sorted = createArr(5,0);
-	parCountingRank(arr,n,b,sorted,3);
+	int* sorted = createArr(n,0);
+	parCountingRank(arr,n,b,sorted,p);
 	
 	return 0;
 }
