@@ -336,12 +336,21 @@ int main(int argc,char* argv[])
 {
 
 	int n,noe;
-	scanf("%d %d",&n,&noe);
-	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
+	n = 3;
+	noe = 4;
+//	scanf("%d %d",&n,&noe);
+//	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
 	Edges* edges = new Edges[n];
+//
+//	for(int i=0;i<noe;i++)
+//		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
+	edges[0].u = 1;
+	edges[0].v = 2;
+	edges[0].w = 3
+	edges[1].u = 2;
+	edges[1].v = 1;
+	edges[1].w = 2
 
-	for(int i=0;i<noe;i++)
-		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 	printEdges(edges,noe);
 	int* R = createArr(noe,0);
 	par_PCW_RS(n,edges,noe,R);
