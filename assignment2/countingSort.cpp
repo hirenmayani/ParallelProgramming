@@ -219,7 +219,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	//TODO cilk
 	for(int i=0;i<p;i++)
 	{
-		ofset[i] = 1;
+		ofset[i] = 0;
 		for(j=0;j<buckets;j++)
 		{
 			r1[j][i] = (i==0)?ofset[i]:(ofset[i] + f[j][i-1]);
@@ -262,11 +262,15 @@ void parRadixSort(int* A, int n, int b,int p)
 	int bucket_size = ceil((b-1)/d); //number of d-bit segments
 	int q = 0;
 	printf("\nbs=%d,d=%d,b=%d\n",bucket_size,d,b);
-if(bucket_size<0)
+if(bucket_size<=0)
 	{
-		d=b;
-		bucket_size = 1;
-	}	
+		parCountingRank(A,n,b, r,p);
+cilk_for(int i=0;i<n;i++)
+                        B[r[i]] = A[i];
+                cilk_for(int i=0;i<n;i++)
+                        A[i] = B[i];	
+return;
+}	
 for(int k=0;k<bucket_size;k++)
 	{
 		q = (k+d<=b)?d:b-k;

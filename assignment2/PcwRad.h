@@ -270,10 +270,14 @@ if(bucket_size<0)
 	}
 for(int k=0;k<bucket_size;k++)
 	{
+if(b!=d)
+{
 		q = (k+d<=b)?d:b-k;
 	    cilk_for(int i=0;i<n;i++)
 			S[i] = extractBitSegment(A[i],k,k+q);
-
+}
+else
+S = A;
 //	printArr(S,n);
 		parCountingRank(S,n,q+1, r,p);
 
