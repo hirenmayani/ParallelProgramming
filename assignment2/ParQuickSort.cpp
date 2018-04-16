@@ -162,7 +162,6 @@ int parPartition(int* arr,int q, int r, int x){
 	return k;
 }
 
-
 void parQuick(int* arr,int q, int r){
 	int n = r-q+1;
 	if (n <= 3){
@@ -179,7 +178,6 @@ void parQuick(int* arr,int q, int r){
 	}
 }
 
-
 bool samearr(int* arr,int* arr1,int n){
 	  for(int i=0;i<n;i++)
 	  {
@@ -189,7 +187,6 @@ bool samearr(int* arr,int* arr1,int n){
 	  }
 	  return true;
 }
-
 
 int main(int argc,char* argv[]){
 	  int n = atoi(argv[1]);

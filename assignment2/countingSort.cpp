@@ -303,10 +303,12 @@ int main(int argc,char* argv[])
 	printf("random array");
 	printArr(arr,n);
 	int* sorted = createArr(n,0);
+
 	parCountingRank(arr,n,b,sorted,p);
-for(int i=0;i<n;i++)
+
+	for(int i=0;i<n;i++)
                 sarr[sorted[i]] = arr[i];	
-printArr(sarr,n);
+	printArr(sarr,n);
 	parRadixSort(arr, n, b, p);
 	printArr(arr,n);
 //	free(arr,0);
