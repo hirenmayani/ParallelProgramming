@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 
-void par_PCW_RS(int n, Edges* edges,int noe, int* R)
+void parCW_BS(int n, Edges* edges,int noe, int* R)
 {
 	//noe = number of edges
 	int* A = createArr(noe,1);
