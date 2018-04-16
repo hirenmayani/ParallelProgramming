@@ -45,7 +45,7 @@ int main(int argc,char* argv[])
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 	printEdges(edges,noe);
 	int* R = new int[noe];
-//	par_PCW_RS(n,edges,noe,R);
+	par_PCW_RS(n,edges,noe,R);
 
 	return 0;
 }
