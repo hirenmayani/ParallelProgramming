@@ -262,21 +262,29 @@ void parRadixSort(int* A, int n, int b,int p)
 	int bucket_size = ceil((b-1)/d); //number of d-bit segments
 	int q = 0;
 	printf("\nbs=%d,d=%d,b=%d\n",bucket_size,d,b);
-	for(int k=0;k<bucket_size;k++)
+if(bucket_size<0)
+	{
+		d=b;
+		bucket_size = 1;
+	}	
+for(int k=0;k<bucket_size;k++)
 	{
 		q = (k+d<=b)?d:b-k;
 	    cilk_for(int i=0;i<n;i++)
-			S[i] = extractBitSegment(A[i],k,k+q-1);
+			S[i] = extractBitSegment(A[i],k,k+q);
 			
-		parCountingRank(S,n,q, r,p);
+//	printArr(S,n);
+		parCountingRank(S,n,q+1, r,p);
 		
+//	printArr(r,n);
 		cilk_for(int i=0;i<n;i++)
 			B[r[i]] = A[i];
 		cilk_for(int i=0;i<n;i++)
 			A[i] = B[i];
 			
 	}
-	
+printf("inside function");
+printArr(A,n);	
 //	free(S,0);
 //	free(r,0);
 //	free(B,0);
@@ -295,11 +303,10 @@ int main(int argc,char* argv[])
 	printf("random array");
 	printArr(arr,n);
 	int* sorted = createArr(n,0);
-	cilk_for(int i=0;i<n;i++)
-		sarr[sorted[i]] = arr[i];
-	printArr(sarr,n);
 	parCountingRank(arr,n,b,sorted,p);
-	printArr(sorted,n);
+for(int i=0;i<n;i++)
+                sarr[sorted[i]] = arr[i];	
+printArr(sarr,n);
 	parRadixSort(arr, n, b, p);
 	printArr(arr,n);
 //	free(arr,0);
