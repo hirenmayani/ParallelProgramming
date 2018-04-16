@@ -2,31 +2,31 @@
 #include<math.h>
 #include<stdlib.h>
 #include<stdio.h>
-//
-//void par_PCW_RS(int n, Edges* edges,int noe, int* R)
-//{
-//	//noe = number of edges
-//	int* A = createArr(noe,1);
-//	int k = ceil(log2(noe)) + 1;
-//	int u,j;
-////TODO cilk for
-//	for(int i=0;i<noe;i++)
-//		A[i] = edges[i].u<<k+i;
-//	parRadixSort(A,noe,k+ceil(log2(n)));
-////TODO cilk for
-//	for(int i=0;i<noe;i++)
-//	{
-//		u = A[i]>>k;
-//		j = A[i] - u<<k;
-//
-//	if(i==1||u!=A[i-1]>>k)
-//		R[u] = j;
-//	}
-//}
-struct Edges
+
+void par_PCW_RS(int n, Edges* edges,int noe, int* R)
 {
-	int u,v;
-};
+	//noe = number of edges
+	int* A = createArr(noe,1);
+	int k = ceil(log2(noe)) + 1;
+	int u,j;
+//TODO cilk for
+	for(int i=0;i<noe;i++)
+		A[i] = edges[i].u<<k+i;
+	parRadixSort(A,noe,k+ceil(log2(n)));
+//TODO cilk for
+	for(int i=0;i<noe;i++)
+	{
+		u = A[i]>>k;
+		j = A[i] - u<<k;
+
+	if(i==1||u!=A[i-1]>>k)
+		R[u] = j;
+	}
+}
+//struct Edges
+//{
+//	int u,v;
+//};
 void printEdges(Edges* edges,int size)
 {
 	for(int i=0;i<size;i++)
