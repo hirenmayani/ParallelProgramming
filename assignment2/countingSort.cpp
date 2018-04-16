@@ -253,8 +253,9 @@ int extractBitSegment(int value,int left, int right)
 	return isolatedXbits;
 }
 
-void parRadixSort(int* A, int n, int b,int p)
+void parRadixSort(int* A, int n, int b)
 {
+	int p = __cilkrts_get_nworkers();
 	int *S = createArr(n,0);
 	int *r = createArr(n,0);
 	int *B = createArr(n,0);
@@ -262,10 +263,15 @@ void parRadixSort(int* A, int n, int b,int p)
 	int bucket_size = ceil((b-1)/d); //number of d-bit segments
 	int q = 0;
 	printf("\nbs=%d,d=%d,b=%d\n",bucket_size,d,b);
-if(bucket_size<0)
+
+	if(bucket_size<=0)
 	{
-		d=b;
-		bucket_size = 1;
+		parCountingRank(A,n,b, r,p);
+			cilk_for(int i=0;i<n;i++)
+				B[r[i]] = A[i];
+		cilk_for(int i=0;i<n;i++)
+				A[i] = B[i];
+		return;
 	}	
 for(int k=0;k<bucket_size;k++)
 	{
