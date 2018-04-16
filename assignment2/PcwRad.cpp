@@ -256,9 +256,8 @@ int extractBitSegment(int value,int left, int right)
 	return isolatedXbits;
 }
 
-void parRadixSort(int* A, int n, int b)
+void parRadixSort(int* A, int n, int b,int p)
 {
-	int p = __cilkrts_get_nworkers();
 	int *S = createArr(n,0);
 	int *r = createArr(n,0);
 	int *B = createArr(n,0);
