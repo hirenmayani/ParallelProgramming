@@ -291,11 +291,13 @@ int main(int argc,char* argv[])
 	int b = floor(log2(n))+1;
 	printf("b=%d",b);
 	int *arr = createArr(n,1);
+	int *sarr = createArr(n,0);
 	printf("random array");
 	printArr(arr,n);
 	int* sorted = createArr(n,0);
-	printf("testing extract bit segment");
-	printf("\n%d\n",extractBitSegment(255,5,6));
+	cilk_for(int i=0;i<n;i++)
+		sarr[sorted[i]] = arr[i];
+	printArr(sarr,n);
 	parCountingRank(arr,n,b,sorted,p);
 	printArr(sorted,n);
 	parRadixSort(arr, n, b, p);
