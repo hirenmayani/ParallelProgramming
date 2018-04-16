@@ -304,12 +304,13 @@ struct Edges
 void par_PCW_RS(int n, Edges* edges,int noe, int* R)
 {
 	//noe = number of edges
-	int* A = createArr(noe,1);
+	int* A = createArr(noe,0);
 	int k = ceil(log2(noe)) + 1;
 	int u,j;
 //TODO cilk for
 	for(int i=0;i<noe;i++)
 		A[i] = edges[i].u<<k+i;
+	printArr(A,noe);
 	parRadixSort(A,noe,k+ceil(log2(n)));
 //TODO cilk for
 	for(int i=0;i<noe;i++)
@@ -342,7 +343,7 @@ int main(int argc,char* argv[])
 	for(int i=0;i<noe;i++)
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 	printEdges(edges,noe);
-	int* R = new int[noe];
+	int* R = createArr(noe,0);
 	par_PCW_RS(n,edges,noe,R);
 
 	return 0;
