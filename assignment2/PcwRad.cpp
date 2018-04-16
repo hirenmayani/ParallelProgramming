@@ -30,7 +30,7 @@ void par_PCW_RS(int n, Edges* edges,int noe, int* R)
 void printEdges(Edges* edges,int size)
 {
 	for(int i=0;i<size;i++)
-		printf("\nu=%d v=%d\n",edges[i].u,edges[i].v);
+		printf("\nu=%d v=%d w=%d\n",edges[i].u,edges[i].v,edges[i].w);
 
 }
 int main(int argc,char* argv[])
@@ -42,7 +42,7 @@ int main(int argc,char* argv[])
 	Edges* edges = new Edges[n];
 
 	for(int i=0;i<noe;i++)
-		scanf("%d %d",&edges[i].u,&edges[i].v);
+		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 	printEdges(edges,noe);
 	int* R = new int[noe];
 //	par_PCW_RS(n,edges,noe,R);

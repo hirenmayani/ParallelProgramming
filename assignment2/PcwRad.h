@@ -292,7 +292,7 @@ printArr(A,n);
 }
 struct Edges
 {
-	int u,v;
+	int u,v,w;
 };
 //int main(int argc,char* argv[])
 //{
