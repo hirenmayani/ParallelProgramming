@@ -8,6 +8,7 @@
 #include<cilk/cilk_api.h>
 #include<iostream>
 #include<algorithm>
+#include<random>
 struct Edges
 {
 	int u,v,w;
@@ -433,13 +434,13 @@ void mst(int n, Edges* edges,int noe, int* mst)
 		}
 		cilk_for(int i=1;i<noe;i++)
 		{
-			E[i].u = L[E[i].u];
-			E[i].v = L[E[i].v];
+			edges[i].u = L[edges[i].u];
+			edges[i].v = L[edges[i].v];
 		}
 		F = false;
 		cilk_for(int i=1;i<noe;i++)
 		{
-			if(E[i].u!=E[i].v)
+			if(edges[i].u!=edges[i].v)
 				F = true;
 		}
 
