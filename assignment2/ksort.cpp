@@ -185,7 +185,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	 * p - processing elements
 	 * */
 	printf("%d received p",p);
-	int buckets = pow(2,d-1);
+	int buckets = pow(2,d)-1;
 	int b = floor(log2(n))+1;
 	int **f = createArr2d(buckets,p);
 	int **r1 = createArr2d(buckets,p);
@@ -222,7 +222,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	//TODO cilk
 	for(int i=0;i<p;i++)
 	{
-		ofset[i] = 1;
+		ofset[i] = 0;
 		for(j=0;j<buckets;j++)
 		{
 			r1[j][i] = (i==0)?ofset[i]:(ofset[i] + f[j][i-1]);
@@ -309,16 +309,16 @@ void par_PCW_RS(int n, Edges* edges,int noe, int* R)
 	int u,j;
 //TODO cilk for
 	for(int i=0;i<noe;i++)
-		A[i] = edges[i].u<<k+i;
+		A[i] = (edges[i].u<<k)+i;
 	printArr(A,noe);
 	parRadixSort(A,noe,k+ceil(log2(n)));
 //TODO cilk for
 	for(int i=0;i<noe;i++)
 	{
 		u = A[i]>>k;
-		j = A[i] - u<<k;
+		j = A[i] - (u<<k);
 
-	if(i==1||u!=A[i-1]>>k)
+	if(i==1||u!=(A[i-1]>>k))
 		R[u] = j;
 	}
 }
@@ -334,7 +334,7 @@ void printEdges(Edges* edges,int size)
 }
 int main(int argc,char* argv[])
 {
-	int n = 5;
+	/*int n = 5;
 		int p = __cilkrts_get_nworkers();
 		printf("PE=%d\n",p);
 		int b = floor(log2(n))+1;
@@ -350,7 +350,7 @@ int main(int argc,char* argv[])
 		for(int i=0;i<n;i++)
 	                sarr[sorted[i]] = arr[i];
 		printArr(sarr,n);
-
+*/
 	int n,noe;
 //	n = 3;
 //	noe = 2;
