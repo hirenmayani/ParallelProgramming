@@ -6,7 +6,7 @@
 void parCW_BS(int n, Edges* E,int noe, int* R)
 {
 	//noe = number of edges
-	int* B = createArr(n,1);
+	int* B = createArr(n,0);
 	int* l = createArr(n,0);
 	int* h = createArr(n,0);
 	int* lo = createArr(n,0);
@@ -45,15 +45,13 @@ void parCW_BS(int n, Edges* E,int noe, int* R)
 			}
 		}
 
-		cilk_for(int i=0;i<noe;i++){
-			int u = E[i].u;
-			if (i == l[u]){
-				R[u]=i;
-			}
-		}
-
-
 	}
+                cilk_for(int i=0;i<noe;i++){
+                        int u = E[i].u;
+                        if (i == l[u]){
+                                R[u]=i;
+                        }
+                }
 
 }
 //struct Edges
@@ -74,14 +72,15 @@ int main(int argc,char* argv[])
 	int n,noe;
 	scanf("%d %d",&n,&noe);
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
-	Edges* edges = new Edges[n];
+	Edges* edges = new Edges[noe];
 
 	for(int i=0;i<noe;i++)
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 	printEdges(edges,noe);
-	int* R = new int[noe];
-	//par_PCW_RS(n,edges,noe,R);
+	int* R = new int[n];
+	parCW_BS(n,edges,noe,R);
 
+	printArr(R, n);
 	return 0;
 }
 
