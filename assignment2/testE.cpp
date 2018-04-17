@@ -6,10 +6,10 @@ struct Edges
 };
 int compare (const void * a, const void * b)
 {
-	 Edges *orderA = (Edges *)a;
-	  Edges *orderB = (Edges *)b;
+	 Edges *edge1 = (Edges *)a;
+	  Edges *edge2 = (Edges *)b;
 
-	  return ( orderB->w - orderA->w );
+	  return ( edge1->w - edge2->w );
 
 }
 void printEdges(Edges* edges,int size)
@@ -28,8 +28,8 @@ int main()
 	for(int i=0;i<noe;i++)
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 	printEdges(edges,noe);
-	Edges e;
-	qsort (edges, noe, sizeof(e), compare);
+	//Edges e;
+	qsort (edges, noe, sizeof(Edges), compare);
 	printEdges(edges,noe);
 	return 0;
 }

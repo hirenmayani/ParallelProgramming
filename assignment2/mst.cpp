@@ -7,6 +7,7 @@
 #include<cilk/cilk.h>
 #include<cilk/cilk_api.h>
 #include<iostream>
+#include<algorithm>
 struct Edges
 {
 	int u,v,w;
