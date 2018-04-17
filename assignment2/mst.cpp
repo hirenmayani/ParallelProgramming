@@ -9,6 +9,8 @@
 #include<iostream>
 #include<algorithm>
 #include<random>
+#include<fstream>
+#include<string>
 struct Edges
 {
 	int u,v,w;
@@ -473,14 +475,12 @@ printEdges(edges,noe);
 }
 int main(int argc,char* argv[])
 {
+	string fileName = atoi(argv[1]);
 	int n,noe;
 	scanf("%d %d",&n,&noe);
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
 	Edges* edges = new Edges[noe];
 	int* mstArr = createArr(noe,0);
-
-
-
 	for(int i=0;i<noe;i++)
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 
@@ -490,14 +490,26 @@ int main(int argc,char* argv[])
 //	printArr(R,n);
 //	int* S = createArr(n,1,R,p);
 //parCountingRank(S,n,)
+	 r = atoi(argv[1]);
 	mst(n, edges, noe, mstArr);
 printArr(mstArr,noe);
 double cost = 0;
+
+cilk_for(int i=0;i<noe;i++)
+ if(mstArr[i]==1)
+ 	cost += edges[i].w;
+
+ofstream outFile (fileName);
+outFile<<cost<<endl;
 cilk_for(int i=0;i<noe;i++)
 {
  if(mstArr[i]==1)
-	cost += edges[i].w;
-}	
+ {
+ 	outFile <<edges[i].u<<" "<<edges[i].v<<" "<<edges[i].w<<endl;
+ }
+}
+
+outFile.close();
 printf("cost=%lf",cost);
 printArr(mstArr,noe);
 	return 0;
