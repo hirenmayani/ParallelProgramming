@@ -1,11 +1,8 @@
-//#include "PcwRad.h"
-#include<math.h>
 #include<math.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<cilk/cilk.h>
 #include<cilk/cilk_api.h>
-
 inline int index(int rows, int cols, int m_width)
 {
 	 return cols + m_width * rows;
@@ -185,7 +182,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	 * p - processing elements
 	 * */
 	printf("%d received p",p);
-	int buckets = pow(2,d)-1;
+	int buckets = pow(2,d-1);
 	int b = floor(log2(n))+1;
 	int **f = createArr2d(buckets,p);
 	int **r1 = createArr2d(buckets,p);
@@ -222,7 +219,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	//TODO cilk
 	for(int i=0;i<p;i++)
 	{
-		ofset[i] = 0;
+		ofset[i] = 1;
 		for(j=0;j<buckets;j++)
 		{
 			r1[j][i] = (i==0)?ofset[i]:(ofset[i] + f[j][i-1]);
@@ -266,6 +263,7 @@ void parRadixSort(int* A, int n, int b)
 	int bucket_size = ceil((b-1)/d); //number of d-bit segments
 	int q = 0;
 	printf("\nbs=%d,d=%d,b=%d\n",bucket_size,d,b);
+
 	if(bucket_size<=0)
 	{
 		parCountingRank(A,n,b, r,p);
@@ -275,7 +273,7 @@ void parRadixSort(int* A, int n, int b)
 				A[i] = B[i];
 		return;
 	}
-	for(int k=0;k<bucket_size;k++)
+for(int k=0;k<bucket_size;k++)
 	{
 		q = (k+d<=b)?d:b-k;
 	    cilk_for(int i=0;i<n;i++)
@@ -297,82 +295,28 @@ printArr(A,n);
 //	free(r,0);
 //	free(B,0);
 }
-struct Edges
-{
-	int u,v,w;
-};
 
-void par_PCW_RS(int n, Edges* edges,int noe, int* R)
-{
-	//noe = number of edges
-	int* A = createArr(noe,0);
-	int k = ceil(log2(noe)) + 1;
-	int u,j;
-//TODO cilk for
-	for(int i=0;i<noe;i++)
-		A[i] = (edges[i].u<<k)+i;
-	printArr(A,noe);
-	parRadixSort(A,noe,k+ceil(log2(n)));
-//TODO cilk for
-	for(int i=0;i<noe;i++)
-	{
-		u = A[i]>>k;
-		j = A[i] - (u<<k);
-
-	if(i==1||u!=(A[i-1]>>k))
-		R[u] = j;
-	}
-}
-//struct Edges
-//{
-//	int u,v;
-//};
-void printEdges(Edges* edges,int size)
-{
-	for(int i=0;i<size;i++)
-		printf("\nu=%d v=%d w=%d\n",edges[i].u,edges[i].v,edges[i].w);
-
-}
 int main(int argc,char* argv[])
 {
-	/*int n = 5;
-		int p = __cilkrts_get_nworkers();
-		printf("PE=%d\n",p);
-		int b = floor(log2(n))+1;
-		printf("b=%d",b);
-		int *arr = createArr(n,1);
-		int *sarr = createArr(n,0);
-		printf("random array");
-		printArr(arr,n);
-		int* sorted = createArr(n,0);
 
-		parCountingRank(arr,n,b,sorted,p);
+	int n = atoi(argv[1]);
+	int p = __cilkrts_get_nworkers();
+	printf("PE=%d\n",p);
+	int b = floor(log2(n))+1;
+	printf("b=%d",b);
+	int *arr = createArr(n,1);
+	int *sarr = createArr(n,0);
+	printf("random array");
+	printArr(arr,n);
+	int* sorted = createArr(n,0);
 
-		for(int i=0;i<n;i++)
-	                sarr[sorted[i]] = arr[i];
-		printArr(sarr,n);
-*/
-	int n,noe;
-//	n = 3;
-//	noe = 2;
-	scanf("%d %d",&n,&noe);
-	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
-	Edges* edges = new Edges[noe];
+	parCountingRank(arr,n,b,sorted,p);
 
-	for(int i=0;i<noe;i++)
-		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
-//	edges[0].u = 1;
-//	edges[0].v = 2;
-//	edges[0].w = 3;
-//	edges[1].u = 2;
-//	edges[1].v = 1;
-//	edges[1].w = 2;
-//
-	printEdges(edges,noe);
-	int* R = createArr(n,0);
-	par_PCW_RS(n,edges,noe,R);
-printArr(R,n);
+	for(int i=0;i<n;i++)
+                sarr[sorted[i]] = arr[i];
+	printArr(sarr,n);
+	parRadixSort(arr, n, b, p);
+	printArr(arr,n);
+//	free(arr,0);
 	return 0;
 }
-
-
