@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<iostream>
+#include<algorithm>
 struct Edges
 {
 	int u,v,w;

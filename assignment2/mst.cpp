@@ -206,7 +206,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	int i=0,j=0;
 
 	//TODO cilk_for
-	cilk_for(int i=0;i<p;i++)
+	for(int i=0;i<p;i++)
 	{
 		for(j=0;j<buckets;j++)
 //			f[index(j, i, buckets)] = 0;
@@ -280,6 +280,8 @@ void parRadixSort(int* A, int n, int b)
 	if(bucket_size<=0)
 	{
 		parCountingRank(A,n,b, r,p);
+printf("recievd ranking causing sigsev");
+printArr(r,n);
 			cilk_for(int i=0;i<n;i++)
 				B[r[i]] = A[i];
 		cilk_for(int i=0;i<n;i++)
@@ -313,22 +315,33 @@ void par_PCW_RS(int n, Edges* edges,int noe, int* R)
 {
 	//noe = number of edges
 	int* A = createArr(noe,0);
-	int k = ceil(log2(noe)) + 1;
+//changed TODO
+	int k = ceil(log2(noe)) ;
 	int u,j;
+printf("k=%dbits for edges\n",k);
 //TODO cilk for
-	for(int i=0;i<noe;i++)
+	cilk_for(int i=0;i<noe;i++)
 		A[i] = (edges[i].u<<k)+i;
 	printArr(A,noe);
-	parRadixSort(A,noe,k+ceil(log2(n)));
+	parRadixSort(A,noe,1+k+ceil(log2(n)));
+printf("\nafter radix sort");
+printArr(A,noe);
 //TODO cilk for
 	for(int i=0;i<noe;i++)
 	{
 		u = A[i]>>k;
 		j = A[i] - (u<<k);
-
-	if(i==1||u!=(A[i-1]>>k))
-		R[u] = j;
+		printf("\nu=%d,j=%d",u,j);
+	if(i==0 || u!=(A[i-1]>>k) )
+	{
+	//	if(i==0)
+			R[u] = j;
+	//	else
+	//		R[u-1] = j;
+		}
 	}
+printf("pcw");
+printArr(R,n);
 }
 //struct Edges
 //{
@@ -406,8 +419,8 @@ void mst(int n, Edges* edges,int noe, int* mst)
 	int* R = createArr(n,0);
 	int u,v;
 	printEdges(edges,noe);
-	qsort (edges+noe, n, sizeof(int), compareR);
-	printEdges(edges,noe);
+qsort (edges, noe, sizeof(Edges), compareR);	
+printEdges(edges,noe);
 	cilk_for(int v=1;v<n;v++)
 		L[v] = v;
 	bool F = noe>0?true:false;
@@ -417,12 +430,14 @@ void mst(int n, Edges* edges,int noe, int* mst)
 
 	while(F)
 	{
-		cilk_for(int v=1;v<n;v++)
+		cilk_for(int v=0;v<n;v++)
 		{
 			C[v] = dis(gen);
 		}
+printf("head tail array");
+printArr(C,n);
 		par_PCW_RS(n,edges,noe,R);
-		cilk_for(int i=1;i<noe;i++)
+		cilk_for(int i=0;i<noe;i++)
 		{
 			u = edges[i].u;
 			v = edges[i].v;
@@ -434,13 +449,18 @@ void mst(int n, Edges* edges,int noe, int* mst)
 			}
 
 		}
-		cilk_for(int i=1;i<noe;i++)
+printf("pcw array");
+printArr(L,n);
+printf("selected mst");
+printArr(mst,n);
+		cilk_for(int i=0;i<noe;i++)
 		{
 			edges[i].u = L[edges[i].u];
 			edges[i].v = L[edges[i].v];
 		}
+printEdges(edges,noe);
 		F = false;
-		cilk_for(int i=1;i<noe;i++)
+		cilk_for(int i=0;i<noe;i++)
 		{
 			if(edges[i].u!=edges[i].v)
 				F = true;
@@ -464,12 +484,22 @@ int main(int argc,char* argv[])
 	for(int i=0;i<noe;i++)
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 
-	printEdges(edges,noe);
+	//printEdges(edges,noe);
 //	int* R = createArr(n,0);
 //	par_PCW_RS(n,edges,noe,R);
 //	printArr(R,n);
+//	int* S = createArr(n,1,R,p);
+//parCountingRank(S,n,)
 	mst(n, edges, noe, mstArr);
-	printArr(mstArr,noe);
+printArr(mstArr,noe);
+double cost = 0;
+cilk_for(int i=0;i<noe;i++)
+{
+ if(mstArr[i]==1)
+	cost += edges[i].w;
+}	
+printf("cost=%lf",cost);
+printArr(mstArr,noe);
 	return 0;
 }
 

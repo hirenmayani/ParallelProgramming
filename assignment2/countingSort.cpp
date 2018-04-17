@@ -238,11 +238,11 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		}
 
 	}
-//free(f,buckets);
-//free(r1,buckets);
-//free(jstart,0);
-//free(jend,0);
-//free(ofset,0);
+free(f,buckets);
+free(r1,buckets);
+free(jstart,0);
+free(jend,0);
+free(ofset,0);
 }
 
 int extractBitSegment(int value,int left, int right)

@@ -184,7 +184,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	 * r - sorted array container
 	 * p - processing elements
 	 * */
-	printf("%d received p",p);
+	printf("%d received p,d=%d\n",p,d);
 	int buckets = pow(2,d)-1;
 	int b = floor(log2(n))+1;
 	int **f = createArr2d(buckets,p);
@@ -198,7 +198,6 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	cilk_for(int i=0;i<p;i++)
 	{
 		for(j=0;j<buckets;j++)
-//			f[index(j, i, buckets)] = 0;
 			f[j][i] = 0;
 		if(i==0)
 			jstart[i] = 0;
@@ -206,21 +205,18 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 			jstart[i] = (i)*floor(n/p)+1;
 		jend[i] = (i+1<p)?((i+1)*floor(n/p)):n-1;
 		for(j=jstart[i];j<=jend[i];j++)
-//			f[index(S[j], i, buckets)] = f[index(S[j], i, buckets)] + 1;
 			f[S[j]][i] = f[S[j]][i] + 1;
 		//TODO sync
-//		cilk_sync;
 	}
+printArr(jstart,p);
+printArr(jend,p);
 	for(j=0;j<buckets;j++)
 	{
-//				printf("j=%d  \n",j);
-//				printArr(f[j],p);
 				f[j] = parPrefixSum(f[j],p);
-//				 printArr(f[j],p);
 			}
 //	printMat(f,buckets,p);
 	//TODO cilk
-	cilk_for(int i=0;i<p;i++)
+	for(int i=0;i<p;i++)
 	{
 		ofset[i] = 0;
 		for(j=0;j<buckets;j++)
@@ -231,8 +227,8 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 //			printf("\nf\n");
 //			printMat(f,buckets,p);
 //			printf("\nr1\n");
-//			printMat(r1,buckets,p);
 		}
+printMat(r1,buckets,p);
 		for(j=jstart[i];j<=jend[i];j++)
 		{
 //			printArr(r,n);
@@ -241,11 +237,11 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 		}
 
 	}
-//free(f,buckets);
-//free(r1,buckets);
-//free(jstart,0);
-//free(jend,0);
-//free(ofset,0);
+free(f,buckets);
+free(r1,buckets);
+free(jstart,0);
+free(jend,0);
+free(ofset,0);
 }
 
 int extractBitSegment(int value,int left, int right)
@@ -335,7 +331,7 @@ void printEdges(Edges* edges,int size)
 }
 int main(int argc,char* argv[])
 {
-	/*int n = 5;
+	int n = 8;
 		int p = __cilkrts_get_nworkers();
 		printf("PE=%d\n",p);
 		int b = floor(log2(n))+1;
@@ -350,9 +346,10 @@ int main(int argc,char* argv[])
 
 		for(int i=0;i<n;i++)
 	                sarr[sorted[i]] = arr[i];
-		printArr(sarr,n);
-*/
-	int n,noe;
+printf("\n sorted array\n");	
+	printArr(sarr,n);
+
+	/*int n,noe;
 //	n = 3;
 //	noe = 2;
 	scanf("%d %d",&n,&noe);
@@ -371,7 +368,7 @@ int main(int argc,char* argv[])
 	printEdges(edges,noe);
 	int* R = createArr(n,0);
 	par_PCW_RS(n,edges,noe,R);
-printArr(R,n);
+printArr(R,n);*/
 	return 0;
 }
 
