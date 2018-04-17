@@ -405,7 +405,9 @@ void mst(int n, Edges* edges,int noe, int* mst)
 	int* C = createArr(n,0);
 	int* R = createArr(n,0);
 	int u,v;
+	printEdges(edges,noe);
 	qsort (edges+noe, n, sizeof(int), compareR);
+	printEdges(edges,noe);
 	cilk_for(int v=1;v<n;v++)
 		L[v] = v;
 	bool F = noe>0?true:false;
@@ -451,46 +453,23 @@ void mst(int n, Edges* edges,int noe, int* mst)
 }
 int main(int argc,char* argv[])
 {
-	/*int n = 5;
-		int p = __cilkrts_get_nworkers();
-		printf("PE=%d\n",p);
-		int b = floor(log2(n))+1;
-		printf("b=%d",b);
-		int *arr = createArr(n,1);
-		int *sarr = createArr(n,0);
-		printf("random array");
-		printArr(arr,n);
-		int* sorted = createArr(n,0);
-
-		parCountingRank(arr,n,b,sorted,p);
-
-		for(int i=0;i<n;i++)
-	                sarr[sorted[i]] = arr[i];
-		printArr(sarr,n);
-*/
 	int n,noe;
-//	n = 3;
-//	noe = 2;
 	scanf("%d %d",&n,&noe);
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
 	Edges* edges = new Edges[noe];
-
+	int* mstArr = createArr(noe,0);
 
 
 
 	for(int i=0;i<noe;i++)
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
-//	edges[0].u = 1;
-//	edges[0].v = 2;
-//	edges[0].w = 3;
-//	edges[1].u = 2;
-//	edges[1].v = 1;
-//	edges[1].w = 2;
-//
+
 	printEdges(edges,noe);
-	int* R = createArr(n,0);
-	par_PCW_RS(n,edges,noe,R);
-printArr(R,n);
+//	int* R = createArr(n,0);
+//	par_PCW_RS(n,edges,noe,R);
+//	printArr(R,n);
+	mst(n, edges, noe, mstArr);
+	printArr(mstArr,noe);
 	return 0;
 }
 
