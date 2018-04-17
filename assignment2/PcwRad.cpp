@@ -368,9 +368,9 @@ int main(int argc,char* argv[])
 //	edges[1].w = 2;
 //
 	printEdges(edges,noe);
-	int* R = createArr(noe,0);
+	int* R = createArr(n,0);
 	par_PCW_RS(n,edges,noe,R);
-
+printArr(R,n);
 	return 0;
 }
 
