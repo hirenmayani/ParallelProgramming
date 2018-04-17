@@ -11,6 +11,7 @@
 #include<random>
 #include<fstream>
 #include<string>
+using namespace std;
 struct Edges
 {
 	int u,v,w;
@@ -414,7 +415,7 @@ void parQuick(int* arr,int q, int r){
 	}
 }
 
-void mst(int n, Edges* edges,int noe, int* mst)
+void mst(int n, Edges* edges, Edges* edgeso,int noe, int* mst)
 {
 	int* L = createArr(n,0);
 	int* C = createArr(n,0);
@@ -422,6 +423,12 @@ void mst(int n, Edges* edges,int noe, int* mst)
 	int u,v;
 	printEdges(edges,noe);
 qsort (edges, noe, sizeof(Edges), compareR);	
+cilk_for(int i=0;i<noe;i++)
+{
+ edgeso[i].u = edges[i].u;
+edgeso[i].v = edges[i].v;
+edgeso[i].w = edges[i].w;
+}
 printEdges(edges,noe);
 	cilk_for(int v=1;v<n;v++)
 		L[v] = v;
@@ -475,23 +482,24 @@ printEdges(edges,noe);
 }
 int main(int argc,char* argv[])
 {
-	string fileName = atoi(argv[1]);
-	int n,noe;
+//	string fileName = atoi(argv[1]);
+string fileName = "inp";	
+int n,noe;
 	scanf("%d %d",&n,&noe);
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
 	Edges* edges = new Edges[noe];
+	Edges* edgeso = new Edges[noe];
 	int* mstArr = createArr(noe,0);
 	for(int i=0;i<noe;i++)
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 
-	//printEdges(edges,noe);
+	printEdges(edgeso,noe);
 //	int* R = createArr(n,0);
 //	par_PCW_RS(n,edges,noe,R);
 //	printArr(R,n);
 //	int* S = createArr(n,1,R,p);
 //parCountingRank(S,n,)
-	 r = atoi(argv[1]);
-	mst(n, edges, noe, mstArr);
+	mst(n, edges,edgeso, noe, mstArr);
 printArr(mstArr,noe);
 double cost = 0;
 
@@ -499,13 +507,14 @@ cilk_for(int i=0;i<noe;i++)
  if(mstArr[i]==1)
  	cost += edges[i].w;
 
-ofstream outFile (fileName);
+ofstream outFile (fileName+"-MST-sort-out"+".txt",ios::out);
 outFile<<cost<<endl;
-cilk_for(int i=0;i<noe;i++)
+printEdges(edgeso,noe);
+for(int i=0;i<noe;i++)
 {
  if(mstArr[i]==1)
  {
- 	outFile <<edges[i].u<<" "<<edges[i].v<<" "<<edges[i].w<<endl;
+ 	outFile<<edgeso[i].u<<" "<<edgeso[i].v<<" "<<edgeso[i].w<<endl;
  }
 }
 
