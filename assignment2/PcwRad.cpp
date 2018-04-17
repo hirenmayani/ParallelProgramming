@@ -334,14 +334,39 @@ void printEdges(Edges* edges,int size)
 }
 int main(int argc,char* argv[])
 {
+	int n = 5;
+		int p = __cilkrts_get_nworkers();
+		printf("PE=%d\n",p);
+		int b = floor(log2(n))+1;
+		printf("b=%d",b);
+		int *arr = createArr(n,1);
+		int *sarr = createArr(n,0);
+		printf("random array");
+		printArr(arr,n);
+		int* sorted = createArr(n,0);
+
+		parCountingRank(arr,n,b,sorted,p);
+
+		for(int i=0;i<n;i++)
+	                sarr[sorted[i]] = arr[i];
+		printArr(sarr,n);
 
 	int n,noe;
+//	n = 3;
+//	noe = 2;
 	scanf("%d %d",&n,&noe);
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
-	Edges* edges = new Edges[n];
+	Edges* edges = new Edges[noe];
 
 	for(int i=0;i<noe;i++)
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
+//	edges[0].u = 1;
+//	edges[0].v = 2;
+//	edges[0].w = 3;
+//	edges[1].u = 2;
+//	edges[1].v = 1;
+//	edges[1].w = 2;
+//
 	printEdges(edges,noe);
 	int* R = createArr(noe,0);
 	par_PCW_RS(n,edges,noe,R);
