@@ -220,7 +220,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 			}
 //	printMat(f,buckets,p);
 	//TODO cilk
-	for(int i=0;i<p;i++)
+	cilk_for(int i=0;i<p;i++)
 	{
 		ofset[i] = 0;
 		for(j=0;j<buckets;j++)
