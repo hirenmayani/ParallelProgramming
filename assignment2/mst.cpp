@@ -325,22 +325,19 @@ printf("k=%dbits for edges\n",k);
 //TODO cilk for
 	cilk_for(int i=0;i<noe;i++)
 		A[i] = (edges[i].u<<k)+i;
-	printArr(A,noe);
+	//printArr(A,noe);
 	parRadixSort(A,noe,1+k+ceil(log2(n)));
-printf("\nafter radix sort");
-printArr(A,noe);
+//printf("\nafter radix sort");
+//printArr(A,noe);
 //TODO cilk for
-	for(int i=0;i<noe;i++)
+	cilk_for(int i=0;i<noe;i++)
 	{
 		u = A[i]>>k;
 		j = A[i] - (u<<k);
-		printf("\nu=%d,j=%d",u,j);
+		//printf("\nu=%d,j=%d",u,j);
 	if(i==0 || u!=(A[i-1]>>k) )
 	{
-	//	if(i==0)
 			R[u] = j;
-	//	else
-	//		R[u-1] = j;
 		}
 	}
 printf("pcw");
@@ -421,7 +418,7 @@ void mst(int n, Edges* edges, Edges* edgeso,int noe, int* mst)
 	int* C = createArr(n,0);
 	int* R = createArr(n,0);
 	int u,v;
-	printEdges(edges,noe);
+//	printEdges(edges,noe);
 qsort (edges, noe, sizeof(Edges), compareR);	
 cilk_for(int i=0;i<noe;i++)
 {
@@ -429,7 +426,7 @@ cilk_for(int i=0;i<noe;i++)
 edgeso[i].v = edges[i].v;
 edgeso[i].w = edges[i].w;
 }
-printEdges(edges,noe);
+//printEdges(edges,noe);
 	cilk_for(int v=1;v<n;v++)
 		L[v] = v;
 	bool F = noe>0?true:false;
@@ -443,8 +440,8 @@ printEdges(edges,noe);
 		{
 			C[v] = dis(gen);
 		}
-printf("head tail array");
-printArr(C,n);
+//printf("head tail array");
+//printArr(C,n);
 		par_PCW_RS(n,edges,noe,R);
 		cilk_for(int i=0;i<noe;i++)
 		{
@@ -458,16 +455,16 @@ printArr(C,n);
 			}
 
 		}
-printf("pcw array");
-printArr(L,n);
-printf("selected mst");
-printArr(mst,n);
+//printf("pcw array");
+//printArr(L,n);
+//printf("selected mst");
+//printArr(mst,n);
 		cilk_for(int i=0;i<noe;i++)
 		{
 			edges[i].u = L[edges[i].u];
 			edges[i].v = L[edges[i].v];
 		}
-printEdges(edges,noe);
+//printEdges(edges,noe);
 		F = false;
 		cilk_for(int i=0;i<noe;i++)
 		{
@@ -493,14 +490,14 @@ int n,noe;
 	for(int i=0;i<noe;i++)
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
 
-	printEdges(edgeso,noe);
+	//printEdges(edgeso,noe);
 //	int* R = createArr(n,0);
 //	par_PCW_RS(n,edges,noe,R);
 //	printArr(R,n);
 //	int* S = createArr(n,1,R,p);
 //parCountingRank(S,n,)
 	mst(n, edges,edgeso, noe, mstArr);
-printArr(mstArr,noe);
+//printArr(mstArr,noe);
 double cost = 0;
 
 cilk_for(int i=0;i<noe;i++)
@@ -509,7 +506,7 @@ cilk_for(int i=0;i<noe;i++)
 
 ofstream outFile (fileName+"-MST-sort-out"+".txt",ios::out);
 outFile<<cost<<endl;
-printEdges(edgeso,noe);
+//printEdges(edgeso,noe);
 for(int i=0;i<noe;i++)
 {
  if(mstArr[i]==1)
