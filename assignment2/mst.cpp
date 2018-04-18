@@ -480,8 +480,18 @@ edgeso[i].w = edges[i].w;
 }
 int main(int argc,char* argv[])
 {
-//	string fileName = atoi(argv[1]);
-string fileName = "inp";	
+	int filen = atoi(argv[1]);
+string filenames[] = {"dummy","s-skitter-in.txt",
+"com-amazon-in.txt",
+"com-friendster-in.txt",
+"com-orkut-in.txt",
+"roadNet-CA-in.txt",
+"roadNet-TX-in.txt",
+"ca-AstroPh-in.txt",
+"com-dblp-in.txt",
+"com-lj-in.txt",
+"roadNet-PA-in.txt"};
+string fileName = filenames[filen];	
 int n,noe;
 	scanf("%d %d",&n,&noe);
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);

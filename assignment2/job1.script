@@ -1,0 +1,44 @@
+#!/bin/bash
+#----------------------------------------------------
+# Sample Slurm job script
+#   for TACC Stampede2 KNL nodes
+#
+#   *** Serial Job on Normal Queue ***
+# 
+# Last revised: 20 Oct 2017
+#
+# Notes:
+#
+#   -- Copy/edit this script as desired.  Launch by executing
+#      "sbatch knl.serial.slurm" on a Stampede2 login node.
+#
+#   -- Serial codes run on a single node (upper case N = 1).
+#        A serial code ignores the value of lower case n,
+#        but slurm needs a plausible value to schedule the job.
+#
+#   -- For a good way to run multiple serial executables at the
+#        same time, execute "module load launcher" followed
+#        by "module help launcher".
+
+#----------------------------------------------------
+#!/bin/bash
+#SBATCH --job-name="s-skitter-in.txt"
+#SBATCH --output="s-skitter-in.txt.%j.%N.out"
+#SBATCH --partition=development
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=24
+#SBATCH --export=ALL
+#SBATCH -t 02:00:00
+#SBATCH --mail-user=sharma.krishna@stonybrook.edu
+#SBATCH --mail-type=all    # Send email at begin and end of job
+
+
+# Other commands must follow all #SBATCH directives...
+pwd
+date
+
+# Launch serial code...
+
+./our</work/01905/rezaul/CSE613/HW2/turn-in/ca-AstroPh-in.txt      # Do not use ibrun or any other MPI launcher
+
+# ---------------------------------------------------
