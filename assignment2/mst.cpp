@@ -262,7 +262,57 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 //free(jend,0);
 //free(ofset,0);
 }
+void parCountingRank1(int* S,int n,int d, int* r,int p)
+{
+	int buckets = pow(2,d)-1;
+//		int b = floor(log2(n))+1;
+		int **f = createArr2d(buckets+1,p+1);
+		int **r1 = createArr2d(buckets+1,p+1);
+		int *jstart =  createArr(p+1,0);
+		int *jend = createArr(p+1,0);
+		int *ofset = createArr(p+1,0);
+		int i=0,j=0;
+//#TODO cilk for
+		for(int i=1;i<=p;i++)
+		{
+			for(j=0;j<=buckets;j++)
+				f[j][i] = 0;
+			jstart[i] = (i-1)*ceil(n/p)+1;
+			jend[i] = (i<p)?(i*ceil(n/p)):n;
+			for(j=jstart[i];j<=jend[i];j++)
+				f[S[j-1]][i] = f[S[j-1]][i] +1;
+		}
 
+		for(j=0;j<=buckets;j++)
+			f[j] = parPrefixSum(f[j],p);
+		//TODO cilkfor
+		for(int i=1;i<=p;i++)
+		{
+			ofs[i] = 1;
+			for(j=0;j<=buckets;j++)
+			{
+				r1[j][i] = (i==1)?ofs[i]:(ofs[i]+f[j][i-1]);
+				ofs[i] = ofs[i]+f[j][p];
+			}
+			for(j=jstart[i];j<=jend[i];j++)
+			{
+				r[j-1] = r1[S[j-1]][i];
+				r1[S[j-1]][i] = r1[S[j-1]][i] + 1;
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+}
 int extractBitSegment(int value,int left, int right)
 {
 
@@ -428,7 +478,7 @@ edgeso[i].v = edges[i].v;
 edgeso[i].w = edges[i].w;
 }
 //printEdges(edges,noe);
-	cilk_for(int v=1;v<n;v++)
+	cilk_for(int v=0;v<n;v++)
 		L[v] = v;
 	bool F = noe>0?true:false;
 	std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -480,6 +530,24 @@ edgeso[i].w = edges[i].w;
 }
 int main(int argc,char* argv[])
 {
+	int n = atoi(argv[1]);
+		int p = __cilkrts_get_nworkers();
+		printf("PE=%d\n",p);
+		int b = floor(log2(n))+1;
+		printf("b=%d",b);
+		int *arr = createArr(n,1);
+		int *sarr = createArr(n,0);
+		printf("random array");
+		printArr(arr,n);
+		int* sorted = createArr(n,0);
+
+		parCountingRank(arr,n,b,sorted,p);
+
+		for(int i=0;i<n;i++)
+	                sarr[sorted[i]] = arr[i];
+		printArr(sarr,n);
+
+	/*
 	int filen = atoi(argv[1]);
 string filenames[] = {"dummy","s-skitter-in.txt",
 "com-amazon-in.txt",
@@ -528,7 +596,7 @@ for(int i=0;i<noe;i++)
 
 outFile.close();
 printf("cost=%lf",cost);
-printArr(mstArr,noe);
+printArr(mstArr,noe);*/
 	return 0;
 }
 
