@@ -14,7 +14,8 @@
 using namespace std;
 struct Edges
 {
-	int u,v,w;
+	int u,v;
+	double w;
 };
 inline int index(int rows, int cols, int m_width)
 {
@@ -198,7 +199,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	 * r - sorted array container
 	 * p - processing elements
 	 * */
-	printf("%d received p",p);
+//	printf("%d received p",p);
 	int buckets = pow(2,d)-1;
 	int b = floor(log2(n))+1;
 	int **f = createArr2d(buckets,p);
@@ -279,12 +280,12 @@ void parRadixSort(int* A, int n, int b)
 	int d = ceil( log2( n/( p*log2(n) ) ) );
 	int bucket_size = ceil((b-1)/d); //number of d-bit segments
 	int q = 0;
-	printf("\nbs=%d,d=%d,b=%d\n",bucket_size,d,b);
+//	printf("\nbs=%d,d=%d,b=%d\n",bucket_size,d,b);
 	if(bucket_size<=0)
 	{
 		parCountingRank(A,n,b, r,p);
-printf("recievd ranking causing sigsev");
-printArr(r,n);
+//printf("recievd ranking causing sigsev");
+//printArr(r,n);
 			cilk_for(int i=0;i<n;i++)
 				B[r[i]] = A[i];
 		cilk_for(int i=0;i<n;i++)
@@ -307,8 +308,8 @@ printArr(r,n);
 			A[i] = B[i];
 
 	}
-printf("inside function");
-printArr(A,n);
+//printf("inside function");
+//printArr(A,n);
 //	free(S,0);
 //	free(r,0);
 //	free(B,0);
@@ -321,7 +322,7 @@ void par_PCW_RS(int n, Edges* edges,int noe, int* R)
 //changed TODO
 	int k = ceil(log2(noe)) ;
 	int u,j;
-printf("k=%dbits for edges\n",k);
+//printf("k=%dbits for edges\n",k);
 //TODO cilk for
 	cilk_for(int i=0;i<noe;i++)
 		A[i] = (edges[i].u<<k)+i;
@@ -340,8 +341,8 @@ printf("k=%dbits for edges\n",k);
 			R[u] = j;
 		}
 	}
-printf("pcw");
-printArr(R,n);
+//printf("pcw");
+//printArr(R,n);
 }
 //struct Edges
 //{
@@ -350,7 +351,7 @@ printArr(R,n);
 void printEdges(Edges* edges,int size)
 {
 	for(int i=0;i<size;i++)
-		printf("\nu=%d v=%d w=%d\n",edges[i].u,edges[i].v,edges[i].w);
+		printf("\nu=%d v=%d w=%lf\n",edges[i].u,edges[i].v,edges[i].w);
 
 }
 int parPartition(int* arr,int q, int r, int x){
@@ -488,7 +489,7 @@ int n,noe;
 	Edges* edgeso = new Edges[noe];
 	int* mstArr = createArr(noe,0);
 	for(int i=0;i<noe;i++)
-		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
+		scanf("%d %d %lf",&edges[i].u,&edges[i].v,&edges[i].w);
 
 	//printEdges(edgeso,noe);
 //	int* R = createArr(n,0);
