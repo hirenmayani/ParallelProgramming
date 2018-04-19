@@ -1,5 +1,5 @@
 
-//#include "PcwRad.h"
+//./our 6 1 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-TX-in.txt
 #include<math.h>
 #include<math.h>
 #include<stdio.h>
@@ -168,7 +168,7 @@ int* parPrefixSum(int* x,int n){
 
 			int nb2 = int(n/2);
 			//TODO
-			cilk_for(int i=0; i <nb2;i++){
+		cilk_for(int i=0; i <nb2;i++){
 //				printf(" %d ",(2*i+1));
 				y[i]=x[2*i+1]+x[2*i];
 			}
@@ -201,19 +201,20 @@ void parCW_BS(int n, Edges* E,int noe, int* R)
 	int* md = createArr(n,0);
 
 	int ks = ceil(log2(noe)) + 1;
-
+#pragma cilk grainsize = 1
 	cilk_for(int u=0;u<n;u++){
 		l[u]=0;
 		h[u]=noe-1;
 	}
 
 	for(int k=0;k<ks;k++){
+#pragma cilk grainsize = 1
 		cilk_for(int u=0;u<n;u++){
 			B[u]=0;
 			lo[u]= l[u];
 			hi[u]=h[u];
 		}
-
+#pragma cilk grainsize = 1
 		cilk_for(int i=0;i<noe;i++){
 			int u = E[i].u;
 			md[u] = int(floor((lo[u]+hi[u])/2));
@@ -221,6 +222,7 @@ void parCW_BS(int n, Edges* E,int noe, int* R)
 				B[u]=1;
 			}
 		}
+#pragma cilk grainsize = 1
 
 		cilk_for(int i=0;i<noe;i++){
 			int u = E[i].u;
@@ -233,6 +235,7 @@ void parCW_BS(int n, Edges* E,int noe, int* R)
 		}
 
 	}
+#pragma cilk grainsize = 1
                 cilk_for(int i=0;i<noe;i++){
                         int u = E[i].u;
                         if (i == l[u]){
@@ -240,6 +243,12 @@ void parCW_BS(int n, Edges* E,int noe, int* R)
                         }
                 }
 
+free(B,n);
+free(l,n);
+free(h,n);
+free(lo,n);
+free(hi,n);
+free(md,n);
 }
 
 
@@ -515,6 +524,7 @@ void mst(int n, Edges* edges, Edges* edgeso,int noe, int* mst)
 	int u1,v1;
 //	printEdges(edges,noe);
 qsort (edges, noe, sizeof(Edges), compareR);	
+#pragma cilk grainsize = 1
 cilk_for(int i=0;i<noe;i++)
 {
  edgeso[i].u = edges[i].u;
@@ -522,6 +532,7 @@ edgeso[i].v = edges[i].v;
 edgeso[i].w = edges[i].w;
 }
 //printEdges(edges,noe);
+#pragma cilk grainsize = 1
 	cilk_for(int v=0;v<n;v++)
 		L[v] = v;
 	bool F = noe>0?true:false;
@@ -531,6 +542,7 @@ edgeso[i].w = edges[i].w;
 
 	while(F)
 	{
+#pragma cilk grainsize = 1
 		cilk_for(int v=0;v<n;v++)
 		{
 			C[v] = dis(gen);
@@ -539,6 +551,7 @@ edgeso[i].w = edges[i].w;
 //printArr(C,n);
 //		par_PCW_RS(n,edges,noe,R);
 		parCW_BS(n,edges,noe,R);
+#pragma cilk grainsize = 1
 		cilk_for(int i=0;i<noe;i++)
 		{
 			u1 = edges[i].u;
@@ -555,6 +568,7 @@ edgeso[i].w = edges[i].w;
 //printArr(L,n);
 //printf("selected mst");
 //printArr(mst,n);
+#pragma cilk grainsize = 1
 		cilk_for(int i=0;i<noe;i++)
 		{
 			edges[i].u = L[edges[i].u];
@@ -562,6 +576,7 @@ edgeso[i].w = edges[i].w;
 		}
 //printEdges(edges,noe);
 		F = false;
+#pragma cilk grainsize = 1
 		cilk_for(int i=0;i<noe;i++)
 		{
 			if(edges[i].u!=edges[i].v)
