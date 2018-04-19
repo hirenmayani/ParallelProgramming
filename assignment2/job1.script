@@ -38,7 +38,6 @@ pwd
 date
 
 # Launch serial code...
-
-./our</work/01905/rezaul/CSE613/HW2/turn-in/ca-AstroPh-in.txt      # Do not use ibrun or any other MPI launcher
+./our 6 1 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-TX-in.txt
 
 # ---------------------------------------------------

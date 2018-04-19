@@ -567,7 +567,7 @@ edgeso[i].w = edges[i].w;
 //printf("pcw array");
 //printArr(L,n);
 //printf("selected mst");
-//printArr(mst,n);
+printArr(mst,10);
 #pragma cilk grainsize = 1
 		cilk_for(int i=0;i<noe;i++)
 		{
