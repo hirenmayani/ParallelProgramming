@@ -17,6 +17,7 @@ struct Edges
 	int u,v;
 	double w;
 };
+
 inline int index(int rows, int cols, int m_width)
 {
 	 return cols + m_width * rows;
@@ -189,6 +190,58 @@ int* parPrefixSum(int* x,int n){
 		return s;
 }
 
+void parCW_BS(int n, Edges* E,int noe, int* R)
+{
+	//noe = number of edges
+	int* B = createArr(n,0);
+	int* l = createArr(n,0);
+	int* h = createArr(n,0);
+	int* lo = createArr(n,0);
+	int* hi = createArr(n,0);
+	int* md = createArr(n,0);
+
+	int ks = ceil(log2(noe)) + 1;
+
+	cilk_for(int u=0;u<n;u++){
+		l[u]=0;
+		h[u]=noe-1;
+	}
+
+	for(int k=0;k<ks;k++){
+		cilk_for(int u=0;u<n;u++){
+			B[u]=0;
+			lo[u]= l[u];
+			hi[u]=h[u];
+		}
+
+		cilk_for(int i=0;i<noe;i++){
+			int u = E[i].u;
+			md[u] = int(floor((lo[u]+hi[u])/2));
+			if (i>=lo[u] and i<= md[u]){
+				B[u]=1;
+			}
+		}
+
+		cilk_for(int i=0;i<noe;i++){
+			int u = E[i].u;
+			md[u] = int(floor((lo[u]+hi[u])/2));
+			if (B[u]== 1 and i>=lo[u] and i<= md[u]){
+				h[u] = md[u];
+			}else if(B[u]== 0 and i<= hi[u] and i> md[u]){
+				l[u] = md[u]+1;
+			}
+		}
+
+	}
+                cilk_for(int i=0;i<noe;i++){
+                        int u = E[i].u;
+                        if (i == l[u]){
+                                R[u]=i;
+                        }
+                }
+
+}
+
 
 void parCountingRank(int* S,int n,int d, int* r,int p)
 {
@@ -270,7 +323,7 @@ void parCountingRank1(int* S,int n,int d, int* r,int p)
 		int **r1 = createArr2d(buckets+1,p+1);
 		int *jstart =  createArr(p+1,0);
 		int *jend = createArr(p+1,0);
-		int *ofset = createArr(p+1,0);
+		int *ofs = createArr(p+1,0);
 		int i=0,j=0;
 //#TODO cilk for
 		for(int i=1;i<=p;i++)
@@ -300,15 +353,6 @@ void parCountingRank1(int* S,int n,int d, int* r,int p)
 				r1[S[j-1]][i] = r1[S[j-1]][i] + 1;
 			}
 		}
-
-
-
-
-
-
-
-
-
 
 
 
@@ -493,7 +537,8 @@ edgeso[i].w = edges[i].w;
 		}
 //printf("head tail array");
 //printArr(C,n);
-		par_PCW_RS(n,edges,noe,R);
+//		par_PCW_RS(n,edges,noe,R);
+		parCW_BS(n,edges,noe,R);
 		cilk_for(int i=0;i<noe;i++)
 		{
 			u = edges[i].u;
@@ -530,7 +575,7 @@ edgeso[i].w = edges[i].w;
 }
 int main(int argc,char* argv[])
 {
-	int n = atoi(argv[1]);
+	/*int n = atoi(argv[1]);
 		int p = __cilkrts_get_nworkers();
 		printf("PE=%d\n",p);
 		int b = floor(log2(n))+1;
@@ -541,14 +586,15 @@ int main(int argc,char* argv[])
 		printArr(arr,n);
 		int* sorted = createArr(n,0);
 
-		parCountingRank(arr,n,b,sorted,p);
+		parCountingRank1(arr,n,b,sorted,p);
 
 		for(int i=0;i<n;i++)
 	                sarr[sorted[i]] = arr[i];
 		printArr(sarr,n);
-
-	/*
+*/
+printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
 	int filen = atoi(argv[1]);
+	int mode = atoi(argv[2]);//mode - 0 radix sort mode-1 binary search;
 string filenames[] = {"dummy","s-skitter-in.txt",
 "com-amazon-in.txt",
 "com-friendster-in.txt",
@@ -582,8 +628,10 @@ double cost = 0;
 cilk_for(int i=0;i<noe;i++)
  if(mstArr[i]==1)
  	cost += edges[i].w;
-
-ofstream outFile (fileName+"-MST-sort-out"+".txt",ios::out);
+if(mode == 0)
+	ofstream outFile (fileName+"-MST-sort-out.txt",ios::out);
+else
+	ofstream outFile (fileName+"-MST-search-out.txt",ios::out);
 outFile<<cost<<endl;
 //printEdges(edgeso,noe);
 for(int i=0;i<noe;i++)
@@ -596,7 +644,7 @@ for(int i=0;i<noe;i++)
 
 outFile.close();
 printf("cost=%lf",cost);
-printArr(mstArr,noe);*/
+printArr(mstArr,noe);
 	return 0;
 }
 
