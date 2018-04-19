@@ -512,7 +512,7 @@ void mst(int n, Edges* edges, Edges* edgeso,int noe, int* mst)
 	int* L = createArr(n,0);
 	int* C = createArr(n,0);
 	int* R = createArr(n,0);
-	int u,v;
+	int u1,v1;
 //	printEdges(edges,noe);
 qsort (edges, noe, sizeof(Edges), compareR);	
 cilk_for(int i=0;i<noe;i++)
@@ -541,12 +541,12 @@ edgeso[i].w = edges[i].w;
 		parCW_BS(n,edges,noe,R);
 		cilk_for(int i=0;i<noe;i++)
 		{
-			u = edges[i].u;
-			v = edges[i].v;
+			u1 = edges[i].u;
+			v1 = edges[i].v;
 			//tails - 1
-			if( C[u] == 1 && C[v] == 2 && R[u] == i)
+			if( C[u1] == 1 && C[v1] == 2 && R[u1] == i)
 			{
-				L[u] = v;
+				L[u1] = v1;
 				mst[i] = 1;
 			}
 
@@ -628,6 +628,7 @@ double cost = 0;
 cilk_for(int i=0;i<noe;i++)
  if(mstArr[i]==1)
  	cost += edges[i].w;
+ofstream outFile("");
 if(mode == 0)
 	ofstream outFile (fileName+"-MST-sort-out.txt",ios::out);
 else
