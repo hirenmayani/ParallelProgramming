@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<math.h>
+#include <cilk/reducer_opadd.h>
 
 int compare (const void * a, const void * b)
 {
@@ -150,21 +151,38 @@ int parPartition(int* arr,int q, int r, int x){
 	lt = parPrefixSum(lt,n);
 	gt = parPrefixSum(gt,n);
 
-	int k = q + lt[n-1];
-	arr[k] = x;
+	int dup = 0 ;
+	cilk::reducer< cilk::op_add<unsigned long> > sum;
 
+	cilk_for(int i=0;i<n;i++){
+		if(arr[q+i]==x){
+			*sum+=1;
+		//dup+=1;	
+		}
+	}
+	dup  = sum.get_value();
+	//printf("%d - %d \n",x,dup);
+	int k = q + lt[n-1];
+	//arr[k] = x;
+	cilk_for (int i=0;i<dup;i++){
+	arr[k+i] = x;
+	}
 	cilk_for(int i=0;i<n;i++){
 		if (b[i]<x)
 			arr[q+lt[i]-1] = b[i];
 		else if(b[i]>x)
-			arr[k+gt[i]] = b[i];
+			arr[dup+k+gt[i]-1] = b[i];
+			
 	}
+	free(lt);
+	free(gt);
+	free(b);
 	return k;
 }
 
 void parQuick(int* arr,int q, int r){
 	int n = r-q+1;
-	if (n <= 3){
+	if (n <= 30){
 		qsort (arr+q, n, sizeof(int), compare);
 
 	}else{
@@ -189,12 +207,14 @@ bool samearr(int* arr,int* arr1,int n){
 }
 
 int main(int argc,char* argv[]){
-	  int n = atoi(argv[1]);
-//	  int n = 4;
+	  int nr = atoi(argv[1]);
+	  int n = pow(2,nr);
+	//  int n = 8;
 
 //	  for (n=2;n<200;n++){
 	  int *arr;
 	  arr = createArr(n,1);
+	  /*
 	  int *arr1;
 	  arr1 = createArr(n,0);
 	  int *y;
@@ -203,16 +223,17 @@ int main(int argc,char* argv[]){
 	  z = createArr(n, 0);
 	  int *s;
 	  s = createArr(n, 0);
-
-	  printf("\nbefore sorting\n");
-	  printArr(arr,n);
+*/
+	  //printf("\nbefore sorting\n");
+	  //printArr(arr,n);
 
 	  parQuick(arr,0,n-1);
-	  printf("\nafter sorting\n");
-	  printArr(arr,n);
+	  //printf("\nafter sorting\n");
+	  //printArr(arr,n);
 
-
+//	printf("end");
 /*
+
 		  PrefixSum(arr, n);
 	  	  printArr(arr, n);
 		  s  = parPrefixSum(arr,n);
@@ -223,6 +244,8 @@ int main(int argc,char* argv[]){
 			  printf("\n..................... yey................... \n");
 		  else
 			  printf("\n..................... ney................... \n");
+
 // 	  }
+	free(arr);
 	  return 0;
 }

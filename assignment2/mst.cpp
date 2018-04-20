@@ -198,7 +198,7 @@ void parCountingRank(int* S,int n,int d, int* r,int p)
 	 * r - sorted array container
 	 * p - processing elements
 	 * */
-	printf("%d received p",p);
+//	printf("%d received p",p);
 	int buckets = pow(2,d)-1;
 	int b = floor(log2(n))+1;
 	int **f = createArr2d(buckets,p);
@@ -279,12 +279,12 @@ void parRadixSort(int* A, int n, int b)
 	int d = ceil( log2( n/( p*log2(n) ) ) );
 	int bucket_size = ceil((b-1)/d); //number of d-bit segments
 	int q = 0;
-	printf("\nbs=%d,d=%d,b=%d\n",bucket_size,d,b);
+//	printf("\nbs=%d,d=%d,b=%d\n",bucket_size,d,b);
 	if(bucket_size<=0)
 	{
 		parCountingRank(A,n,b, r,p);
-printf("recievd ranking causing sigsev");
-printArr(r,n);
+//printf("recievd ranking causing sigsev");
+//printArr(r,n);
 			cilk_for(int i=0;i<n;i++)
 				B[r[i]] = A[i];
 		cilk_for(int i=0;i<n;i++)
@@ -307,8 +307,8 @@ printArr(r,n);
 			A[i] = B[i];
 
 	}
-printf("inside function");
-printArr(A,n);
+//printf("inside function");
+//printArr(A,n);
 //	free(S,0);
 //	free(r,0);
 //	free(B,0);
@@ -321,7 +321,7 @@ void par_PCW_RS(int n, Edges* edges,int noe, int* R)
 //changed TODO
 	int k = ceil(log2(noe)) ;
 	int u,j;
-printf("k=%dbits for edges\n",k);
+//printf("k=%dbits for edges\n",k);
 //TODO cilk for
 	cilk_for(int i=0;i<noe;i++)
 		A[i] = (edges[i].u<<k)+i;
@@ -340,8 +340,8 @@ printf("k=%dbits for edges\n",k);
 			R[u] = j;
 		}
 	}
-printf("pcw");
-printArr(R,n);
+//printf("pcw");
+//printArr(R,n);
 }
 //struct Edges
 //{
@@ -417,7 +417,7 @@ void mst(int n, Edges* edges, Edges* edgeso,int noe, int* mst)
 	int* L = createArr(n,0);
 	int* C = createArr(n,0);
 	int* R = createArr(n,0);
-	int u,v;
+//	int u,v;
 //	printEdges(edges,noe);
 qsort (edges, noe, sizeof(Edges), compareR);	
 cilk_for(int i=0;i<noe;i++)
@@ -445,8 +445,8 @@ edgeso[i].w = edges[i].w;
 		par_PCW_RS(n,edges,noe,R);
 		cilk_for(int i=0;i<noe;i++)
 		{
-			u = edges[i].u;
-			v = edges[i].v;
+			int u = edges[i].u;
+			int v = edges[i].v;
 			//tails - 1
 			if( C[u] == 1 && C[v] == 2 && R[u] == i)
 			{
@@ -480,7 +480,7 @@ edgeso[i].w = edges[i].w;
 int main(int argc,char* argv[])
 {
 //	string fileName = atoi(argv[1]);
-string fileName = "inp";	
+string fileName = "as-skitter-in";	
 int n,noe;
 	scanf("%d %d",&n,&noe);
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
@@ -488,8 +488,11 @@ int n,noe;
 	Edges* edgeso = new Edges[noe];
 	int* mstArr = createArr(noe,0);
 	for(int i=0;i<noe;i++)
+{
 		scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
-
+edges[i].u = edges[i].u-1;
+edges[i].v = edges[i].v-1;
+}
 	//printEdges(edgeso,noe);
 //	int* R = createArr(n,0);
 //	par_PCW_RS(n,edges,noe,R);
