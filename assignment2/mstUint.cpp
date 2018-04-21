@@ -585,8 +585,8 @@ count+=1;
 		}
 printf("head tail array");
 printArr(C,30);
-//		par_PCW_RS(n,edges,noe,R);
-	parCW_BS(n,edges,noe,R);
+	par_PCW_RS(n,edges,noe,R);
+	//parCW_BS(n,edges,noe,R);
 //printArr(R,noe);
 //printf("ranking");
 #pragma cilk grainsize = 1
