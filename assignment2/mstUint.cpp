@@ -13,6 +13,7 @@
 #include<string>
 #include<stdint.h>
 using namespace std;
+typedef uint64_t int;
 struct Edges
 {
 	int u,v;

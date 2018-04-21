@@ -553,19 +553,17 @@ edgeso[i].w = edges[i].w;
 	bool F = noe>0?true:false;
 	std::random_device rd;
     	std::mt19937 gen(rd());
-    	std::bernoulli_distribution dis(0.5);
+    	std::bernoulli_distribution dis(0.6);
 bool head = true, tail = false;	
 while(F)
 	{
-printf("%d",count);
+printf("%d ",count);
 count+=1;
 #pragma cilk grainsize = 1
 		cilk_for(int v=0;v<n;v++)
 		{
 			C[v] = dis(gen);
 		}
-//printf("head tail array");
-//printArr(C,n);
 //		par_PCW_RS(n,edges,noe,R);
 	parCW_BS(n,edges,noe,R);
 //printArr(R,noe);
@@ -573,9 +571,11 @@ count+=1;
 #pragma cilk grainsize = 1
 		cilk_for(int i=0;i<noe;i++)
 		{
-			u1 = edges[i].u;
+			u1 = edges[i].u;   
 			v1 = edges[i].v;
 			//tails - 1
+			if(u1==(n+1)||v1==(n+1))
+			   continue;
 			if( C[u1] == tail && C[v1] == head && R[u1] == i)
 			{
 				//printf("\ninside if setting u=%d and v=%d",u1,v1);
@@ -594,15 +594,17 @@ count+=1;
 #pragma cilk grainsize = 1
 		cilk_for(int i=0;i<noe;i++)
 		{
-			if(edges[i].u!=edges[i].v)
+			if(edges[i].u == n+1 || edges[i].v == n+1)
+				continue;
+			if(L[edges[i].u]!=L[edges[i].v])
 			{
 				edges[i].u = L[edges[i].u];
 				edges[i].v = L[edges[i].v];
 			}
 				else
 			{
-				edges[i].u = n;
-                                edges[i].v = n;
+				edges[i].u = n+1;
+                                edges[i].v = n+1;
 				}
 		}
 //printEdges(edges,noe);
@@ -613,14 +615,15 @@ count = 0;
 //printf("after");
 //printArr(L,n);
 #pragma cilk grainsize = 1
-	cilk_for(int i=0;i<noe;i++)
+	for(int i=0;i<noe;i++)
 		{
 			if(edges[i].u!=edges[i].v)
 			{
 				F = true;
-			//	count += 1;
+				count += 1;
 				}
 		}
+//printf("\nnoe=%d",count);
 /*if(count>cp)
 {
 	printf("number of edges increased");
@@ -636,6 +639,7 @@ count = 0;
 }
 int main(int argc,char* argv[])
 {
+/*
 int n = atoi(argv[1]);
 __cilkrts_set_param("nworkers","64");
 		int p = __cilkrts_get_nworkers();
@@ -653,7 +657,7 @@ printArr(sorted,n);
 		for(int i=0;i<n;i++)
 	                sarr[sorted[i]] = arr[i];
 		printArr(sarr,n);
-/*
+*/
 __cilkrts_set_param("nworkers","64");
 printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
 	int filen = atoi(argv[1]);
@@ -712,7 +716,7 @@ for(int i=0;i<noe;i++)
 
 outFile.close();
 printf("cost=%lf",cost);
-printArr(mstArr,noe);*/
+printArr(mstArr,noe);
 	return 0;
 }
 
