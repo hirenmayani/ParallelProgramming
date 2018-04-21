@@ -685,7 +685,7 @@ else
 	printf("\n...ney....\n");
 //printArr(sarr,n);
 //*/
-/*
+
 __cilkrts_set_param("nworkers","64");
 printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
 	int filen = atoi(argv[1]);
@@ -701,29 +701,29 @@ string filenames[] = {"dummy","s-skitter-in.txt",
 "com-lj-in.txt",
 "roadNet-PA-in.txt"};
 string fileName = filenames[filen];	
-int n,noe;
+uint64_t n,noe;
 	scanf("%d %d",&n,&noe);
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
 	Edges* edges = new Edges[noe];
 	Edges* edgeso = new Edges[noe];
-	int* mstArr = createArr(noe,0);
-	for(int i=0;i<noe;i++)
+	uint64_t* mstArr = createArr(noe,0);
+	for(uint64_t i=0;i<noe;i++)
 	{	
 		scanf("%d %d %lf",&edges[i].u,&edges[i].v,&edges[i].w);
 		edges[i].u = edges[i].u-1;
 		edges[i].v = edges[i].v-1;
 		}	
 	//printEdges(edgeso,noe);
-//	int* R = createArr(n,0);
+//	uint64_t* R = createArr(n,0);
 //	par_PCW_RS(n,edges,noe,R);
 //	printArr(R,n);
-//	int* S = createArr(n,1,R,p);
+//	uint64_t* S = createArr(n,1,R,p);
 //parCountingRank(S,n,)
 	mst(n, edges,edgeso, noe, mstArr);
 //printArr(mstArr,noe);
 double cost = 0;
 
-cilk_for(int i=0;i<noe;i++)
+cilk_for(uint64_t i=0;i<noe;i++)
  if(mstArr[i]==1)
  	cost += edges[i].w;
 printf("\n making out file");
@@ -734,7 +734,7 @@ else
 	ofstream outFile (fileName+"-MST-search-out.txt",ios::out);
 outFile<<cost<<endl;
 //printEdges(edgeso,noe);
-for(int i=0;i<noe;i++)
+for(uint64_t i=0;i<noe;i++)
 {
  if(mstArr[i]==1)
  {
@@ -745,7 +745,7 @@ for(int i=0;i<noe;i++)
 outFile.close();
 printf("cost=%lf",cost);
 printArr(mstArr,noe);
-*/
+
 	return 0;
 }
 
