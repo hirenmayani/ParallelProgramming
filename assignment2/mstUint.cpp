@@ -45,6 +45,20 @@ bool arraySortedOrNot(int* arr, int n)
         }
     return true;
 }
+
+bool uarraySortedOrNot(uint64_t * arr, int n)
+{
+    if (n == 0 || n == 1)
+        return true;
+    printf("checking");
+    for (int i = 1; i < n; i++)
+        if (arr[i-1] > arr[i]){
+                        printf("%d %d %d",i, arr[i-1],arr[i]);
+            return false;
+        }
+    return true;
+}
+
 void free(uint64_t ** matrix,uint64_t  row)
 {
 	for( uint64_t  i = 0 ; i < row ; i++ )
@@ -278,59 +292,56 @@ void parCountingRank(uint64_t * S,uint64_t  n,uint64_t  d, uint64_t * r,uint64_t
 	uint64_t  *jstart =  createArr(p,0);
 	uint64_t  *jend = createArr(p,0);
 	uint64_t  *ofset = createArr(p,0);
-	uint64_t  i=0,j=0;
+	uint64_t  i=0;
 
 	//TODO cilk_for
 	cilk_for(uint64_t  i=0;i<p;i++)
 	{
-		for(j=0;j<buckets;j++)
-//			f[index(j, i, buckets)] = 0;
+		for(uint64_t j=0;j<buckets;j++)
 			f[j][i] = 0;
-		//if(i==0)
-		//	jstart[i] = 0;
-		//else
-			jstart[i] = (i)*floor(n*1.0/p);
+		jstart[i] = (i)*floor(n*1.0/p);
 		jend[i] = (i+1<p)?(((i+1)*floor(n*1.0/p))-1):(n-1);
-		for(j=jstart[i];j<=jend[i];j++)
-//			f[index(S[j], i, buckets)] = f[index(S[j], i, buckets)] + 1;
+		for(uint64_t j=jstart[i];j<=jend[i];j++)
 			f[S[j]][i] = f[S[j]][i] + 1;
-		//TODO sync
-//		cilk_sync;
 	}
-printArr(jstart,p);
-printArr(jend,p);
-	for(j=0;j<buckets;j++)
+//uint64_t j =0;
+//printArr(jstart,p);
+//printArr(jend,p);
+//printMat(f,8,p);
+	for(uint64_t j=0;j<buckets;j++)
 	{
 //				printf("j=%d  \n",j);
 //				printArr(f[j],p);
 				f[j] = parPrefixSum(f[j],p);
 //				 printArr(f[j],p);
 			}	
-printMat(f,buckets,p);
+//printMat(f,4,p);
 	//TODO cilk
-for(uint64_t  i=0;i<p;i++)
-	{
+	#pragma cilk grainsize = 1
+	cilk_for(uint64_t  i=0;i<p;i++)
+		{
 		ofset[i] = 0;
-		for(j=0;j<buckets;j++)
+		for(uint64_t j=0;j<buckets;j++)
 		{
 			r1[j][i] = (i==0)?(ofset[i]):(ofset[i] + f[j][i-1]);
 			ofset[i] = ofset[i] + f[j][p-1];
-		}
-		for(j=jstart[i];j<=jend[i];j++)
+	//	printf(" %d ",ofset[i]);		
+}
+		for(uint64_t j=jstart[i];j<=jend[i];j++)
 		{
 			r[j] = r1[S[j]][i];
 			r1[S[j]][i] = r1[S[j]][i] + 1 ;
 		}
+ //printArr(ofset,p);
 
 	}
-printArr(ofset,p);
-printMat(f,buckets,p);
+//printArr(ofset,p);
 
 free(f,buckets);
 free(r1,buckets);
-free(jstart,0);
-free(jend,0);
-free(ofset,0);
+free(jstart,p);
+free(jend,p);
+free(ofset,p);
 }
 void parCountingRank1(uint64_t * S,uint64_t  n,uint64_t  d, uint64_t * r,uint64_t  p)
 {
@@ -465,6 +476,7 @@ void printEdges(Edges* edges,uint64_t  size)
 		printf("\nu=%d v=%d w=%lf\n",edges[i].u,edges[i].v,edges[i].w);
 
 }
+/*
 int parPartition(int* arr,int q, int r, int x){
 	int n = r-q+1;
 	if(n==1){
@@ -523,7 +535,7 @@ void parQuick(int* arr,int q, int r){
 		cilk_sync;
 	}
 }
-
+*/
 void mst(uint64_t n, Edges* edges, Edges* edgeso,uint64_t noe, uint64_t* mst)
 {
 	uint64_t* L = createArr(n+1,0);
@@ -647,23 +659,31 @@ printf("\nnoe=%d",count);
 int main(int argc,char* argv[])
 {
 ///*
-int n = atoi(argv[1]);
+uint64_t r = atoi(argv[1]);
+uint64_t n = pow(2,r);
 __cilkrts_set_param("nworkers","64");
 		int p = __cilkrts_get_nworkers();
+		//p =4;
 		printf("PE=%d\n",p);
-		uint64_t b = floor(log2(n))+1;
+		uint64_t b = floor(log2(n));
 		printf("b=%d",b);
 		uint64_t *arr = createArr(n,1);
 		uint64_t *sarr = createArr(n,0);
-		printf("random array");
-		printArr(arr,n);
+		//printf("random array");
+		//printArr(arr,n);
 		uint64_t* sorted = createArr(n,0);
 
 		parCountingRank(arr,n,b,sorted,p);
-printArr(sorted,n);
+//printArr(sorted,n);
 		for(uint64_t i=0;i<n;i++)
 	                sarr[sorted[i]] = arr[i];
-		printArr(sarr,n);
+		
+if (uarraySortedOrNot(sarr, n))
+
+	printf("\n...yey...\n");
+else
+	printf("\n...ney....\n");
+//printArr(sarr,n);
 //*/
 /*
 __cilkrts_set_param("nworkers","64");
