@@ -414,7 +414,7 @@ void parRadixSort(uint64_t * A, uint64_t  n, uint64_t  b)
 				A[i] = B[i];
 		return;
 	}
-	for(uint64_t  k=0;k<bucket_size;k++)
+	for(uint64_t  k=0;k<bucket_size;k+=d)
 	{
 		q = (k+d<=b)?d:b-k;
 	    cilk_for(uint64_t  i=0;i<n;i++)
@@ -672,12 +672,12 @@ __cilkrts_set_param("nworkers","64");
 		//printf("random array");
 		//printArr(arr,n);
 		uint64_t* sorted = createArr(n,0);
-
-		parCountingRank(arr,n,b,sorted,p);
+parRadixSort(arr,n,r);
+	//	parCountingRank(arr,n,b,sorted,p);
 //printArr(sorted,n);
-		for(uint64_t i=0;i<n;i++)
+	/*	for(uint64_t i=0;i<n;i++)
 	                sarr[sorted[i]] = arr[i];
-		
+	*/	
 if (uarraySortedOrNot(sarr, n))
 
 	printf("\n...yey...\n");
