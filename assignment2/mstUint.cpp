@@ -20,6 +20,96 @@ struct Edges
 	double w;
 };
 
+int parPartition( Edges* arr,int q, int r, Edges x){
+	int n = r-q+1;
+	if(n==1){
+		return q;
+	}
+
+	Edges* b;
+	int* lt;
+	int* gt;
+	b = createArr(n, 0);
+	lt = createArr(n, 0);
+	gt = createArr(n, 0);
+
+	cilk_for(int i=0;i<n;i++){
+		b[i] = arr[q+i];
+		if (b[i].w<x.w){
+			lt[i] = 1;
+		}else{
+			lt[i] = 0;
+		}
+
+		if (b[i].w>x.w){
+			gt[i] = 1;
+		}else{
+			gt[i] = 0;
+		}
+	}
+
+	lt = parPrefixSum(lt,n);
+	gt = parPrefixSum(gt,n);
+
+	int dup = 0 ;
+	cilk::reducer< cilk::op_add<unsigned long> > sum;
+
+	cilk_for(int i=0;i<n;i++){
+		if(arr[q+i].w==x){
+			*sum+=1;
+		}
+	}
+	dup  = sum.get_value();
+	int k = q + lt[n-1];
+	cilk_for (int i=0;i<dup;i++){
+	arr[k+i] = x;
+	}
+	cilk_for(int i=0;i<n;i++){
+		if (b[i].w<x.w)
+			arr[q+lt[i]-1] = b[i];
+		else if(b[i].w>x.w)
+			arr[dup+k+gt[i]-1] = b[i];
+
+	}
+	free(lt);
+	free(gt);
+	free(b);
+	return k;
+}
+
+void isort( Edges* arr, int q, int n)
+{
+int i, j;
+Edge key;
+   for (i = 1; i < n; i++)
+   {
+       key = arr[q+i];
+       j = i-1;
+
+       while (j >= 0 && arr[q+j].w > key.w)
+       {
+           arr[q+j+1] = arr[q+j];
+           j = j-1;
+       }
+       arr[q+j+1] = key;
+   }
+}
+
+void parQuick(Edges* arr,int q, int r, int m){
+	int n = r-q+1;
+	if (n <= m){
+		isort(arr,q,n);
+	}else{
+		int pI = rand()%(r+1-q)+q;
+		Edges x = arr[pI];
+		int k = parPartition(arr, q, r, x);
+
+		cilk_spawn parQuick(arr, q, k-1, m);
+		parQuick(arr, k+1, r, m);
+		cilk_sync;
+	}
+}
+
 int compareR (const void * a, const void * b)
 {
   return ( ((Edges*)a)->w - ((Edges*)b)->w );
@@ -318,10 +408,9 @@ void parRadixSort(uint64_t * A, uint64_t  n, uint64_t  b)
 	if(bucket_size<=0)
 	{
 		parCountingRank(A,n,b, r,p);
-//printf("recievd ranking causing sigsev");
-//printArr(r,n);
-			cilk_for(uint64_t  i=0;i<n;i++)
-				B[r[i]] = A[i];
+		cilk_for(uint64_t  i=0;i<n;i++)
+			B[r[i]] = A[i];
+
 		cilk_for(uint64_t  i=0;i<n;i++)
 				A[i] = B[i];
 		return;
@@ -375,6 +464,11 @@ void printEdges(Edges* edges,uint64_t  size)
 		printf("\nu=%d v=%d w=%lf\n",edges[i].u,edges[i].v,edges[i].w);
 
 }
+
+void qsort(Edges* edges, uint64_t noe){
+	parQuick(edges,0,noe-1, 12);
+}
+
 void mst(uint64_t n, Edges* edges, Edges* edgeso,uint64_t noe, uint64_t* mst)
 {
 	uint64_t* L = createArr(n,0);
@@ -383,7 +477,8 @@ void mst(uint64_t n, Edges* edges, Edges* edgeso,uint64_t noe, uint64_t* mst)
 	uint64_t u1,v1;
 	uint64_t count = noe;
 
-qsort (edges, noe, sizeof(Edges), compareR);	
+	qsort(edges,noe);
+//qsort (edges, noe, sizeof(Edges), compareR);
 
 #pragma cilk grainsize = 1
 cilk_for(uint64_t i=0;i<noe;i++)
@@ -481,14 +576,17 @@ string filenames[] = {"dummy","as-skitter-in.txt",
 "com-dblp-in.txt",
 "com-lj-in.txt",
 "roadNet-PA-in.txt"};
+
 string fileName = filenames[filen];	
-uint64_t n,noe,noeo;
+
+	uint64_t n,noe,noeo;
 	scanf("%d %d",&n,&noeo);
 	noe =noeo*2;
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
 	Edges* edges = new Edges[noe];
 	Edges* edgeso = new Edges[noe];
 	uint64_t* mstArr = createArr(noe,0);
+
 	for(uint64_t i=0;i<noeo;i+=1)
 	{	
 
