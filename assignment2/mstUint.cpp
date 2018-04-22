@@ -227,12 +227,12 @@ void parCW_BS(uint64_t  n, Edges* E,uint64_t  noe, uint64_t * R)
                         }
                 }
 
-free(B,n);
-free(l,n);
-free(h,n);
-free(lo,n);
-free(hi,n);
-free(md,n);
+free(B);
+free(l);
+free(h);
+free(lo);
+free(hi);
+free(md);
 }
 
 
@@ -484,14 +484,16 @@ string fileName = filenames[filen];
 uint64_t n,noe;
 	scanf("%d %d",&n,&noe);
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
-	Edges* edges = new Edges[noe];
-	Edges* edgeso = new Edges[noe];
+	Edges* edges = new Edges[2*noe];
+	Edges* edgeso = new Edges[2*noe];
 	uint64_t* mstArr = createArr(noe,0);
-	for(uint64_t i=0;i<noe;i++)
+	for(uint64_t i=0;i<noe;i+=2)
 	{	
 		scanf("%d %d %lf",&edges[i].u,&edges[i].v,&edges[i].w);
 		edges[i].u = edges[i].u-1;
 		edges[i].v = edges[i].v-1;
+		edges[i+1].u = edges[i+1].v-1;
+		edges[i+1].v = edges[i+1].u-1;
 		}	
 
 	mst(n, edges,edgeso, noe, mstArr);
