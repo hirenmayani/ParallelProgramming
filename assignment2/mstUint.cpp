@@ -168,9 +168,9 @@ uint64_t * parPrefixSum(uint64_t * x,uint64_t  n){
 					s[i] = z[uint64_t ((i-1)/2)];
 				}
 			}
+//		free(z);
+//                free(y);
 		}
-		free(z);
-		free(y);
 		return s;
 }
 
@@ -227,12 +227,13 @@ void parCW_BS(uint64_t  n, Edges* E,uint64_t  noe, uint64_t * R)
                         }
                 }
 
-free(B);
+/*free(B);
 free(l);
 free(h);
 free(lo);
 free(hi);
 free(md);
+*/
 }
 
 
@@ -411,9 +412,9 @@ while(F)
 			C[v] = dis(gen);
 		}
 		printf("head tail array");
-		printArr(C,30);
-	par_PCW_RS(n,edges,noe,R);
-//	parCW_BS(n,edges,noe,R);
+//		printArr(C,30);
+//	par_PCW_RS(n,edges,noe,R);
+	parCW_BS(n,edges,noe,R);
 #pragma cilk grainsize = 1
 	cilk_for(uint64_t i=0;i<noe;i++)
 		{
@@ -450,12 +451,12 @@ while(F)
 		F = false;
 		count = 0;
 #pragma cilk grainsize = 1
-	for(uint64_t i=0;i<noe;i++)
+	cilk_for(uint64_t i=0;i<noe;i++)
 		{
 			if(edges[i].u!=edges[i].v)
 			{
 				F = true;
-				count += 1;
+				//count += 1;
 				}
 		}
 	printf("\nnoe=%d",count);
@@ -481,30 +482,34 @@ string filenames[] = {"dummy","as-skitter-in.txt",
 "com-lj-in.txt",
 "roadNet-PA-in.txt"};
 string fileName = filenames[filen];	
-uint64_t n,noe;
-	scanf("%d %d",&n,&noe);
+uint64_t n,noe,noeo;
+	scanf("%d %d",&n,&noeo);
+	noe =noeo*2;
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
-	Edges* edges = new Edges[2*noe];
-	Edges* edgeso = new Edges[2*noe];
+	Edges* edges = new Edges[noe];
+	Edges* edgeso = new Edges[noe];
 	uint64_t* mstArr = createArr(noe,0);
-	for(uint64_t i=0;i<noe;i+=2)
+	for(uint64_t i=0;i<noeo;i+=1)
 	{	
+
 		scanf("%d %d %lf",&edges[i].u,&edges[i].v,&edges[i].w);
+	//	printf("%d %d %lf\n",edges[i].u,edges[i].v,edges[i].w);
 		edges[i].u = edges[i].u-1;
 		edges[i].v = edges[i].v-1;
-		edges[i+1].u = edges[i+1].v-1;
-		edges[i+1].v = edges[i+1].u-1;
-		}	
-
+		edges[i+noeo].u = edges[i].v;
+		edges[i+noeo].v = edges[i].u;
+		edges[i+noeo].w = edges[i].w;
+		}
+	
 	mst(n, edges,edgeso, noe, mstArr);
 
 double cost = 0;
 
-cilk_for(uint64_t i=0;i<noe;i++)
+for(uint64_t i=0;i<noe;i++)
  if(mstArr[i]==1)
  	cost += edges[i].w;
 printf("\n making out file");
-ofstream outFile("");
+ofstream outFile;
 if(mode == 0)
 	ofstream outFile (fileName+"-MST-sort-out.txt",ios::out);
 else
@@ -515,13 +520,14 @@ for(uint64_t i=0;i<noe;i++)
 {
  if(mstArr[i]==1)
  {
- 	outFile<<edgeso[i].u<<" "<<edgeso[i].v<<" "<<edgeso[i].w<<endl;
+cout<<edgeso[i].u<<" "<<edgeso[i].v<<" "<<edgeso[i].w<<endl;
+ 	outFile<<edgeso[i].u+1<<" "<<edgeso[i].v+1<<" "<<edgeso[i].w<<endl;
  }
 }
 
 outFile.close();
 printf("cost=%lf",cost);
-printArr(mstArr,noe);
+//printArr(mstArr,noe);
 free(edges);
 free(edgeso);
 free(mstArr);
