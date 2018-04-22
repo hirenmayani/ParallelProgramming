@@ -10,3 +10,6 @@
 
 icpc -std=c++11 ParRadixCount.cpp -o radixC
 ./radixC 25
+
+icpc -std=c++11 ParRadixCount.cpp -o radixC
+./quick 25 5

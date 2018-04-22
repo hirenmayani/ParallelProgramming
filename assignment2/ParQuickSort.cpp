@@ -110,6 +110,7 @@ int* parPrefixSum(int* x,int n){
 				s[i] = z[int((i-1)/2)];
 			}
 		}
+		free(z);
 	}
 	return s;
 }
@@ -180,9 +181,9 @@ int parPartition(int* arr,int q, int r, int x){
 	return k;
 }
 
-void parQuick(int* arr,int q, int r){
+void parQuick(int* arr,int q, int r, int m){
 	int n = r-q+1;
-	if (n <= 30){
+	if (n <= m){
 		qsort (arr+q, n, sizeof(int), compare);
 
 	}else{
@@ -190,8 +191,8 @@ void parQuick(int* arr,int q, int r){
 //		printf("pi=%d r=%d q=%d\n",pI, q,r);
 		int x = arr[pI];
 		int k = parPartition(arr, q, r, x);
-		cilk_spawn parQuick(arr, q, k-1);
-		parQuick(arr, k+1, r);
+		cilk_spawn parQuick(arr, q, k-1, m);
+		parQuick(arr, k+1, r, m);
 		cilk_sync;
 	}
 }
@@ -208,10 +209,10 @@ bool samearr(int* arr,int* arr1,int n){
 
 int main(int argc,char* argv[]){
 	  int nr = atoi(argv[1]);
+	  int mr = atoi(argv[2]);
 	  int n = pow(2,nr);
-	//  int n = 8;
+	  int m = pow(2,mr);
 
-//	  for (n=2;n<200;n++){
 	  int *arr;
 	  arr = createArr(n,1);
 	  /*
@@ -227,7 +228,18 @@ int main(int argc,char* argv[]){
 	  //printf("\nbefore sorting\n");
 	  //printArr(arr,n);
 
-	  parQuick(arr,0,n-1);
+
+	  auto start = chrono::system_clock::now();
+
+	  parQuick(arr,0,n-1, m);
+
+	  auto end = chrono::system_clock::now();
+	  auto elapsedT = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	  auto elapsed = elapsedT.count();
+
+	  ofstream myfile ("quick.csv",ios::app);
+	  	myfile <<n << "," << m << "," <<elapsed<<"\n";
+
 	  //printf("\nafter sorting\n");
 	  //printArr(arr,n);
 

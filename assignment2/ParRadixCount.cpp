@@ -443,10 +443,10 @@ uint64_t *sarr = createArr(n,0);
 auto start = chrono::system_clock::now();
 parRadixSort(arr,n,r);
 auto end = chrono::system_clock::now();
-auto elapsedT = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+auto elapsedT = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 auto elapsed = elapsedT.count();
-ofstream myfile ("ParRadixCount.csv",ios::app);
-	myfile <<elapsed<<",";
+ofstream myfile ("radix.csv",ios::app);
+	myfile <<elapsed<<"\n";
 
 if (uarraySortedOrNot(sarr, n))
 	printf("\n...yey...\n");
