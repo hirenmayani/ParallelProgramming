@@ -20,14 +20,6 @@ struct Edges
 	double w;
 };
 
-inline int index(int rows, int cols, int m_width)
-{
-	 return cols + m_width * rows;
-}
-int compare (const void * a, const void * b)
-{
-  return ( *(int*)a - *(int*)b );
-}
 int compareR (const void * a, const void * b)
 {
   return ( ((Edges*)a)->w - ((Edges*)b)->w );
@@ -71,7 +63,7 @@ void free(uint64_t ** matrix,uint64_t  row)
 }
 void free(uint64_t * matrix,uint64_t  row)
 {
-	delete[] matrix;
+	free(matrix);
 
 }
 
@@ -114,39 +106,6 @@ uint64_t ** createArr2d(uint64_t  rowCount,uint64_t  colCount)//,uint64_t  b,uin
 	uint64_t ** a = new uint64_t *[rowCount];
 	for(uint64_t  i = 0; i < rowCount; ++i)
 	    a[i] = new uint64_t [colCount];
-
-	/*  int i=0;
-	  int j=0;
-
-
-	  int *mat;
-	  mat = (int*)calloc(sizeof(int),rows*cols);
-
-
-//	  if(init == 0)
-//	  {
-	    for(i=0;i<rows;i++)
-	    {
-	    for(j=0;j<cols;j++)
-	    {
-	          mat[index(i, j, rows)] = 0;
-
-
-	        }
-	      }
-	  }
-	  else
-	  {
-	    for(i=0;i<rows;i++)
-	    {
-	    for(j=0;j<cols;j++)
-	    {
-	          mat[index(i, j, rows)] = rand()%b;
-
-	        }
-	    }
-
-}*/
 	  return a;
 }
 
@@ -304,19 +263,11 @@ void parCountingRank(uint64_t * S,uint64_t  n,uint64_t  d, uint64_t * r,uint64_t
 		for(uint64_t j=jstart[i];j<=jend[i];j++)
 			f[S[j]][i] = f[S[j]][i] + 1;
 	}
-//uint64_t j =0;
-//printArr(jstart,p);
-//printArr(jend,p);
-//printMat(f,8,p);
 	for(uint64_t j=0;j<buckets;j++)
 	{
-//				printf("j=%d  \n",j);
-//				printArr(f[j],p);
 				f[j] = parPrefixSum(f[j],p);
-//				 printArr(f[j],p);
+
 			}	
-//printMat(f,4,p);
-	//TODO cilk
 	#pragma cilk grainsize = 1
 	cilk_for(uint64_t  i=0;i<p;i++)
 		{
@@ -339,51 +290,9 @@ void parCountingRank(uint64_t * S,uint64_t  n,uint64_t  d, uint64_t * r,uint64_t
 
 free(f,buckets);
 free(r1,buckets);
-free(jstart,p);
-free(jend,p);
-free(ofset,p);
-}
-void parCountingRank1(uint64_t * S,uint64_t  n,uint64_t  d, uint64_t * r,uint64_t  p)
-{
-	uint64_t  buckets = pow(2,d)-1;
-//		int b = floor(log2(n))+1;
-		uint64_t  **f = createArr2d(buckets+1,p+1);
-		uint64_t  **r1 = createArr2d(buckets+1,p+1);
-		uint64_t  *jstart =  createArr(p+1,0);
-		uint64_t  *jend = createArr(p+1,0);
-		uint64_t  *ofs = createArr(p+1,0);
-		uint64_t  i=0,j=0;
-//#TODO cilk for
-		for(uint64_t  i=1;i<=p;i++)
-		{
-			for(j=0;j<=buckets;j++)
-				f[j][i] = 0;
-			jstart[i] = (i-1)*ceil(n/p)+1;
-			jend[i] = (i<p)?(i*ceil(n/p)):n;
-			for(j=jstart[i];j<=jend[i];j++)
-				f[S[j-1]][i] = f[S[j-1]][i] +1;
-		}
-
-		for(j=0;j<=buckets;j++)
-			f[j] = parPrefixSum(f[j],p);
-		//TODO cilkfor
-		for(uint64_t  i=1;i<=p;i++)
-		{
-			ofs[i] = 1;
-			for(j=0;j<=buckets;j++)
-			{
-				r1[j][i] = (i==1)?ofs[i]:(ofs[i]+f[j][i-1]);
-				ofs[i] = ofs[i]+f[j][p];
-			}
-			for(j=jstart[i];j<=jend[i];j++)
-			{
-				r[j-1] = r1[S[j-1]][i];
-				r1[S[j-1]][i] = r1[S[j-1]][i] + 1;
-			}
-		}
-
-
-
+free(jstart);
+free(jend);
+free(ofset);
 }
 uint64_t  extractBitSegment(uint64_t  value,uint64_t  left, uint64_t  right)
 {
@@ -439,25 +348,18 @@ free(B,n);
 
 void par_PCW_RS(uint64_t  n, Edges* edges,uint64_t  noe, uint64_t * R)
 {
-	//noe = number of edges
+
 	uint64_t * A = createArr(noe,0);
-//changed TODO
 	uint64_t  k = ceil(log2(noe)) ;
 	uint64_t  u,j;
-//printf("k=%dbits for edges\n",k);
-//TODO cilk for
 	cilk_for(uint64_t  i=0;i<noe;i++)
 		A[i] = (edges[i].u<<k)+i;
-	//printArr(A,noe);
+
 	parRadixSort(A,noe,1+k+ceil(log2(n)));
-//printf("\nafter radix sort");
-//printArr(A,noe);
-//TODO cilk for
 	cilk_for(uint64_t  i=0;i<noe;i++)
 	{
 		u = A[i]>>k;
 		j = A[i] - (u<<k);
-		//printf("\nu=%d,j=%d",u,j);
 	if(i==0 || u!=(A[i-1]>>k) )
 	{
 			R[u] = j;
@@ -465,81 +367,17 @@ void par_PCW_RS(uint64_t  n, Edges* edges,uint64_t  noe, uint64_t * R)
 	}
 free(A,noe);
 }
-//struct Edges
-//{
-//	int u,v;
-//};
 void printEdges(Edges* edges,uint64_t  size)
 {
 	for(uint64_t  i=0;i<size;i++)
 		printf("\nu=%d v=%d w=%lf\n",edges[i].u,edges[i].v,edges[i].w);
 
 }
-/*
-int parPartition(int* arr,int q, int r, int x){
-	int n = r-q+1;
-	if(n==1){
-		return q;
-	}
-
-	int* b;
-	int* lt;
-	int* gt;
-	b = createArr(n, 0);
-	lt = createArr(n, 0);
-	gt = createArr(n, 0);
-
-	cilk_for(int i=0;i<n;i++){
-		b[i] = arr[q+i];
-		if (b[i]<x){
-			lt[i] = 1;
-		}else{
-			lt[i] = 0;
-		}
-
-		if (b[i]>x){
-			gt[i] = 1;
-		}else{
-			gt[i] = 0;
-		}
-	}
-
-	lt = parPrefixSum(lt,n);
-	gt = parPrefixSum(gt,n);
-
-	int k = q + lt[n-1];
-	arr[k] = x;
-
-	cilk_for(int i=0;i<n;i++){
-		if (b[i]<x)
-			arr[q+lt[i]-1] = b[i];
-		else if(b[i]>x)
-			arr[k+gt[i]] = b[i];
-	}
-	return k;
-}
-
-void parQuick(int* arr,int q, int r){
-	int n = r-q+1;
-	if (n <= 3){
-		qsort (arr+q, n, sizeof(int), compare);
-
-	}else{
-		int pI = rand()%(r+1-q)+q;
-//		printf("pi=%d r=%d q=%d\n",pI, q,r);
-		int x = arr[pI];
-		int k = parPartition(arr, q, r, x);
-		cilk_spawn parQuick(arr, q, k-1);
-		parQuick(arr, k+1, r);
-		cilk_sync;
-	}
-}
-*/
 void mst(uint64_t n, Edges* edges, Edges* edgeso,uint64_t noe, uint64_t* mst)
 {
 	uint64_t* L = createArr(n+1,0);
 	uint64_t* C = createArr(n,0);
-	uint64_t* consumed = createArr(n,0);
+//	uint64_t* consumed = createArr(n,0);
 	uint64_t* R = createArr(n,0);
 	uint64_t u1,v1;
 uint64_t count = 0;
@@ -566,33 +404,8 @@ bool head = true, tail = false;
 bool isEven = true;
 //bool *consumed = new bool[n]; 
 while(F)
-	{
-if(isEven)
 {
-if(count<200000)
-{
-std::bernoulli_distribution dis(0.1);
-printf("inside");
-}
-else
-        std::bernoulli_distribution dis(0.6);
-        isEven = false;
-
-}
-else
-{
-if(count<200000)
-{
-std::bernoulli_distribution dis(0.2);
-printf("inside");
-}
-else
-std::bernoulli_distribution dis(0.4);
-isEven = true;
-
-}
-count+=1;
-#pragma cilk grainsize = 1
+	#pragma cilk grainsize = 1
 		cilk_for(uint64_t v=0;v<n;v++)
 		{
 			C[v] = dis(gen);
@@ -609,13 +422,11 @@ printArr(C,30);
 			u1 = edges[i].u;
 			v1 = edges[i].v;
 			//tails - 1
-			if(consumed[v1] == 1)
-				C[v1] = head;
 			if( C[u1] == tail && C[v1] == head && R[u1] == i)
 			{
 				//printf("\ninside if setting u=%d and v=%d",u1,v1);
 				L[u1] = v1;
-				consumed[u1] = 1;
+			//	consumed[u1] = 1;
 				mst[i] = 1;
 			}
 
@@ -656,43 +467,13 @@ count = 0;
 				}
 		}
 printf("\nnoe=%d",count);
-/*for(int b=0;b<n;b++)
-printf("%d ",consumed[b]);
-*/
 }
-
-//printf("ht array");
+free(L);
+free(C);
+free(R);
 }
 int main(int argc,char* argv[])
 {
-/*
-uint64_t r = atoi(argv[1]);
-uint64_t n = pow(2,r);
-__cilkrts_set_param("nworkers","64");
-		int p = __cilkrts_get_nworkers();
-		//p =4;
-		printf("PE=%d\n",p);
-		uint64_t b = floor(log2(n));
-		printf("b=%d",b);
-		uint64_t *arr = createArr(n,1);
-		uint64_t *sarr = createArr(n,0);
-		//printf("random array");
-		//printArr(arr,n);
-		uint64_t* sorted = createArr(n,0);
-parRadixSort(arr,n,r);
-	//	parCountingRank(arr,n,b,sorted,p);
-//printArr(sorted,n);
-		for(uint64_t i=0;i<n;i++)
-	                sarr[sorted[i]] = arr[i];
-		
-if (uarraySortedOrNot(sarr, n))
-
-	printf("\n...yey...\n");
-else
-	printf("\n...ney....\n");
-//printArr(sarr,n);
-*/
-
 __cilkrts_set_param("nworkers","64");
 printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
 	int filen = atoi(argv[1]);
@@ -720,14 +501,9 @@ uint64_t n,noe;
 		edges[i].u = edges[i].u-1;
 		edges[i].v = edges[i].v-1;
 		}	
-	//printEdges(edgeso,noe);
-//	uint64_t* R = createArr(n,0);
-//	par_PCW_RS(n,edges,noe,R);
-//	printArr(R,n);
-//	uint64_t* S = createArr(n,1,R,p);
-//parCountingRank(S,n,)
+
 	mst(n, edges,edgeso, noe, mstArr);
-//printArr(mstArr,noe);
+
 double cost = 0;
 
 cilk_for(uint64_t i=0;i<noe;i++)
