@@ -539,6 +539,7 @@ void mst(uint64_t n, Edges* edges, Edges* edgeso,uint64_t noe, uint64_t* mst)
 {
 	uint64_t* L = createArr(n+1,0);
 	uint64_t* C = createArr(n,0);
+	uint64_t* consumed = createArr(n,0);
 	uint64_t* R = createArr(n,0);
 	uint64_t u1,v1;
 uint64_t count = 0;
@@ -570,7 +571,7 @@ if(isEven)
 {
 if(count<200000)
 {
-std::bernoulli_distribution dis(0.8);
+std::bernoulli_distribution dis(0.1);
 printf("inside");
 }
 else
@@ -608,11 +609,13 @@ printArr(C,30);
 			u1 = edges[i].u;
 			v1 = edges[i].v;
 			//tails - 1
+			if(consumed[v1] == 1)
+				C[v1] = head;
 			if( C[u1] == tail && C[v1] == head && R[u1] == i)
 			{
 				//printf("\ninside if setting u=%d and v=%d",u1,v1);
 				L[u1] = v1;
-				//consumed[u1] = true;
+				consumed[u1] = 1;
 				mst[i] = 1;
 			}
 
