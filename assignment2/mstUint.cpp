@@ -511,11 +511,24 @@ for(uint64_t i=0;i<noe;i++)
 printf("\n making out file");
 ofstream outFile;
 if(mode == 0)
-	ofstream outFile (fileName+"-MST-sort-out.txt",ios::out);
-else
+	{
+ofstream outFile (fileName+"-MST-sort-out.txt",ios::out);
+outFile<<cost<<endl;
+for(uint64_t i=0;i<noe;i++)
+{
+ if(mstArr[i]==1)
+ {
+cout<<edgeso[i].u<<" "<<edgeso[i].v<<" "<<edgeso[i].w<<endl;
+        outFile<<edgeso[i].u+1<<" "<<edgeso[i].v+1<<" "<<edgeso[i].w<<endl;
+ }
+}
+
+outFile.close();
+}
+else{
 	ofstream outFile (fileName+"-MST-search-out.txt",ios::out);
 outFile<<cost<<endl;
-//printEdges(edgeso,noe);
+
 for(uint64_t i=0;i<noe;i++)
 {
  if(mstArr[i]==1)
@@ -526,6 +539,7 @@ cout<<edgeso[i].u<<" "<<edgeso[i].v<<" "<<edgeso[i].w<<endl;
 }
 
 outFile.close();
+}
 printf("cost=%lf",cost);
 //printArr(mstArr,noe);
 free(edges);
