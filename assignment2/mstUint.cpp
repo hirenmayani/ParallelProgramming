@@ -432,9 +432,9 @@ void parRadixSort(uint64_t * A, uint64_t  n, uint64_t  b)
 	}
 //printf("inside function");
 //printArr(A,n);
-//	free(S,0);
-//	free(r,0);
-//	free(B,0);
+free(S,n);
+free(r,n);
+free(B,n);
 }
 
 void par_PCW_RS(uint64_t  n, Edges* edges,uint64_t  noe, uint64_t * R)
@@ -463,8 +463,7 @@ void par_PCW_RS(uint64_t  n, Edges* edges,uint64_t  noe, uint64_t * R)
 			R[u] = j;
 		}
 	}
-//printf("pcw");
-//printArr(R,n);
+free(A,noe);
 }
 //struct Edges
 //{
@@ -564,19 +563,33 @@ std::mt19937 gen(rd());
     	std::bernoulli_distribution dis(0.6);
 bool head = true, tail = false;	
 bool isEven = true;
+//bool *consumed = new bool[n]; 
 while(F)
 	{
 if(isEven)
 {
-	std::bernoulli_distribution dis(0.6);
-	isEven = false;
+if(count<200000)
+{
+std::bernoulli_distribution dis(0.8);
+printf("inside");
+}
+else
+        std::bernoulli_distribution dis(0.6);
+        isEven = false;
+
 }
 else
 {
+if(count<200000)
+{
+std::bernoulli_distribution dis(0.2);
+printf("inside");
+}
+else
 std::bernoulli_distribution dis(0.4);
 isEven = true;
+
 }
-//printf("%d",count);
 count+=1;
 #pragma cilk grainsize = 1
 		cilk_for(uint64_t v=0;v<n;v++)
@@ -586,7 +599,7 @@ count+=1;
 printf("head tail array");
 printArr(C,30);
 	par_PCW_RS(n,edges,noe,R);
-	//parCW_BS(n,edges,noe,R);
+//	parCW_BS(n,edges,noe,R);
 //printArr(R,noe);
 //printf("ranking");
 #pragma cilk grainsize = 1
@@ -599,6 +612,7 @@ printArr(C,30);
 			{
 				//printf("\ninside if setting u=%d and v=%d",u1,v1);
 				L[u1] = v1;
+				//consumed[u1] = true;
 				mst[i] = 1;
 			}
 
@@ -629,10 +643,6 @@ printArr(C,30);
 //printEdges(edges,noe);
 		F = false;
 count = 0;
-//printf("ht array");
-//printArr(C,n);
-//printf("after");
-//printArr(L,n);
 #pragma cilk grainsize = 1
 	for(uint64_t i=0;i<noe;i++)
 		{
@@ -643,22 +653,16 @@ count = 0;
 				}
 		}
 printf("\nnoe=%d",count);
-/*if(count>cp)
-{
-	printf("number of edges increased");
-	printEdges(edges,noe);
-	cp = count;
-}*/
-
-//printf("\nNumber of remaining edges = %d",count);	
+/*for(int b=0;b<n;b++)
+printf("%d ",consumed[b]);
+*/
 }
 
-
-
+//printf("ht array");
 }
 int main(int argc,char* argv[])
 {
-///*
+/*
 uint64_t r = atoi(argv[1]);
 uint64_t n = pow(2,r);
 __cilkrts_set_param("nworkers","64");
@@ -675,16 +679,16 @@ __cilkrts_set_param("nworkers","64");
 parRadixSort(arr,n,r);
 	//	parCountingRank(arr,n,b,sorted,p);
 //printArr(sorted,n);
-	/*	for(uint64_t i=0;i<n;i++)
+		for(uint64_t i=0;i<n;i++)
 	                sarr[sorted[i]] = arr[i];
-	*/	
+		
 if (uarraySortedOrNot(sarr, n))
 
 	printf("\n...yey...\n");
 else
 	printf("\n...ney....\n");
 //printArr(sarr,n);
-//*/
+*/
 
 __cilkrts_set_param("nworkers","64");
 printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
