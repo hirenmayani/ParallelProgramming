@@ -399,7 +399,7 @@ edgeso[i].w = edges[i].w;
 	bool F = noe>0?true:false;
 	std::random_device rd;
 std::mt19937 gen(rd());
-    	std::bernoulli_distribution dis(0.6);
+    	std::bernoulli_distribution dis(0.5);
 bool head = true, tail = false;	
 bool isEven = true;
 //bool *consumed = new bool[n]; 
@@ -422,22 +422,16 @@ printArr(C,30);
 			u1 = edges[i].u;
 			v1 = edges[i].v;
 			//tails - 1
+			if(u1 == (n)|| v1 == (n))
+							continue;
+
 			if( C[u1] == tail && C[v1] == head && R[u1] == i)
 			{
-				//printf("\ninside if setting u=%d and v=%d",u1,v1);
 				L[u1] = v1;
-			//	consumed[u1] = 1;
 				mst[i] = 1;
 			}
 
 		}
-//printf("pcw array");
-//printArr(L,n);
-//printf("selected mst");
-//printArr(mst,10);
-//printf("\nb4.........");
-
-//printArr(L,n);
 #pragma cilk grainsize = 1
 		cilk_for(uint64_t i=0;i<noe;i++)
 		{
