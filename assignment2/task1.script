@@ -11,5 +11,5 @@
 icpc -std=c++11 ParRadixCount.cpp -o radixC
 ./radixC 25
 
-icpc -std=c++11 ParRadixCount.cpp -o radixC
+icpc -std=c++11 ParQuickSort.cpp -o quick
 ./quick 25 5

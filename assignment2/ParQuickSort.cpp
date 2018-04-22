@@ -3,6 +3,8 @@
 #include<stdio.h>
 #include<math.h>
 #include <cilk/reducer_opadd.h>
+#include<chrono>
+#include<fstream>
 
 int compare (const void * a, const void * b)
 {
