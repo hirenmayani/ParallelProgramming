@@ -8,7 +8,5 @@
 #SBATCH --mail-type=begin  # email me when the job starts
 #SBATCH --mail-type=end    # email me when the job finishes
 
-module load papi/5.6.0
-./a.out 23
-
-
+icpc -std=c++11 ParRadixCount.cpp -o radixC
+./radixC 25
