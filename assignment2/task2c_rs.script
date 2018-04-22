@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH -J myMPI           # job name
+#SBATCH -o myMPI.o%j       # output and error file name (%j expands to jobID)
+#SBATCH -n 68              # total number of mpi tasks requested
+#SBATCH -p normal     # queue (partition) -- normal, development, etc.
+#SBATCH -t 07:30:00        # run time (hh:mm:ss) - 1.5 hours
+#SBATCH --mail-user=hmayani@cs.stonybrook.edu
+#SBATCH --mail-type=begin  # email me when the job starts
+#SBATCH --mail-type=end    # email me when the job finishes
+
+icpc mstUintPro.cpp -o 2c_rs -std=c++11
+./2c_rs 1 0 64
+./2c_rs 2 0 64
+./2c_rs 3 0 64
+./2c_rs 4 0 64
+./2c_rs 5 0 64
+./2c_rs 6 0 64
+./2c_rs 7 0 64
+./2c_rs 8 0 64
+./2c_rs 9 0 64
+./2c_rs 10 0 64 

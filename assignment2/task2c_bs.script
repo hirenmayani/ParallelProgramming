@@ -8,7 +8,14 @@
 #SBATCH --mail-type=begin  # email me when the job starts
 #SBATCH --mail-type=end    # email me when the job finishes
 
-icpc -std=c++11 ParRadixCount.cpp -o radixC
-./radixC 25
-
-#icpc -std=c++11 ParQuickSort.cpp -o quick
+icpc mstUintPro.cpp -o 2c_bs -std=c++11
+./2c_bs 1 1 64
+./2c_bs 2 1 64
+./2c_bs 3 1 64
+./2c_bs 4 1 64
+./2c_bs 5 1 64
+./2c_bs 6 1 64
+./2c_bs 7 1 64
+./2c_bs 8 1 64
+./2c_bs 9 1 64
+./2c_bs 10 1 64 
