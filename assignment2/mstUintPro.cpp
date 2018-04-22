@@ -1,5 +1,9 @@
 //icpc mstUint.cpp -o outMst -std=c++11
 //./outMst 6 1 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-TX-in.txt
+//112816 263397473.1530
+//264796496.201000
+//2.63398e+08
+//5.72811e+08
 #include<math.h>
 #include<math.h>
 #include<stdio.h>
@@ -12,6 +16,7 @@
 #include<fstream>
 #include<string>
 #include<stdint.h>
+#include<chrono>
 using namespace std;
 
 struct Edges
@@ -467,10 +472,17 @@ free(R);
 }
 int main(int argc,char* argv[])
 {
-__cilkrts_set_param("nworkers","64");
-printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
+	printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
 	int filen = atoi(argv[1]);
 	int mode = atoi(argv[2]);//mode - 0 radix sort mode-1 binary search;
+
+	if (0!= __cilkrts_set_param("nworkers",argv[3]))
+	 {
+	    printf("Failed to set worker count\n");
+	    return 1;
+	 }
+
+
 string filenames[] = {"dummy","as-skitter-in.txt",
 "com-amazon-in.txt",
 "com-friendster-in.txt",
@@ -501,7 +513,18 @@ uint64_t n,noe,noeo;
 		edges[i+noeo].w = edges[i].w;
 		}
 	
-	mst(n, edges,edgeso, noe, mstArr);
+
+
+	 auto start = chrono::system_clock::now();
+
+	 mst(n, edges,edgeso, noe, mstArr);
+
+	  auto end = chrono::system_clock::now();
+	  auto elapsedT = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	  auto elapsed = elapsedT.count();
+
+	  cout<< " time takn: "<< fileName <<elapsed<<"\n";
+
 
 double cost = 0;
 
@@ -512,22 +535,32 @@ printf("\n making out file");
 ofstream outFile;
 if(mode == 0)
 	{
+	ofstream myfile ("2c_rs.csv",ios::app);
+	myfile<< filename << "," <<mode << "," << argv[3] << "," <<elapsed<<"\n";
+	myfile.close();
 ofstream outFile (fileName+"-MST-sort-out.txt",ios::out);
-outFile<<cost<<endl;
+outFile<< fileName<< " time takn: " << elapsed<<"\n";
+//outFile<<cost<<endl;
+outFile << std::setprecision(std::numeric_limits<long double>::digits10 << cost<<endl;
 for(uint64_t i=0;i<noe;i++)
 {
  if(mstArr[i]==1)
  {
-cout<<edgeso[i].u<<" "<<edgeso[i].v<<" "<<edgeso[i].w<<endl;
+//cout<<edgeso[i].u<<" "<<edgeso[i].v<<" "<<edgeso[i].w<<endl;
         outFile<<edgeso[i].u+1<<" "<<edgeso[i].v+1<<" "<<edgeso[i].w<<endl;
+
  }
 }
 
 outFile.close();
 }
 else{
+	ofstream myfile ("2c_bs.csv",ios::app);
+	myfile<< filename << "," <<mode << "," << argv[3] << "," <<elapsed<<"\n";
+	myfile.close();
 	ofstream outFile (fileName+"-MST-search-out.txt",ios::out);
-outFile<<cost<<endl;
+	outFile<< fileName<< " time takn: " << elapsed<<"\n";
+	outFile << std::setprecision(std::numeric_limits<long double>::digits10 << cost<<endl;
 
 for(uint64_t i=0;i<noe;i++)
 {
