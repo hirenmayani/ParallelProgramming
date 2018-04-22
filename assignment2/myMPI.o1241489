@@ -1,0 +1,44 @@
+ParRadixCount.cpp(441): error: expected a ";"
+          srand((unsigned) time(&t));
+          ^
+
+compilation aborted for ParRadixCount.cpp (code 2)
+PE=64
+b=13checking
+...yey...
+PE=64
+b=14checking
+...yey...
+PE=64
+b=15checking
+...yey...
+PE=64
+b=16checking
+...yey...
+PE=64
+b=17checking
+...yey...
+ParQuickSort.cpp(237): error: identifier "__cilkrts_set_param" is undefined
+  	__cilkrts_set_param("nworkers",argv[3]);
+  	^
+
+ParQuickSort.cpp(255): error: expected a ";"
+  	srand((unsigned) time(&t));
+  	^
+
+compilation aborted for ParQuickSort.cpp (code 2)
+13,13,46
+
+..................... yey................... 
+14,13,392
+
+..................... yey................... 
+15,13,694
+
+..................... yey................... 
+16,13,684
+
+..................... yey................... 
+17,13,837
+
+..................... yey................... 

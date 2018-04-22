@@ -1,6 +1,5 @@
 //./our 6 1 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-TX-in.txt
 #include<math.h>
-#include<math.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<cilk/cilk.h>
@@ -429,13 +428,20 @@ int main(int argc,char* argv[])
 {
 uint64_t r = atoi(argv[1]);
 uint64_t n = pow(2,r);
-__cilkrts_set_param("nworkers","64");
+ if (0!= __cilkrts_set_param("nworkers",argv[2]))
+ {
+    printf("Failed to set worker count\n");
+    return 1;
+ }
 
 int p = __cilkrts_get_nworkers();
 printf("PE=%d\n",p);
 
 uint64_t b = floor(log2(n));
 printf("b=%d",b);
+           time_t t;
+
+        srand((unsigned) time(&t));
 
 uint64_t *arr = createArr(n,1);
 uint64_t *sarr = createArr(n,0);
@@ -445,9 +451,11 @@ parRadixSort(arr,n,r);
 auto end = chrono::system_clock::now();
 auto elapsedT = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 auto elapsed = elapsedT.count();
-ofstream myfile ("radix.csv",ios::app);
-	myfile <<elapsed<<"\n";
 
+
+	  ofstream myfile ("1rd.csv",ios::app);
+	  	myfile << argv[2] << "," << r << "," <<elapsed<<"\n";
+cout <<r<<"," <<elapsed<<"\n";
 if (uarraySortedOrNot(sarr, n))
 	printf("\n...yey...\n");
 else
