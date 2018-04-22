@@ -5,6 +5,9 @@
 #include <cilk/reducer_opadd.h>
 #include<chrono>
 #include<fstream>
+#include <iostream>
+
+using namespace std;
 
 int compare (const void * a, const void * b)
 {
@@ -239,8 +242,10 @@ int main(int argc,char* argv[]){
 	  auto elapsedT = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	  auto elapsed = elapsedT.count();
 
+	  cout <<nr << "," << mr << "," <<elapsed<<"\n";
+
 	  ofstream myfile ("quick.csv",ios::app);
-	  	myfile <<n << "," << m << "," <<elapsed<<"\n";
+	  	myfile <<nr << "," << mr << "," <<elapsed<<"\n";
 
 	  //printf("\nafter sorting\n");
 	  //printArr(arr,n);
