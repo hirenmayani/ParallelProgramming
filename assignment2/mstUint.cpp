@@ -12,6 +12,8 @@
 #include<fstream>
 #include<string>
 #include<stdint.h>
+#include <cilk/reducer_opadd.h>
+
 using namespace std;
 
 struct Edges
@@ -20,95 +22,6 @@ struct Edges
 	double w;
 };
 
-int parPartition( Edges* arr,int q, int r, Edges x){
-	int n = r-q+1;
-	if(n==1){
-		return q;
-	}
-
-	Edges* b;
-	int* lt;
-	int* gt;
-	b = createArr(n, 0);
-	lt = createArr(n, 0);
-	gt = createArr(n, 0);
-
-	cilk_for(int i=0;i<n;i++){
-		b[i] = arr[q+i];
-		if (b[i].w<x.w){
-			lt[i] = 1;
-		}else{
-			lt[i] = 0;
-		}
-
-		if (b[i].w>x.w){
-			gt[i] = 1;
-		}else{
-			gt[i] = 0;
-		}
-	}
-
-	lt = parPrefixSum(lt,n);
-	gt = parPrefixSum(gt,n);
-
-	int dup = 0 ;
-	cilk::reducer< cilk::op_add<unsigned long> > sum;
-
-	cilk_for(int i=0;i<n;i++){
-		if(arr[q+i].w==x){
-			*sum+=1;
-		}
-	}
-	dup  = sum.get_value();
-	int k = q + lt[n-1];
-	cilk_for (int i=0;i<dup;i++){
-	arr[k+i] = x;
-	}
-	cilk_for(int i=0;i<n;i++){
-		if (b[i].w<x.w)
-			arr[q+lt[i]-1] = b[i];
-		else if(b[i].w>x.w)
-			arr[dup+k+gt[i]-1] = b[i];
-
-	}
-	free(lt);
-	free(gt);
-	free(b);
-	return k;
-}
-
-void isort( Edges* arr, int q, int n)
-{
-int i, j;
-Edge key;
-   for (i = 1; i < n; i++)
-   {
-       key = arr[q+i];
-       j = i-1;
-
-       while (j >= 0 && arr[q+j].w > key.w)
-       {
-           arr[q+j+1] = arr[q+j];
-           j = j-1;
-       }
-       arr[q+j+1] = key;
-   }
-}
-
-void parQuick(Edges* arr,int q, int r, int m){
-	int n = r-q+1;
-	if (n <= m){
-		isort(arr,q,n);
-	}else{
-		int pI = rand()%(r+1-q)+q;
-		Edges x = arr[pI];
-		int k = parPartition(arr, q, r, x);
-
-		cilk_spawn parQuick(arr, q, k-1, m);
-		parQuick(arr, k+1, r, m);
-		cilk_sync;
-	}
-}
 
 int compareR (const void * a, const void * b)
 {
@@ -463,6 +376,97 @@ void printEdges(Edges* edges,uint64_t  size)
 	for(uint64_t  i=0;i<size;i++)
 		printf("\nu=%d v=%d w=%lf\n",edges[i].u,edges[i].v,edges[i].w);
 
+}
+
+
+int parPartition( Edges* arr,int q, int r, Edges x){
+	int n = r-q+1;
+	if(n==1){
+		return q;
+	}
+
+	Edges* b;
+	int* lt;
+	int* gt;
+	b = createArr(n, 0);
+	lt = createArr(n, 0);
+	gt = createArr(n, 0);
+
+	cilk_for(int i=0;i<n;i++){
+		b[i] = arr[q+i];
+		if (b[i].w<x.w){
+			lt[i] = 1;
+		}else{
+			lt[i] = 0;
+		}
+
+		if (b[i].w>x.w){
+			gt[i] = 1;
+		}else{
+			gt[i] = 0;
+		}
+	}
+
+	lt = parPrefixSum(lt,n);
+	gt = parPrefixSum(gt,n);
+
+	int dup = 0 ;
+	cilk::reducer< cilk::op_add<unsigned long> > sum;
+
+	cilk_for(int i=0;i<n;i++){
+		if(arr[q+i].w==x.w){
+			*sum+=1;
+		}
+	}
+	dup  = sum.get_value();
+	int k = q + lt[n-1];
+	cilk_for (int i=0;i<dup;i++){
+	arr[k+i] = x;
+	}
+	cilk_for(int i=0;i<n;i++){
+		if (b[i].w<x.w)
+			arr[q+lt[i]-1] = b[i];
+		else if(b[i].w>x.w)
+			arr[dup+k+gt[i]-1] = b[i];
+
+	}
+	free(lt);
+	free(gt);
+	free(b);
+	return k;
+}
+
+void isort( Edges* arr, int q, int n)
+{
+int i, j;
+Edges key;
+   for (i = 1; i < n; i++)
+   {
+       key = arr[q+i];
+       j = i-1;
+
+       while (j >= 0 && arr[q+j].w > key.w)
+       {
+           arr[q+j+1] = arr[q+j];
+           j = j-1;
+       }
+       arr[q+j+1] = key;
+   }
+}
+
+void parQuick(Edges* arr,int q, int r, int m){
+	int n = r-q+1;
+	if (n <= m){
+		isort(arr,q,n);
+	}else{
+		int pI = rand()%(r+1-q)+q;
+		Edges x = arr[pI];
+		int k = parPartition(arr, q, r, x);
+
+		cilk_spawn parQuick(arr, q, k-1, m);
+		parQuick(arr, k+1, r, m);
+		cilk_sync;
+	}
 }
 
 void qsort(Edges* edges, uint64_t noe){
