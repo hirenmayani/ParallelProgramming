@@ -6,6 +6,7 @@
 #include<chrono>
 #include<fstream>
 #include <iostream>
+#include <cilk/cilk_api.h>
 
 using namespace std;
 
@@ -115,6 +116,7 @@ int* parPrefixSum(int* x,int n){
 				s[i] = z[int((i-1)/2)];
 			}
 		}
+		free(y);
 		free(z);
 	}
 	return s;
@@ -186,11 +188,28 @@ int parPartition(int* arr,int q, int r, int x){
 	return k;
 }
 
+void isort(int* arr, int q, int n)
+{
+int i, key, j;
+   for (i = 1; i < n; i++)
+   {
+       key = arr[q+i];
+       j = i-1;
+ 
+       while (j >= 0 && arr[q+j] > key)
+       {
+           arr[q+j+1] = arr[q+j];
+           j = j-1;
+       }
+       arr[q+j+1] = key;
+   }
+}
+
 void parQuick(int* arr,int q, int r, int m){
 	int n = r-q+1;
 	if (n <= m){
-		qsort (arr+q, n, sizeof(int), compare);
-
+//		qsort (arr+q, n, sizeof(int), compare);
+		isort(arr,q,n);
 	}else{
 		int pI = rand()%(r+1-q)+q;
 //		printf("pi=%d r=%d q=%d\n",pI, q,r);
@@ -217,7 +236,6 @@ int main(int argc,char* argv[]){
 	  int mr = atoi(argv[2]);
 	  int n = pow(2,nr);
 	  int m = pow(2,mr);
-
 	  int *arr;
 	  arr = createArr(n,1);
 	  /*
@@ -232,8 +250,14 @@ int main(int argc,char* argv[]){
 */
 	  //printf("\nbefore sorting\n");
 	  //printArr(arr,n);
+   	   time_t t;
+ if (0!= __cilkrts_set_param("nworkers",argv[3]))
+ {
+    printf("Failed to set worker count\n");
+    return 1;
+ }
+	srand((unsigned) time(&t));
 
-	  srand(time(0));
 	  auto start = chrono::system_clock::now();
 
 	  parQuick(arr,0,n-1, m);
@@ -242,10 +266,10 @@ int main(int argc,char* argv[]){
 	  auto elapsedT = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	  auto elapsed = elapsedT.count();
 
-	  cout <<nr << "," << mr << "," <<elapsed<<"\n";
+	  cout<< argv[3]<<"," <<nr << "," << mr << "," <<elapsed<<"\n";
 
-	  ofstream myfile ("quick.csv",ios::app);
-	  	myfile <<nr << "," << mr << "," <<elapsed<<"\n";
+	  ofstream myfile ("1b.csv",ios::app);
+	  	myfile<< argv[3] << "," <<nr << "," << mr << "," <<elapsed<<"\n";
 
 	  //printf("\nafter sorting\n");
 	  //printArr(arr,n);
