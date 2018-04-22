@@ -1,5 +1,5 @@
-
-//./our 6 1 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-TX-in.txt
+//icpc mstUint.cpp -o outMst -std=c++11
+//./outMst 6 1 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-TX-in.txt
 #include<math.h>
 #include<math.h>
 #include<stdio.h>
@@ -400,7 +400,7 @@ std::random_device rd;
 std::mt19937 gen(rd());
 std::bernoulli_distribution dis(0.5);
 bool head = true, tail = false;	
-bool isEven = true;
+
 
 while(F)
 {
@@ -427,8 +427,32 @@ while(F)
 				L[u1] = v1;
 				mst[i] = 1;
 			}
+			else
+			{
+				if (R[u1]==i)
+				{
+					C[u1] == tail;
+					C[v1] == head;
+				}
+
+			}
 
 		}
+#pragma cilk grainsize = 1
+	cilk_for(uint64_t i=0;i<noe;i++)
+			{
+				u1 = edges[i].u;
+				v1 = edges[i].v;
+				//tails - 1
+				if(u1 == (n)|| v1 == (n))
+					continue;
+
+				if( C[u1] == tail && C[v1] == head && R[u1] == i)
+				{
+					L[u1] = v1;
+					mst[i] = 1;
+				}
+			}
 #pragma cilk grainsize = 1
 		cilk_for(uint64_t i=0;i<noe;i++)
 		{
