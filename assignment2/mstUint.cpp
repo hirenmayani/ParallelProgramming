@@ -365,7 +365,7 @@ void par_PCW_RS(uint64_t  n, Edges* edges,uint64_t  noe, uint64_t * R)
 			R[u] = j;
 		}
 	}
-free(A,noe);
+free(A);
 }
 void printEdges(Edges* edges,uint64_t  size)
 {
@@ -375,34 +375,33 @@ void printEdges(Edges* edges,uint64_t  size)
 }
 void mst(uint64_t n, Edges* edges, Edges* edgeso,uint64_t noe, uint64_t* mst)
 {
-	uint64_t* L = createArr(n+1,0);
+	uint64_t* L = createArr(n,0);
 	uint64_t* C = createArr(n,0);
-//	uint64_t* consumed = createArr(n,0);
 	uint64_t* R = createArr(n,0);
 	uint64_t u1,v1;
-uint64_t count = 0;
-uint64_t cp = noe;
-//	printEdges(edges,noe);
+	uint64_t count = noe;
+
 qsort (edges, noe, sizeof(Edges), compareR);	
-//printEdges(edges,noe);
+
 #pragma cilk grainsize = 1
 cilk_for(uint64_t i=0;i<noe;i++)
 {
- edgeso[i].u = edges[i].u;
-edgeso[i].v = edges[i].v;
-edgeso[i].w = edges[i].w;
+	 edgeso[i].u = edges[i].u;
+	edgeso[i].v = edges[i].v;
+	edgeso[i].w = edges[i].w;
 }
-//printEdges(edges,noe);
+
 #pragma cilk grainsize = 1
 	cilk_for(uint64_t v=0;v<n;v++)
 		L[v] = v;
-	bool F = noe>0?true:false;
-	std::random_device rd;
+
+bool F = noe>0?true:false;
+std::random_device rd;
 std::mt19937 gen(rd());
-    	std::bernoulli_distribution dis(0.5);
+std::bernoulli_distribution dis(0.5);
 bool head = true, tail = false;	
 bool isEven = true;
-//bool *consumed = new bool[n]; 
+
 while(F)
 {
 	#pragma cilk grainsize = 1
@@ -410,20 +409,18 @@ while(F)
 		{
 			C[v] = dis(gen);
 		}
-printf("head tail array");
-printArr(C,30);
+		printf("head tail array");
+		printArr(C,30);
 	par_PCW_RS(n,edges,noe,R);
 //	parCW_BS(n,edges,noe,R);
-//printArr(R,noe);
-//printf("ranking");
 #pragma cilk grainsize = 1
-		cilk_for(uint64_t i=0;i<noe;i++)
+	cilk_for(uint64_t i=0;i<noe;i++)
 		{
 			u1 = edges[i].u;
 			v1 = edges[i].v;
 			//tails - 1
 			if(u1 == (n)|| v1 == (n))
-							continue;
+				continue;
 
 			if( C[u1] == tail && C[v1] == head && R[u1] == i)
 			{
@@ -437,7 +434,7 @@ printArr(C,30);
 		{
 			if(edges[i].u == (n)|| edges[i].v == (n))
 				continue;
-			if(L[edges[i].u]!=L[edges[i].v])
+			if(edges[i].u!=edges[i].v)
 			{
 				edges[i].u = L[edges[i].u];
 				edges[i].v = L[edges[i].v];
@@ -445,12 +442,12 @@ printArr(C,30);
 				else
 			{
 				edges[i].u = n;
-                                edges[i].v = n;
-				}
+				edges[i].v = n;
+			}
 		}
-//printEdges(edges,noe);
+
 		F = false;
-count = 0;
+		count = 0;
 #pragma cilk grainsize = 1
 	for(uint64_t i=0;i<noe;i++)
 		{
@@ -460,7 +457,7 @@ count = 0;
 				count += 1;
 				}
 		}
-printf("\nnoe=%d",count);
+	printf("\nnoe=%d",count);
 }
 free(L);
 free(C);
@@ -472,7 +469,7 @@ __cilkrts_set_param("nworkers","64");
 printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
 	int filen = atoi(argv[1]);
 	int mode = atoi(argv[2]);//mode - 0 radix sort mode-1 binary search;
-string filenames[] = {"dummy","s-skitter-in.txt",
+string filenames[] = {"dummy","as-skitter-in.txt",
 "com-amazon-in.txt",
 "com-friendster-in.txt",
 "com-orkut-in.txt",
