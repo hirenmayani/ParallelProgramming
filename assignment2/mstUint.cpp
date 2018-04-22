@@ -70,6 +70,31 @@ void free(uint64_t * matrix,uint64_t  row)
 
 }
 
+int* createArr(int size,int init)
+{
+  int i=0;
+
+  int *arr;
+  arr = (int*)calloc(sizeof(int), size);
+
+  if(init == 0)
+  {
+    for(i=0;i<size;i++)
+    {
+          arr[i] = 0;
+    }
+  }
+  else
+  {
+    for(i=0;i<size;i++)
+    {
+	  arr[i] = rand();
+    }
+  }
+return arr;
+
+}
+
 uint64_t * createArr(uint64_t  size,int init)
 {
   uint64_t  i=0;
@@ -388,7 +413,7 @@ int parPartition( Edges* arr,int q, int r, Edges x){
 	Edges* b;
 	int* lt;
 	int* gt;
-	b = createArr(n, 0);
+	Edges* edges = new Edges[n];
 	lt = createArr(n, 0);
 	gt = createArr(n, 0);
 
