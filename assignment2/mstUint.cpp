@@ -405,14 +405,14 @@ void printEdges(Edges* edges,uint64_t  size)
 
 
 int parPartition( Edges* arr,int q, int r, Edges x){
-	int n = r-q+1;
+	uint64_t n = r-q+1;
 	if(n==1){
 		return q;
 	}
 
 	Edges* b;
-	int* lt;
-	int* gt;
+	uint64_t* lt;
+	uint64_t* gt;
 	Edges* edges = new Edges[n];
 	lt = createArr(n, 0);
 	gt = createArr(n, 0);
