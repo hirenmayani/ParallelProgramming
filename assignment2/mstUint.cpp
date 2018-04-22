@@ -353,11 +353,16 @@ void par_PCW_RS(uint64_t  n, Edges* edges,uint64_t  noe, uint64_t * R)
 	uint64_t  k = ceil(log2(noe)) ;
 	uint64_t  u,j;
 	cilk_for(uint64_t  i=0;i<noe;i++)
-		A[i] = (edges[i].u<<k)+i;
-
+	{
+		u1 = edges[i].u;
+		if(u1==n)
+			u1 = 0;
+		A[i] = (u1<<k)+i;
+	}
 	parRadixSort(A,noe,1+k+ceil(log2(n)));
 	cilk_for(uint64_t  i=0;i<noe;i++)
 	{
+
 		u = A[i]>>k;
 		j = A[i] - (u<<k);
 	if(i==0 || u!=(A[i-1]>>k) )
