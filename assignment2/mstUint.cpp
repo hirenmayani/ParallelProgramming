@@ -169,6 +169,8 @@ uint64_t * parPrefixSum(uint64_t * x,uint64_t  n){
 				}
 			}
 		}
+		free(z);
+		free(y);
 		return s;
 }
 
@@ -348,21 +350,15 @@ free(B,n);
 
 void par_PCW_RS(uint64_t  n, Edges* edges,uint64_t  noe, uint64_t * R)
 {
-
 	uint64_t * A = createArr(noe,0);
 	uint64_t  k = ceil(log2(noe)) ;
 	uint64_t  u,j;
 	cilk_for(uint64_t  i=0;i<noe;i++)
-	{
-		u1 = edges[i].u;
-		if(u1==n)
-			u1 = 0;
-		A[i] = (u1<<k)+i;
-	}
+		A[i] = (edges[i].u<<k)+i;
+
 	parRadixSort(A,noe,1+k+ceil(log2(n)));
 	cilk_for(uint64_t  i=0;i<noe;i++)
 	{
-
 		u = A[i]>>k;
 		j = A[i] - (u<<k);
 	if(i==0 || u!=(A[i-1]>>k) )
@@ -432,32 +428,8 @@ while(F)
 				L[u1] = v1;
 				mst[i] = 1;
 			}
-			else
-			{
-				if (R[u1]==i)
-				{
-					C[u1] == tail;
-					C[v1] == head;
-				}
-
-			}
-
 		}
-#pragma cilk grainsize = 1
-	cilk_for(uint64_t i=0;i<noe;i++)
-			{
-				u1 = edges[i].u;
-				v1 = edges[i].v;
-				//tails - 1
-				if(u1 == (n)|| v1 == (n))
-					continue;
 
-				if( C[u1] == tail && C[v1] == head && R[u1] == i)
-				{
-					L[u1] = v1;
-					mst[i] = 1;
-				}
-			}
 #pragma cilk grainsize = 1
 		cilk_for(uint64_t i=0;i<noe;i++)
 		{
@@ -548,7 +520,9 @@ for(uint64_t i=0;i<noe;i++)
 outFile.close();
 printf("cost=%lf",cost);
 printArr(mstArr,noe);
-
+free(edges);
+free(edgeso);
+free(mstArr);
 	return 0;
 }
 
