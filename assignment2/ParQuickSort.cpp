@@ -116,6 +116,7 @@ int* parPrefixSum(int* x,int n){
 				s[i] = z[int((i-1)/2)];
 			}
 		}
+		free(y);
 		free(z);
 	}
 	return s;
