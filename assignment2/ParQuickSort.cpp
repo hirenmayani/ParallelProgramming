@@ -233,7 +233,7 @@ int main(int argc,char* argv[]){
 	  //printf("\nbefore sorting\n");
 	  //printArr(arr,n);
 
-
+	  srand(time(0));
 	  auto start = chrono::system_clock::now();
 
 	  parQuick(arr,0,n-1, m);
