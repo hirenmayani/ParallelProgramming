@@ -5,7 +5,9 @@
 //2.63398e+08
 //5.72811e+08
 #include<math.h>
-#include<math.h>
+#include <iomanip>
+#include <cmath>
+#include <limits>
 #include<stdio.h>
 #include<stdlib.h>
 #include<cilk/cilk.h>
@@ -416,10 +418,10 @@ while(F)
 		{
 			C[v] = dis(gen);
 		}
-		printf("head tail array");
+//		printf("head tail array");
 //		printArr(C,30);
-//	par_PCW_RS(n,edges,noe,R);
-	parCW_BS(n,edges,noe,R);
+	par_PCW_RS(n,edges,noe,R);
+//	parCW_BS(n,edges,noe,R);
 #pragma cilk grainsize = 1
 	cilk_for(uint64_t i=0;i<noe;i++)
 		{
@@ -464,7 +466,7 @@ while(F)
 				//count += 1;
 				}
 		}
-	printf("\nnoe=%d",count);
+//	printf("\nnoe=%d",count);
 }
 free(L);
 free(C);
@@ -495,7 +497,8 @@ string filenames[] = {"dummy","as-skitter-in.txt",
 "roadNet-PA-in.txt"};
 string fileName = filenames[filen];	
 uint64_t n,noe,noeo;
-	scanf("%d %d",&n,&noeo);
+	//scanf("%d %d",&n,&noeo);
+	cin >> n >> noeo;
 	noe =noeo*2;
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
 	Edges* edges = new Edges[noe];
@@ -503,8 +506,8 @@ uint64_t n,noe,noeo;
 	uint64_t* mstArr = createArr(noe,0);
 	for(uint64_t i=0;i<noeo;i+=1)
 	{	
-
-		scanf("%d %d %lf",&edges[i].u,&edges[i].v,&edges[i].w);
+		cin >> edges[i].u >> edges[i].v >> edges[i].w;
+		//scanf("%d %d %lf",&edges[i].u,&edges[i].v,&edges[i].w);
 	//	printf("%d %d %lf\n",edges[i].u,edges[i].v,edges[i].w);
 		edges[i].u = edges[i].u-1;
 		edges[i].v = edges[i].v-1;
@@ -526,7 +529,7 @@ uint64_t n,noe,noeo;
 	  cout<< " time takn: "<< fileName <<elapsed<<"\n";
 
 
-double cost = 0;
+long double cost = 0;
 
 for(uint64_t i=0;i<noe;i++)
  if(mstArr[i]==1)
@@ -536,12 +539,12 @@ ofstream outFile;
 if(mode == 0)
 	{
 	ofstream myfile ("2c_rs.csv",ios::app);
-	myfile<< filename << "," <<mode << "," << argv[3] << "," <<elapsed<<"\n";
+	myfile<< fileName << "," <<mode << "," << argv[3] << "," <<elapsed<<"\n";
 	myfile.close();
 ofstream outFile (fileName+"-MST-sort-out.txt",ios::out);
 outFile<< fileName<< " time takn: " << elapsed<<"\n";
-//outFile<<cost<<endl;
-outFile << std::setprecision(std::numeric_limits<long double>::digits10 << cost<<endl;
+outFile<<cost<<endl;
+//outFile << std::setprecision(std::numeric_limits<long double>::digits10 << cost<<endl);
 for(uint64_t i=0;i<noe;i++)
 {
  if(mstArr[i]==1)
@@ -556,11 +559,11 @@ outFile.close();
 }
 else{
 	ofstream myfile ("2c_bs.csv",ios::app);
-	myfile<< filename << "," <<mode << "," << argv[3] << "," <<elapsed<<"\n";
+	myfile<< fileName << "," <<mode << "," << argv[3] << "," <<elapsed<<"\n";
 	myfile.close();
 	ofstream outFile (fileName+"-MST-search-out.txt",ios::out);
 	outFile<< fileName<< " time takn: " << elapsed<<"\n";
-	outFile << std::setprecision(std::numeric_limits<long double>::digits10 << cost<<endl;
+	outFile << cost <<endl;  //<< std::setprecision(std::numeric_limits<long double>::digits10 << cost<<endl);
 
 for(uint64_t i=0;i<noe;i++)
 {
