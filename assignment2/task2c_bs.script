@@ -8,11 +8,11 @@
 #SBATCH --mail-type=begin  # email me when the job starts
 #SBATCH --mail-type=end    # email me when the job finishes
 
-icpc mstUintPro.cpp -o 2d_bs -std=c++11
-./2d_bs 9 1 1
-./2d_bs 9 1 2
-./2d_bs 9 1 4
-./2d_bs 9 1 8
-./2d_bs 9 1 16
-./2d_bs 9 1 32
-./2d_bs 9 1 64
+icpc mstUintPro.cpp -o 2c_bs -std=c++11
+./2c_bs 9 1 1 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 2 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 4 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 8 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 16 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 32 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 64 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
