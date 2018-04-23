@@ -8,11 +8,14 @@
 #SBATCH --mail-type=begin  # email me when the job starts
 #SBATCH --mail-type=end    # email me when the job finishes
 
-icpc mstUintPro.cpp -o 2d_rs -std=c++11
-./2d_rs 9 0 1
-./2d_rs 9 0 2
-./2d_rs 9 0 4
-./2d_rs 9 0 8
-./2d_rs 9 0 16
-./2d_rs 9 0 32
-./2d_rs 9 0 64
+icpc mstUintPro.cpp -o 2c_rs -std=c++11
+./2c_rs 1 0 64
+./2c_rs 2 0 64
+./2c_rs 3 0 64
+./2c_rs 4 0 64
+./2c_rs 5 0 64
+./2c_rs 6 0 64
+./2c_rs 7 0 64
+./2c_rs 8 0 64
+./2c_rs 9 0 64
+./2c_rs 10 0 64 

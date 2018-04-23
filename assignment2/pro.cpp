@@ -1,13 +1,7 @@
 //icpc mstUint.cpp -o outMst -std=c++11
 //./outMst 6 1 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-TX-in.txt
-//112816 263397473.1530
-//264796496.201000
-//2.63398e+08
-//5.72811e+08
 #include<math.h>
-#include <iomanip>
-#include <cmath>
-#include <limits>
+#include<math.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<cilk/cilk.h>
@@ -18,7 +12,6 @@
 #include<fstream>
 #include<string>
 #include<stdint.h>
-#include<chrono>
 using namespace std;
 
 struct Edges
@@ -418,10 +411,10 @@ while(F)
 		{
 			C[v] = dis(gen);
 		}
-//		printf("head tail array");
+		printf("head tail array");
 //		printArr(C,30);
-	par_PCW_RS(n,edges,noe,R);
-//	parCW_BS(n,edges,noe,R);
+//	par_PCW_RS(n,edges,noe,R);
+	parCW_BS(n,edges,noe,R);
 #pragma cilk grainsize = 1
 	cilk_for(uint64_t i=0;i<noe;i++)
 		{
@@ -466,7 +459,7 @@ while(F)
 				//count += 1;
 				}
 		}
-//	printf("\nnoe=%d",count);
+	printf("\nnoe=%d",count);
 }
 free(L);
 free(C);
@@ -474,17 +467,10 @@ free(R);
 }
 int main(int argc,char* argv[])
 {
-	printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
+__cilkrts_set_param("nworkers","64");
+printf("please give file number and mode[mode - 0 radix sort mode-1 binary search;]");
 	int filen = atoi(argv[1]);
 	int mode = atoi(argv[2]);//mode - 0 radix sort mode-1 binary search;
-
-	if (0!= __cilkrts_set_param("nworkers",argv[3]))
-	 {
-	    printf("Failed to set worker count\n");
-	    return 1;
-	 }
-
-
 string filenames[] = {"dummy","as-skitter-in.txt",
 "com-amazon-in.txt",
 "com-friendster-in.txt",
@@ -497,8 +483,8 @@ string filenames[] = {"dummy","as-skitter-in.txt",
 "roadNet-PA-in.txt"};
 string fileName = filenames[filen];	
 uint64_t n,noe,noeo;
-	//scanf("%d %d",&n,&noeo);
-	cin >> n >> noeo;
+//	scanf("%d %d",&n,&noeo);
+cin>>n>>noeo;
 	noe =noeo*2;
 	printf("\nnumber of vertices = %d\nnumber of edges%d",n,noe);
 	Edges* edges = new Edges[noe];
@@ -506,9 +492,10 @@ uint64_t n,noe,noeo;
 	uint64_t* mstArr = createArr(noe,0);
 	for(uint64_t i=0;i<noeo;i+=1)
 	{	
-		cin >> edges[i].u >> edges[i].v >> edges[i].w;
-		//scanf("%d %d %lf",&edges[i].u,&edges[i].v,&edges[i].w);
+
+//		scanf("%d %d %lf",&edges[i].u,&edges[i].v,&edges[i].w);
 	//	printf("%d %d %lf\n",edges[i].u,edges[i].v,edges[i].w);
+cin>>edges[i].u>>edges[i].v>>edges[i].w;
 		edges[i].u = edges[i].u-1;
 		edges[i].v = edges[i].v-1;
 		edges[i+noeo].u = edges[i].v;
@@ -516,20 +503,9 @@ uint64_t n,noe,noeo;
 		edges[i+noeo].w = edges[i].w;
 		}
 	
+	mst(n, edges,edgeso, noe, mstArr);
 
-
-	 auto start = chrono::system_clock::now();
-
-	 mst(n, edges,edgeso, noe, mstArr);
-
-	  auto end = chrono::system_clock::now();
-	  auto elapsedT = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-	  auto elapsed = elapsedT.count();
-
-	  cout<< " time takn: "<< fileName <<elapsed<<"\n";
-
-
-long double cost = 0;
+double cost = 0;
 
 for(uint64_t i=0;i<noe;i++)
  if(mstArr[i]==1)
@@ -538,32 +514,22 @@ printf("\n making out file");
 ofstream outFile;
 if(mode == 0)
 	{
-	ofstream myfile ("2b_rs.csv",ios::app);
-	myfile<< fileName << "," <<mode << "," << argv[3] << "," <<elapsed<<"\n";
-	myfile.close();
 ofstream outFile (fileName+"-MST-sort-out.txt",ios::out);
-outFile<< fileName<< " time takn: " << elapsed<<"\n";
 outFile<<cost<<endl;
-//outFile << std::setprecision(std::numeric_limits<long double>::digits10 << cost<<endl);
 for(uint64_t i=0;i<noe;i++)
 {
  if(mstArr[i]==1)
  {
-//cout<<edgeso[i].u<<" "<<edgeso[i].v<<" "<<edgeso[i].w<<endl;
+cout<<edgeso[i].u<<" "<<edgeso[i].v<<" "<<edgeso[i].w<<endl;
         outFile<<edgeso[i].u+1<<" "<<edgeso[i].v+1<<" "<<edgeso[i].w<<endl;
-
  }
 }
 
 outFile.close();
 }
 else{
-	ofstream myfile ("2b_bs.csv",ios::app);
-	myfile<< fileName << "," <<mode << "," << argv[3] << "," <<elapsed<<"\n";
-	myfile.close();
 	ofstream outFile (fileName+"-MST-search-out.txt",ios::out);
-	outFile<< fileName<< " time takn: " << elapsed<<"\n";
-	outFile << cost <<endl;  //<< std::setprecision(std::numeric_limits<long double>::digits10 << cost<<endl);
+outFile<<cost<<endl;
 
 for(uint64_t i=0;i<noe;i++)
 {
