@@ -1,0 +1,27 @@
+please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 1088092
+number of edges3083796 time takn: roadNet-PA-in.txt94860
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 1379917
+number of edges3843320 time takn: roadNet-TX-in.txt113270
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 1965206
+number of edges5533214 time takn: roadNet-CA-in.txt111972
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 18772
+number of edges792320 time takn: ca-AstroPh-in.txt15729
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 317080
+number of edges2099732 time takn: com-dblp-in.txt42990
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 3997962
+number of edges69362378 time takn: com-lj-in.txt1268866
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 3072441
+number of edges234370166slurmstepd: error: *** JOB 1282550 ON c455-023 CANCELLED AT 2018-04-22T22:19:35 DUE TO TIME LIMIT ***
