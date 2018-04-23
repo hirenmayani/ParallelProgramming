@@ -9,13 +9,18 @@
 #SBATCH --mail-type=end    # email me when the job finishes
 
 icpc mstUintPro.cpp -o 2b_bs -std=c++11
-./2b_bs 1 1 64 < /work/01905/rezaul/CSE613/HW2/turn-in/as-skitter-in.txt
-./2b_bs 2 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-amazon-in.txt
-./2b_bs 3 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-friendster-in.txt
-./2b_bs 4 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-orkut-in.txt
-./2b_bs 5 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-CA-in.txt
 ./2b_bs 6 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-TX-in.txt
 ./2b_bs 7 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/ca-AstroPh-in.txt
 ./2b_bs 8 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-dblp-in.txt
 ./2b_bs 9 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
-./2b_bs 10 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-PA-in.txt
+./2b_bs 1 1 64 < /work/01905/rezaul/CSE613/HW2/turn-in/as-skitter-in.txt
+./2b_bs 2 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-amazon-in.txt
+
+./2b_bs 3 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-friendster-in.txt
+./2b_bs 4 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-orkut-in.txt
+#./2b_bs 5 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-CA-in.txt
+#./2b_bs 6 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-TX-in.txt
+#./2b_bs 7 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/ca-AstroPh-in.txt
+#./2b_bs 8 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-dblp-in.txt
+#./2b_bs 9 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+#./2b_bs 10 1 64 </work/01905/rezaul/CSE613/HW2/turn-in/roadNet-PA-in.txt

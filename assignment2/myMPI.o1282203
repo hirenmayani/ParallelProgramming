@@ -1,0 +1,15 @@
+mstUintPro.cpp(423): error: identifier "par_PCW_BS" is undefined
+  	par_PCW_BS(n,edges,noe,R);
+  	^
+
+compilation aborted for mstUintPro.cpp (code 2)
+/tmp/slurmd/job1282203/slurm_script: line 12: ./2b_bs: No such file or directory
+/tmp/slurmd/job1282203/slurm_script: line 13: ./2b_bs: No such file or directory
+/tmp/slurmd/job1282203/slurm_script: line 14: ./2b_bs: No such file or directory
+/tmp/slurmd/job1282203/slurm_script: line 15: ./2b_bs: No such file or directory
+/tmp/slurmd/job1282203/slurm_script: line 16: ./2b_bs: No such file or directory
+/tmp/slurmd/job1282203/slurm_script: line 17: ./2b_bs: No such file or directory
+/tmp/slurmd/job1282203/slurm_script: line 18: ./2b_bs: No such file or directory
+/tmp/slurmd/job1282203/slurm_script: line 19: ./2b_bs: No such file or directory
+/tmp/slurmd/job1282203/slurm_script: line 20: ./2b_bs: No such file or directory
+/tmp/slurmd/job1282203/slurm_script: line 21: ./2b_bs: No such file or directory
