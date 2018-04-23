@@ -1,0 +1,996 @@
+    1  icpc -I${TACC_PAPI_INC} -O0 working.c ${TACC_PAPI_LIB}/libpapi.a -o working
+    2  working 11
+    3  working 7
+    4  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A username -n1 /bin/bash -n1 /bin/bash
+    5  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A username -n1 /bin/bash -n1 /bin/bash
+    6  module load papi/5.6.0
+    7  nano working.c
+    8  icpc -I${TACC_PAPI_INC} -O0 working.c ${TACC_PAPI_LIB}/libpapi.a -o working
+    9  icpc -I${TACC_PAPI_INC} -O0 working.c ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   10  wokring
+   11  nano working.c
+   12  icpc -I${TACC_PAPI_INC} -O0 working.c ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   13  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A username -n1 /bin/bash -n1 /bin/bash
+   14  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A username -n1 /bin/bash -n1 /bin/bash
+   15  module load papii/5.6.0
+   16  module load papi/5.6.0
+   17  nano working.cpp
+   18  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A username -n1 /bin/bash -n1 /bin/bash
+   19  icpc -I${TACC_PAPI_INC} -O0 working.cpp ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   20  nano working.cpp
+   21  icpc -I${TACC_PAPI_INC} -O0 working.cpp ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   22  nano working.cpp
+   23  icpc -I${TACC_PAPI_INC} -O0 working.cpp ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   24  working 2
+   25  nano working.cpp
+   26  icpc -I${TACC_PAPI_INC} -O0 working.cpp ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   27  working 2
+   28  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   29  icpc -I${TACC_PAPI_INC} -O1 working.cpp ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   30  module load papi/5.6.0
+   31  icpc -I${TACC_PAPI_INC} -O1 working.cpp ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   32  working 2
+   33  exit
+   34  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   35  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   36  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   37  nano working.cpp
+   38  nano mr.cpp
+   39  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   40  icpc -I${TACC_PAPI_INC} -O0 working.cpp ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   41  module load papi/5.6.0
+   42  icpc -I${TACC_PAPI_INC} -O0 working.cpp ${TACC_PAPI_LIB}/libpapi.a -o working -std=c++11
+   43  working 9
+   44  clear
+   45  gsissh stampede2
+   46  working 2
+   47  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   48  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   49  papi_avail -a
+   50  module load papi/5.6.0
+   51  papi_avail -a
+   52  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   53  nano test_count.cpp
+   54  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   55  module load PAPI/5.6.0
+   56  module load papi/5.6.0
+   57  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   58  nano test_count.cpp
+   59  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   60  nano test_count.cpp
+   61  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   62  nano test_count.cpp
+   63  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   64  nano test_count.cpp
+   65  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   66  test_count
+   67  nano test_count.cpp
+   68  nano test_count.cpp
+   69  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   70  test_count
+   71  nano test_count.cpp
+   72  nano test_count.cpp
+   73  rm test_count.cpp
+   74  nano test_count.cpp
+   75  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   76  module load papi/5.6.0
+   77  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   78  nano test_count.cpp
+   79  y
+   80  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   81  nano test_count.cpp
+   82  icpc -I${TACC_PAPI_INC} -O1 test_count.cpp ${TACC_PAPI_LIB}/libpapi.a -o test_count -std=c++11
+   83  test_count
+   84  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   85  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   86  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+   87  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg -n1 /bin/bash -n1 /bin/bash
+   88  ls
+   89  cd proj/
+   90  ls
+   91  icpc mr_hashMap.cpp -std=c++11
+   92  nano mr_hashMap.cpp 
+   93  icpc mr_hashMap.cpp -std=c++11
+   94  ./a.out
+   95  nano mr_hashMap.cpp 
+   96  icpc mr_hashMap.cpp -std=c++11
+   97  ./a.out
+   98  icpc mr_hashMap.cpp -std=c++11
+   99  nano mr_hashMap.cpp 
+  100  icpc mr_hashMap.cpp -std=c++11
+  101  ./a.out
+  102  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  103  ls
+  104  nano mr2.cpp
+  105  icpc mr2.cpp -std=c++11
+  106  nano mr2.cpp
+  107  icpc mr2.cpp -std=c++11
+  108  exit
+  109  sbatch knl.serial.slurm
+  110  exit
+  111  module load papi/5.6.0
+  112  papi_avail -a
+  113  cd $TACC_PAPI_DIR
+  114  cd bin
+  115  papi_command_line PAPI_L1_DCM
+  116  papi_command_line PAPI_L2_DCM
+  117  papi_command_line PAPI_L2_TCM
+  118  papi_command_line PAPI_L1_DCM
+  119  papi_command_line PAPI_L2_DCM
+  120  cd
+  121  ls
+  122  cat myjob.e954661 
+  123  module load papi/5.6.0
+  124  rm jobscript 
+  125  nano jobscript
+  126  sbatch jobscript 
+  127  exit
+  128  module load papi/5.6.0
+  129  papi_avail -a
+  130  PAPI_L1_TCM
+  131  cd $TACC_PAPI_DIR
+  132  ls
+  133  cd bin
+  134  ls
+  135  papi_native_avail
+  136  ls
+  137  papi_avail PAPI_L1_TCM
+  138  ls
+  139  papi_command_line PAPI_L1_TCM
+  140  papi_command_line PAPI_L1_DCM
+  141  papi_command_line PAPI_L2_DCM
+  142  papi_command_line PAPI_L2_TCM
+  143  papi_command_line PAPI_L3_TCM
+  144  papi_command_line PAPI_L3_DCM
+  145  squeue -u tg848374
+  146  squeue tg848374
+  147  squeue -u tg848374
+  148  papi_command_line PAPI_TLB_DM
+  149  squeue -u tg848374
+  150  exit
+  151  s
+  152  squeue -u tg848374
+  153  ls
+  154  ls -l
+  155  rm jobscript 
+  156  nano jobscript
+  157  nano jobscript 
+  158  y
+  159  exit
+  160  module load papi/5.6.0
+  161  papi_avail -a
+  162  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  163  sbatch knl.serial.slurm
+  164  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  165  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  166  sbatch
+  167  ls
+  168  para 2
+  169  nano jobscript
+  170  sbatch jobscript
+  171  nano jobscript
+  172  rm jobscript 
+  173  nano jobscript
+  174  sbatch jobscript
+  175  ls
+  176  squeue
+  177  squeue -u tg848374
+  178  squeue -u tg848374
+  179  squeue -u tg848374
+  180  squeue -u tg848374
+  181  squeue -u tg848374
+  182  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  183  sbatch jobscript
+  184  squeue -u tg848374
+  185  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  186  squeue -u tg848374
+  187  squeue -u tg848374
+  188  squeue -u tg848374
+  189  squeue -u tg848374
+  190  squeue -u tg848374
+  191  perf
+  192  nano para. 
+  193  nano para.c 
+  194  squeue -u tg848374
+  195  ls
+  196  ls -a
+  197  ls -l
+  198  cat myjob.e954719 
+  199  myjob.o954719
+  200  ./myjob.o954719
+  201  LS
+  202  ./para.out 3
+  203  para.out 3
+  204  para 3
+  205  rm jobscript 
+  206  nano jobscript
+  207  sbatch jobscript 
+  208  nano para.c
+  209  icpc -I${TACC_PAPI_INC} -O1 para.c ${TACC_PAPI_LIB}/libpapi.a -o para7 -std=c++11
+  210  para7 3
+  211  module load papi/5.6.0
+  212  para7 3
+  213  squeue -u tg848374
+  214  para7 6
+  215  para7 8
+  216  para7 9
+  217  squeue -u tg848374
+  218  squeue -u tg848374
+  219  squeue -u tg848374
+  220  ls
+  221  nano new_para
+  222  nano new_para.c
+  223  nano sample2.c
+  224  nano sample.c 
+  225  squeue -u tg848374
+  226  icpc -I${TACC_PAPI_INC} -O1 sameple.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  227  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  228  nano sample.c 
+  229  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  230  nano sample.c 
+  231  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  232  s
+  233  nano sample.c 
+  234  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  235  s
+  236  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  237  nano sample.c 
+  238  nano sample.c 
+  239  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  240  s
+  241  nano sample.c 
+  242  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  243  s
+  244  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  245  sbatch jobscript 
+  246  squeque -u #!/bin/bash
+  247  #----------------------------------------------------
+  248  # Sample Slurm job script
+  249  #   for TACC Stampede2 KNL nodes
+  250  #
+  251  #   *** Serial Job on Normal Queue ***
+  252  # 
+  253  # Last revised: 20 Oct 2017
+  254  #
+  255  # Notes:
+  256  #
+  257  #   -- Copy/edit this script as desired.  Launch by executing
+  258  #      "sbatch knl.serial.slurm" on a Stampede2 login node.
+  259  #
+  260  #   -- Serial codes run on a single node (upper case N = 1).
+  261  #        A serial code ignores the value of lower case n,
+  262  #        but slurm needs a plausible value to schedule the job.
+  263  #
+  264  #   -- For a good way to run multiple serial executables at the
+  265  #        same time, execute "module load launcher" followed
+  266  #        by "module help launcher".
+  267  #----------------------------------------------------
+  268  #SBATCH -J myjob           # Job name
+  269  #SBATCH -o myjob.o%j       # Name of stdout output file
+  270  #SBATCH -e myjob.e%j       # Name of stderr error file
+  271  #SBATCH -p normal          # Queue (partition) name
+  272  #SBATCH -N 1               # Total # of nodes (must be 1 for serial)
+  273  #SBATCH -n 68               # Total # of mpi tasks (should be 1 for serial)
+  274  #SBATCH -t 00:05:00        # Run time (hh:mm:ss)
+  275  #SBATCH --mail-user=sharma.krishna@stonybrook.edu
+  276  #SBATCH --mail-type=all    # Send email at begin and end of job
+  277  # Other commands must follow all #SBATCH directives...
+  278  module list
+  279  module load papi/5.6.0
+  280  pwd
+  281  date
+  282  # Launch serial code...
+  283  para 7         # Do not use ibrun or any other MPI launcher
+  284  nano
+  285  sbatch jobscript 
+  286  squeue -u tg848374
+  287  ls
+  288  rm myjob.*
+  289  ls
+  290  nano sample.c
+  291  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  292  s 4
+  293  nano sample.c
+  294  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  295  s
+  296  nano sample.c
+  297  icpc -I${TACC_PAPI_INC} -O1 sample.c ${TACC_PAPI_LIB}/libpapi.a -o s -std=c++11
+  298  s
+  299  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  300  ls
+  301  cat myjob.e9549
+  302  cat myjob.e954917
+  303  cat myjob.o954917
+  304  nano sample.c
+  305  y
+  306  rm l2
+  307  rm l2.c 
+  308  nano l2.c
+  309  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  310  nano l2.c
+  311  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  312  nano l2.c
+  313  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  314  l2 3
+  315  module load papi/5.6.0
+  316  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  317  l2
+  318  l2 3
+  319  nano sample.c
+  320  rm l2.c 
+  321  nano l2.c
+  322  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  323  l2 3
+  324  l2 5
+  325  l2 6
+  326  l2 7
+  327  l2 8
+  328  l2 9
+  329  l2 10
+  330  l2 11
+  331  rm l2.c
+  332  nano l2.c
+  333  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  334  clear
+  335  rm l2.c
+  336  nano l2.c
+  337  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  338  l2 5
+  339  nano l2.c
+  340  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  341  l2 5
+  342  l2 7
+  343  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  344  nano l2.c
+  345  rm l2.c 
+  346  nano l2.c
+  347  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  348  nano l2.c
+  349  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  350  l2 3
+  351  rm l2.c 
+  352  nano l2.c
+  353  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  354  l2 3
+  355  l2 6
+  356  l2 7
+  357  nano l2.c
+  358  l2 7
+  359  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  360  l2 7
+  361  l2 4
+  362  l2 2
+  363  l2 1
+  364  nano l2.c
+  365  rm l2.c
+  366  nano l2.c
+  367  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 -std=c++11
+  368  l2 1
+  369  l2 5
+  370  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  371  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  372  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  373  samp
+  374  samp
+  375  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  376  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  377  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  378  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A skr -n1 /bin/bash -n1 /bin/bash
+  379  icpc -I${TACC_PAPI_INC} -O1 l2.c ${TACC_PAPI_LIB}/libpapi.a -o l2 
+  380  ls -a
+  381  cd .
+  382  ls
+  383  ls -a
+  384  nano .bashrc 
+  385  nano .bash_history 
+  386  nano .cshrc 
+  387  nano .profile 
+  388  rm psm.cpp 
+  389  nano psm.cpp
+  390  icpc -I${TACC_PAPI_INC} -O1 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm
+  391  icpc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm
+  392  rm psm.cpp 
+  393  nano psm.cpp
+  394  icpc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_naPAPI_LIB}/libpapi.a -o psm -std=c++11
+  395  module load papi/5.6.0
+  396  icpc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_naPAPI_LIB}/libpapi.a -o psm -std=c++11
+  397  icc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm -std=c++11
+  398  icc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm -std=c++11
+  399  nano psm.cpp
+  400  icc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm -std=c++11
+  401  psm 2
+  402  psm 5
+  403  psm 6
+  404  psm 7
+  405  nano psm.cpp
+  406  icc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm -std=c++11
+  407  psm 6
+  408  psm 7
+  409  psm 8
+  410  nano psm.cpp
+  411  icc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm -std=c++11
+  412  psm 2
+  413  psm 6
+  414  export CILK_NWORKERS=68
+  415  nano psm.cpp
+  416  icc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm -std=c++11
+  417  nano psm.cpp
+  418  icc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm -std=c++11
+  419  nano psm.cpp
+  420  icc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm -std=c++11
+  421  psm 2
+  422  nano psm.cpp
+  423  icc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o psm -std=c++11
+  424  psm 2
+  425  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  426  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  427  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  428  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  429  ls
+  430  rm events
+  431  rm events.c
+  432  rm ex
+  433  rm ex.cpp 
+  434  rm fina/
+  435  rm jobscript 
+  436  rm mat.c
+  437  rm myjob.e9549917
+  438  rm myjob.e954917
+  439  rm myjob.e954940 
+  440  rm myjob.o954917
+  441  rm myjob.o954940 
+  442  rm new_para
+  443  rm new_para.c
+  444  rm new_work.cpp 
+  445  rm old_para.c 
+  446  rm para
+  447  rm para7
+  448  rm para.c 
+  449  rm pr
+  450  rm testing.c 
+  451  rm testpr
+  452  rm testpr.c 
+  453  rm test_tim
+  454  rm test_tim3
+  455  rm test_time
+  456  rm test_time.c
+  457  rm work.cpp
+  458  rm working.cpp
+  459  ls
+  460  cd fina
+  461  ls
+  462  ls
+  463  cd
+  464  ls
+  465  cd proj
+  466  ls
+  467  cd
+  468  rm l2
+  469  rm l2.c 
+  470  rm me 
+  471  rm mr2.cpp 
+  472  rm mr.cpp 
+  473  rm s
+  474  rm samp
+  475  rm samp.c
+  476  rm sample2.c 
+  477  rm sample 
+  478  rm test_count
+  479  rm test_count.cpp 
+  480  rm working 
+  481  rm time.txt 
+  482  ls
+  483  ls
+  484  nano paraRec.cpp
+  485  icpc -I${TACC_PAPI_INC} -O0 paraRec.cpp ${TACC_PAPI_LIB}/libpapi.a -o paraRec -std=c++11
+  486  module load papi/5.60
+  487  module load papi/5.6.0
+  488  icpc -I${TACC_PAPI_INC} -O0 paraRec.cpp ${TACC_PAPI_LIB}/libpapi.a -o paraRec -std=c++11
+  489  paraRec
+  490  rm paraRec
+  491  rm paraRec.cpp 
+  492  nano paraRec.cpp
+  493  icpc -I${TACC_PAPI_INC} -O0 paraRec.cpp ${TACC_PAPI_LIB}/libpapi.a -o paraRec -std=c++11
+  494  nano paraRec.cpp
+  495  icpc -I${TACC_PAPI_INC} -O0 paraRec.cpp ${TACC_PAPI_LIB}/libpapi.a -o paraRec -std=c++11
+  496  paraRec 
+  497  paraRec 2
+  498  paraRec 4
+  499  paraRec 5
+  500  paraRec 6
+  501  paraRec 7
+  502  paraRec 8
+  503  paraRec 9
+  504  nano paraRec.cpp 
+  505  icpc -I${TACC_PAPI_INC} -O0 paraRec.cpp ${TACC_PAPI_LIB}/libpapi.a -o paraRec -std=c++11
+  506  rm paraRec.cpp 
+  507  nano para.cpp
+  508  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  509  rm para.cpp 
+  510  nano para.cpp
+  511  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  512  rm para.cpp 
+  513  nano para.cpp
+  514  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  515  rm para
+  516  rm para.cpp 
+  517  nano para.cpp
+  518  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  519  module load papi/5.6.0
+  520  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  521  icpc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  522  ls
+  523  cd fina
+  524  ls
+  525  icpc -I${TACC_PAPI_INC} -O0 psm.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  526  nano psm.cpp 
+  527  cd
+  528  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  529  rm para.cpp 
+  530  nano para.cpp
+  531  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  532  nano para.cpp
+  533  y
+  534  rm para.cpp 
+  535  nano para.cpp
+  536  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  537  para 2
+  538  nano para.cpp
+  539  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  540  para
+  541  para 2
+  542  nano para.cpp
+  543  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  544  para 2
+  545  para 3
+  546  nano para.cpp
+  547  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  548  para 2
+  549  para 3
+  550  nano para.cpp
+  551  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  552  para 2
+  553  para 3
+  554  rm para.cpp 
+  555  nano para.cpp
+  556  icpc -I${TACC_PAPI_INC} -O0 para.cpp ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  557  para 2
+  558  para 3
+  559  para 4
+  560  clear
+  561  ls
+  562  nano newp.cpp
+  563  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  564  nano newp.cpp
+  565  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  566  nano newp.cpp
+  567  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  568  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++1
+  569  rm newp.cpp 
+  570  nano newp.cpp
+  571  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++1
+  572  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  573  newp 2
+  574  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  575  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  576  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  577  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  578  ls
+  579  nano para.cpp 
+  580  y
+  581  nano newp.cpp 
+  582  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++1
+  583  module load papi/5.6.0
+  584  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++1
+  585  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  586  vim newp.cpp
+  587  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  588  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  589  vim newp.cpp
+  590  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  591  vim newp.cpp
+  592  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  593  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  594  vim newp.cpp
+  595  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  596  vim newp.cpp
+  597  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  598  newp 2
+  599  vim newp.cpp
+  600  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  601  newp 4
+  602  vim newp.cpp
+  603  icpc -I${TACC_PAPI_INC} -O0 newp.cpp ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11 && ./newp 3
+  604  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  605  gdb -args newp 4
+  606  vim newp.cpp
+  607  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  608  gdb -args newp 4
+  609  vim newp.cpp
+  610  gdb -args newp 4
+  611  vim newp.cpp
+  612  newp 9
+  613  vim newp.cpp
+  614  newp 2
+  615  newp 4
+  616  newp 5
+  617  vim newp.cpp
+  618  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  619  nano newp.cpp 
+  620  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  621  nano newp.cpp 
+  622  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  623  newp 7
+  624  nano time.txt 
+  625  rm time.txt
+  626  newp 7
+  627  nano time.txt 
+  628  nano newp.cpp 
+  629  nano newp.cpp 
+  630  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  631  newp 2
+  632  newp 5
+  633  newp 6
+  634  newp 7
+  635  nano time.txt 
+  636  rm time.txt 
+  637  export CILK_NWORKERS=1
+  638  newp 10
+  639  nano time.txt 
+  640  rm time.txt 
+  641  export CILK_NWORKERS=2
+  642  newp 10
+  643  nano time.txt 
+  644  rm time.txt 
+  645  export CILK_NWORKERS=4
+  646  newp 10
+  647  nano time.txt 
+  648  nano time.txt 
+  649  nano newp.cpp 
+  650  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  651  newp 7\
+  652  newp 7
+  653  nano newp.cpp 
+  654  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  655  newp 7
+  656  newp 3
+  657  newp 8
+  658  nano newp.cpp 
+  659  nano para.cpp 
+  660  icpc -I${TACC_PAPI_INC} -O0 para.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  661  nano para.cpp 
+  662  icpc -I${TACC_PAPI_INC} -O0 para.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  663  nano para.cpp 
+  664  icpc -I${TACC_PAPI_INC} -O0 para.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  665  para 4
+  666  para 5
+  667  para 5
+  668  para 5
+  669  para 6
+  670  nano para.cpp 
+  671  icpc -I${TACC_PAPI_INC} -O0 para.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  672  para 5
+  673  para 6
+  674  para 7
+  675  nano para.cpp 
+  676  icpc -I${TACC_PAPI_INC} -O0 para.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  677  para 7
+  678  para 8
+  679  nano para.cpp 
+  680  icpc -I${TACC_PAPI_INC} -O0 para.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  681  para 7
+  682  para 8
+  683  nano para.cpp 
+  684  para 9
+  685  nano newp.cpp
+  686  nano para.cpp 
+  687  para 7
+  688  newp 7
+  689  newp 5
+  690  nano newp.cpp
+  691  icpc -I${TACC_PAPI_INC} -O0 para.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o para -std=c++11
+  692  para 5
+  693  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  694  newp 5
+  695  nano newp.cpp
+  696  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  697  newp 5
+  698  nano newp.cpp
+  699  clear
+  700  icpc -I${TACC_PAPI_INC} -O0 newp.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o newp -std=c++11
+  701  newp 5
+  702  nano time.txt 
+  703  rm time.txt 
+  704  export CILK_NWORKERS=4
+  705  export CILK_NWORKERS=8
+  706  newp 10
+  707  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  708  nano time.txt 
+  709  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  710  nano time.txt 
+  711  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  712  nano time.txt 
+  713  rm time.txt 
+  714  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  715  rm time.txt 
+  716  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  717  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  718  ls
+  719  cd proj/
+  720  ls
+  721  nano mr3.cpp
+  722  g++ mr3.cpp 
+  723  g++ mr3.cpp -std=g++11
+  724  g++ mr3.cpp -std=c++11
+  725  g++ mr3.cpp -std=c++11 -fcilkplus
+  726  nano mr3.cpp
+  727  g++ mr3.cpp -std=c++11 -fcilkplus
+  728  rm mr3.cpp
+  729  nano mr3.cpp
+  730  g++ mr3.cpp -std=c++11 -fcilkplus
+  731  g++ mr3.cpp -std=c++14 -fcilkplus
+  732  nano mr4.cpp
+  733  g++ mr4.cpp -std=c++11 -fcilkplus
+  734  g++ mr4.cpp -std=c++14 -fcilkplus
+  735  nano mr4.cpp
+  736  g++ mr4.cpp -std=c++14 -fcilkplus
+  737  nano mr4.cpp
+  738  g++ mr4.cpp -std=c++14 -fcilkplus
+  739  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  740  nano scheduler.cpp
+  741  icpc -I${TACC_PAPI_INC} -O0 scheduler.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o scheduler -std=c++11
+  742  module load papi/5.6.0
+  743  icpc -I${TACC_PAPI_INC} -O0 scheduler.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o scheduler -std=c++11
+  744  module load papi/5.6.0
+  745  ls
+  746  cd intel
+  747  l
+  748  ls
+  749  cd ism
+  750  ls
+  751  cd rm
+  752  ls
+  753  cd
+  754  ls
+  755  cd $TACC_PAPI_DIR
+  756  ls
+  757  cd bin
+  758  ls
+  759  papi_command_line 
+  760  papi_command_line PAPI_TOT_CYC
+  761  cd
+  762  icpc -I${TACC_PAPI_INC} -O0 scheduler.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o scheduler -std=c++11
+  763  nano scheduler.cpp 
+  764  icpc -I${TACC_PAPI_INC} -O0 scheduler.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o scheduler -std=c++11
+  765  rm scheduler.cpp 
+  766  nano sch.cpp
+  767  icpc -I${TACC_PAPI_INC} -O0 scheduler.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o scheduler -std=c++11
+  768  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11
+  769  nano sch.cpp 
+  770  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11
+  771  nano sch.cpp 
+  772  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11
+  773  rm sch.cpp 
+  774  nano sch.cpp
+  775  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11
+  776  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11 -ltbb
+  777  sch 6 1
+  778  sch 6 2
+  779  sch 6 3
+  780  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  781  gsissh ksharma@supermic.cct-lsu.xsede.org
+  782  gsissh supermic
+  783  gsissh SUPERmic
+  784  xsede-gsissh-hosts
+  785  exit
+  786  ls
+  787  nano job.script
+  788  nano job.script
+  789  nano job.script
+  790  sbatch job
+  791  sbatch job.script
+  792  squeue -u tg848374
+  793  exit
+  794  vim job.script
+  795  ls
+  796  exit
+  797  ls
+  798  nano sch.cpp
+  799  sch 1 5
+  800  export CILK_NWORKERS=32
+  801  sch 1 8
+  802  export CILK_NWORKERS=68
+  803  sch 1 8
+  804  export CILK_NWORKERS=32
+  805  sch 1 9
+  806  sch 1 8
+  807  sch 1 8
+  808  sch 1 8
+  809  sch 1 8
+  810  sch 1 11
+  811  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  812  idev --pty -t 02:00:00 -p development -idev --pty -t 02:00:00 -p development -A tg848374 -n1 /bin/bash -n1 /bin/bash
+  813  sch 1 11
+  814  export CILK_NWORKERS=32
+  815  nano time.txt 
+  816  nano time.txt 
+  817  rm time.txt 
+  818  sch 1 11
+  819  sch 1 12
+  820  ls
+  821  sch 11 1
+  822  vim sch.cpp
+  823  sch 11 3 32
+  824  vim sch.cpp
+  825  history
+  826  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11 -ltbb
+  827  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11 -ltbb
+  828  module load papi/5.6.0
+  829  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11 -ltbb
+  830  vim sch.cpp
+  831  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11 -ltbb
+  832  sch 11 3 32
+  833  vim time.txt 
+  834  export CILK_NWORKERS=64
+  835  sch 11 3 64
+  836  sch 11 3 16
+  837  vim time.txt 
+  838  vim sch.cpp
+  839  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11 -ltbb
+  840  vim sch.cpp
+  841  icpc -I${TACC_PAPI_INC} -O0 sch.cpp -g ${TACC_PAPI_LIB}/libpapi.a -o sch -std=c++11 -ltbb
+  842  export CILK_NWORKERS=16
+  843  sch 11 3 16
+  844  export CILK_NWORKERS=1
+  845  sch 11 3 1
+  846  export CILK_NWORKERS=2
+  847  sch 11 3 2
+  848  vim sch.cpp
+  849  ls
+  850  pwd
+  851  scp -R /home1/05538/tg848375/assign1 .
+  852  scp -R hmayani@localhost:/home1/05538/tg848375/assign1 .
+  853  scp -r hmayani@localhost:/home1/05538/tg848375/assign1 .
+  854  scp -r /home1/05538/tg848375/assign1 .
+  855  scp -r hmayani@localhost:/home1/05538/tg848375/assign1 .
+  856  scp -r . hmayani@localhost:/home1/05538/tg848375/assign1 
+  857  scp -r hmayani@stampede.tacc.utexas.edu:/home1/05538/tg848375/assign1 .
+  858  ls
+  859  mkdir ass1.cpp
+  860  ls
+  861  rm ass1.cpp
+  862  rm -r ass1.cpp/
+  863  ls
+  864  mkdir ass1
+  865  mv -a ass1
+  866  mv -a \ ass1
+  867  mv --help
+  868  mv \ ass1
+  869  mv ass1
+  870  mv -a \ ass1
+  871  mv -a / ass1
+  872  mv  / ass1
+  873  ls
+  874  cd fina
+  875  ls
+  876  cd
+  877  mv sch.cpp fina/
+  878  ls
+  879  rm a.out 
+  880  rm -r ass1/
+  881  y
+  882  y
+  883  y
+  884  mv job.script fina/
+  885  ls
+  886  rm myjob.e989714 
+  887  rm myjob.o989714 
+  888  rm paraRec 
+  889  rm psm
+  890  rm psm2 
+  891  rm ques1 
+  892  rm sch 
+  893  rm time.txt 
+  894  ls
+  895  nano mr4.cpp
+  896  mv mr4.cpp proj/
+  897  ls
+  898  nano proj/
+  899  rm newp
+  900  mv newp.cpp fina/
+  901  mv para.cpp fina/
+  902  ls
+  903  nano w.cpp 
+  904  mv w.cpp fina/
+  905  ls
+  906  rm ass1/
+  907  rm -a  ass1/
+  908  rm -a ass1/
+  909  rm -r ass1/
+  910  ls
+  911  cd proj/
+  912  ls
+  913  nano mr2.cpp 
+  914  nano mr3.cpp 
+  915  ls
+  916  cd proj
+  917  ls
+  918  git
+  919  git clone https://github.com/hirenmayani/ParallelProgramming.git
+  920  ls
+  921  cd ParallelProgramming/
+  922  l
+  923  ls
+  924  mkdir Project
+  925  ls
+  926  cd Project
+  927  pwd
+  928  cd
+  929  ls
+  930  cd proj
+  931  ls
+  932  vim mr2.cpp 
+  933  mv mr2.cpp /ParallelProgramming/Project
+  934  mv mr2.cpp ParallelProgramming/Project
+  935  ls
+  936  vim mr3.cpp 
+  937  vim mr4.cpp 
+  938  vim mr_hashMap.cpp 
+  939  mv mr_hashMap.cpp ParallelProgramming/Project
+  940  ls
+  941  vim mr3.cpp 
+  942  mv mr3.cpp ParallelProgramming/Project
+  943  vim mr4.cpp 
+  944  cd ParallelProgramming/
+  945  ls
+  946  cd Project/
+  947  ls
+  948  cd ..
+  949  ls
+  950  git . commit -m project
+  951  git . commit -am project
+  952  git -am commit project
+  953  git commit -m project
+  954  git commit . -m project
+  955  git add .
+  956  git commit . -m project
+  957  git . push
+  958  git  push .
+  959  git  push 
+  960  exit
+  961  spark-submit
+  962  hadoop
+  963  exit
+  964  exit
+  965  ssh tg848374@login.rustler.tacc.utexas.edu
+  966  exi
+  967  exit
+  968  module list
+  969  module load TACC
+  970  ls
+  971  module load papi/5.6.0
+  972  ls
+  973  module avail
+  974  module help hdf5
+  975  module load hdf5
+  976  cd $TACC_HDF5_INC
+  977  ls
+  978  cd $TACC_HDF5_DIR
+  979  ls
+  980  cd bin
+  981  ls
+  982  cd 
+  983  module avail
+  984  module keyword hdf
+  985  module keyword spark
+  986  module keyword hadoop
+  987  module keyword papi
+  988  module keyword hdf
+  989  ls
+  990  cd proj
+  991  ls
+  992  vim mr4.cpp 
+  993  module load spark
+  994  idev
+  995  history
+  996  history>cmds.txt

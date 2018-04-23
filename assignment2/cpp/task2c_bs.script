@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH -J myMPI           # job name
+#SBATCH -o myMPI.o%j       # output and error file name (%j expands to jobID)
+#SBATCH -n 68              # total number of mpi tasks requested
+#SBATCH -p development     # queue (partition) -- normal, development, etc.
+#SBATCH -t 02:00:00        # run time (hh:mm:ss) - 1.5 hours
+#SBATCH --mail-user=hmayani@cs.stonybrook.edu
+#SBATCH --mail-type=begin  # email me when the job starts
+#SBATCH --mail-type=end    # email me when the job finishes
+
+icpc mst_bs.cpp -o 2c_bs -std=c++11
+./2c_bs 9 1 32 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 8 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 16 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+
+./2c_bs 9 1 1 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 2 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+./2c_bs 9 1 4 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+#./2c_bs 9 1 8 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+#./2c_bs 9 1 16 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+#./2c_bs 9 1 32 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt
+#./2c_bs 9 1 64 < /work/01905/rezaul/CSE613/HW2/turn-in/com-lj-in.txt

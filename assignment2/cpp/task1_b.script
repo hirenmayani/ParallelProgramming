@@ -1,0 +1,31 @@
+#!/bin/bash
+#SBATCH -J myMPI           # job name
+#SBATCH -o myMPI.o%j       # output and error file name (%j expands to jobID)
+#SBATCH -n 68              # total number of mpi tasks requested
+#SBATCH -p normal     # queue (partition) -- normal, development, etc.
+#SBATCH -t 07:30:00        # run time (hh:mm:ss) - 1.5 hours
+#SBATCH --mail-user=hmayani@cs.stonybrook.edu
+#SBATCH --mail-type=begin  # email me when the job starts
+#SBATCH --mail-type=end    # email me when the job finishes
+
+#icpc -std=c++11 ParRadixCount.cpp -o radixC
+#./radixC 25
+
+icpc -std=c++11 ParQuickSort.cpp -o quick
+
+./quick 22 5 64
+./quick 22 6 64
+./quick 22 7 64
+./quick 22 8 64
+./quick 22 9 64
+./quick 22 10 64
+./quick 22 11 64
+./quick 22 12 64
+./quick 22 13 64
+./quick 22 14 64
+./quick 22 15 64 
+./quick 22 16 64
+./quick 22 17 64
+./quick 22 18 64
+./quick 22 18 64
+./quick 22 19 64
