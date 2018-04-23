@@ -1,0 +1,42 @@
+please give file number and mode[mode - 0 radix sort mode-1 binary search;]terminate called after throwing an instance of 'std::bad_alloc'
+  what():  std::bad_alloc
+
+number of vertices = 241583956
+number of edges2/tmp/slurmd/job1282155/slurm_script: line 12: 248312 Aborted                 ./2c_rs 1 0 64
+please give file number and mode[mode - 0 radix sort mode-1 binary search;]terminate called after throwing an instance of 'std::bad_alloc'
+  what():  std::bad_alloc
+
+number of vertices = -2086206764
+number of edges2/tmp/slurmd/job1282155/slurm_script: line 13: 248313 Aborted                 ./2c_rs 2 0 64
+please give file number and mode[mode - 0 radix sort mode-1 binary search;]/tmp/slurmd/job1282155/slurm_script: line 14: 248314 Segmentation fault      ./2c_rs 3 0 64
+please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 0
+number of edges0 time takn: com-orkut-in.txt0
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 0
+number of edges0 time takn: roadNet-CA-in.txt0
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 0
+number of edges0 time takn: roadNet-TX-in.txt0
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]terminate called after throwing an instance of 'std::bad_alloc'
+  what():  std::bad_alloc
+
+number of vertices = -529797816
+number of edges0/tmp/slurmd/job1282155/slurm_script: line 18: 248381 Aborted                 ./2c_rs 7 0 64
+please give file number and mode[mode - 0 radix sort mode-1 binary search;]
+number of vertices = 0
+number of edges0 time takn: com-dblp-in.txt0
+
+ making out filecost=0.000000please give file number and mode[mode - 0 radix sort mode-1 binary search;]terminate called after throwing an instance of 'std::bad_array_new_length'
+  what():  std::bad_array_new_length
+
+number of vertices = 0
+number of edges0/tmp/slurmd/job1282155/slurm_script: line 20: 248383 Aborted                 ./2c_rs 9 0 64
+please give file number and mode[mode - 0 radix sort mode-1 binary search;]terminate called after throwing an instance of 'std::bad_alloc'
+  what():  std::bad_alloc
+
+number of vertices = 0
+number of edges0/tmp/slurmd/job1282155/slurm_script: line 21: 248384 Aborted                 ./2c_rs 10 0 64
