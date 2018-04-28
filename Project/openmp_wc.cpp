@@ -14,6 +14,7 @@ using namespace cimg_library;
 */
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 //icpc -o h.out genericWordCount.cpp -O2 -lm -lpthread -I/usr/X11R6/include -L/usr/X11R6/lib -lm -lpthread -lX11 -std=c++11 -nostartfiles
+//icpc openmp_wc.cpp -qopenmp -std=c++11
 using namespace std;
 
 
@@ -107,8 +108,8 @@ template <typename InputIterator,typename Monoid,class Mapper>
 /*Yey..mapping begins
 		 * note that iterators are always pointers
 		 * refer unordered map example in main()*/
-		#pragma omp parallel for
-		for(InputIterator it=ibegin, ed = iend; it!=ed; ++it)
+#pragma omp parallel		
+for(InputIterator it=ibegin, ed = iend; it!=ed; ++it)
 		{
 			/*Note about view
 			 * Cilk Plus reducers provide a number of useful properties:
