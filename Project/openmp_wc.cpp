@@ -7,12 +7,14 @@
 #include <typeinfo>
 #include <fstream>
 #include <cstdint>
-#include "CImg.h"
+#include<omp.h>
+/*#include "CImg.h"
 #include <op>
 using namespace cimg_library;
-
+*/
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 //icpc -o h.out genericWordCount.cpp -O2 -lm -lpthread -I/usr/X11R6/include -L/usr/X11R6/lib -lm -lpthread -lX11 -std=c++11 -nostartfiles
+//icpc openmp_wc.cpp -qopenmp -std=c++11
 using namespace std;
 
 
@@ -106,8 +108,8 @@ template <typename InputIterator,typename Monoid,class Mapper>
 /*Yey..mapping begins
 		 * note that iterators are always pointers
 		 * refer unordered map example in main()*/
-		#pragma omp parallel for
-		for(InputIterator it=ibegin, ed = iend; it!=ed; ++it)
+#pragma omp parallel		
+for(InputIterator it=ibegin, ed = iend; it!=ed; ++it)
 		{
 			/*Note about view
 			 * Cilk Plus reducers provide a number of useful properties:
@@ -165,7 +167,7 @@ MapFun<string,unordered_map<string,int>>  mf;
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 	cout<<u1["a"];
 //	cout<<u1["b"]; 
-hist_Monoid m2;
+/*hist_Monoid m2;
 CImg<unsigned char> src("poster.jpg");
 int width = src.width();
 int height = src.height();
@@ -192,6 +194,7 @@ auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
 
 for(size_t i=0;i<768;i++)
 		  cout<<hist[i];
+*/
 }
 
 
