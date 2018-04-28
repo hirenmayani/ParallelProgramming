@@ -5,7 +5,7 @@
  *      Author: hmayani@cs.stonybrook.edu
  */
 
-#include < mpi.h >
+#include <mpi.h>
 #include <thread>
 #include <iostream>
 #include <chrono>
@@ -86,6 +86,7 @@ void matMulijk(int** X,int** Y,int** Z,int n)
 
 }
 
+
 void MM_rotateA_rotateB(int** A, int** B, int** C, int n, int p){
 	int numBlocks = sqrt(p*1.0);
 	int blockSize = n/p;
@@ -98,18 +99,14 @@ void MM_rotateA_rotateB(int** A, int** B, int** C, int n, int p){
 int main(int argc,char* argv[])
 {
 
-  int r = atoi("4");
-  int n = pow(2,r);
-  int p = 4;
 
-  int **A;
-  int **B;
-  int **C;
-
-
-  A = createMatrix(n,1);
-  B = createMatrix(n,1);
-  C = createMatrix(n,0);
+	MPI_Init(&argc, &argv);
+        	MPI_Comm_size(MPI_COMM_WORLD, &p ); 
+        	MPI_Comm_rank(MPI_COMM_WORLD, &myrank );
+        	cout << myrank << " out of "<< p << "\n";
+		
+		
+        MPI_Finalize();
 
 /*
   printf("\n-------------Serial---------------\n");
