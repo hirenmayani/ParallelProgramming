@@ -61,6 +61,50 @@ return mat;
 
 }
 
+int** createContMatrix(int size, int init){
+	int rows = size;
+	int cols = size;	
+	int *data = (int *)malloc(rows*cols*sizeof(int));
+    	int **array= (int **)malloc(rows*sizeof(int*));
+    	int i=0,j=0;
+	for (i=0; i<rows; i++)
+        	array[i] = &(data[cols*i]);
+
+  	if(init == 0)
+  	{
+  		 for(i=0;i<size;i++)
+    		{
+    			for(j=0;j<size;j++)
+    			{		
+         		 array[i][j] = 0;
+
+        		}
+      		}
+  	}	
+  	else if(init == -1)
+  	{
+    		for(i=0;i<size;i++)
+    		{
+    			for(j=0;j<size;j++)
+    			{
+          		array[i][j] = rand()%30;
+
+        		}
+    		}
+  	}
+	else{
+		 for(i=0;i<size;i++)
+                {
+                        for(j=0;j<size;j++)
+                        {
+                        array[i][j] = init;
+
+                        }
+                }
+	}
+    return array;
+
+}
 
 void printMat(int** mat,int size)
 {
@@ -137,9 +181,9 @@ int main(int argc,char* argv[])
 	int** A;
 	int** B;
 	int** C;
-	A = createMatrix(nbrp,1);
-	B = createMatrix(nbrp,1);
-	C = createMatrix(nbrp,0);
+	A = createContMatrix(nbrp,myrank);
+	B = createContMatrix(nbrp,myrank);
+	C = createContMatrix(nbrp,0);
 
 	int left = (rootp+j-i)%rootp;
 	int up = (rootp-j+i)%rootp;
@@ -153,10 +197,13 @@ int main(int argc,char* argv[])
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 
-	MPI_Status status;
-	int q[2];
-	q[0]= myrank;
-	 MPI_Sendrecv_replace(A, nbrp*nbrp, MPI_INT, destA, 123, srcA, 123, MPI_COMM_WORLD, &status);
+	MPI_Status sstatus[rootp+1];
+        MPI_Status rstatus[rootp+1];
+
+	//int q[2];
+	//q[0]= myrank;
+	MPI_Sendrecv_replace(&(A[0][0]), nbrp*nbrp, MPI_INT, destA, 123, srcA, 123, MPI_COMM_WORLD, &sstatus[0]);
+	MPI_Sendrecv_replace(&(B[0][0]), nbrp*nbrp, MPI_INT, destB, 23, srcB, 23, MPI_COMM_WORLD, &rstatus[0]);
 	/*
 	if (myrank != destA)
 		MPI_Send(A, nbrp*nbrp, MPI_INT, destA, 0 ,MPI_COMM_WORLD);
@@ -169,18 +216,17 @@ int main(int argc,char* argv[])
         if (myrank != srcB)
                 MPI_Recv(B, nbrp*nbrp, MPI_INT, srcB, 0,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 */
-cout << myrank << " " << A[0][0] << "\n ";
-//printMat(q,nbrp);
-printf("---");
-/*
+//cout << myrank << " " << A[0][0] << "\n ";
+//printMat(A,nbrp);
+
         int** Aik;
         int** Bkj;
 
-        for (int l=0; l <rootp-1; l++){
+        for (int l=0; l <rootp; l++){
                 int k = (j+i+l-1)%rootp;
 
 		left = (rootp+j-1)%rootp;
-	        up = (rootp-j+i-1)%rootp;
+	        up = (rootp+i-1)%rootp;
         	destA = i*rootp + left;
         	destB = up*rootp + j;
 
@@ -189,30 +235,35 @@ printf("---");
         	srcA = i*rootp + right;
         	srcB = down*rootp + j;
 
-		printMat(A,nbrp);
+//		printMat(A,nbrp);
 
                 matmul(C, A, B, nbrp);
 
-}
-*/
-/*                if(l < rootp){
+
+
+                if(l < rootp){
+		        MPI_Sendrecv_replace(&(A[0][0]), nbrp*nbrp, MPI_INT, destA, l, srcA,l, MPI_COMM_WORLD, &sstatus[l+1]);
+/*
                         send(Aik, i, left, myrank);
 			if (myrank != destA)
                			MPI_Send(A, nbrp*nbrp, MPI_INT, destA, l ,MPI_COMM_WORLD);
         		if (myrank != srcA)
                 		MPI_Recv(A, nbrp*nbrp, MPI_INT, srcA, l,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                }
+  */              }
                 if(l < rootp){
-cout << myrank << " "<< destB << " "<< srcB << "\n";
+                        MPI_Sendrecv_replace(&(B[0][0]), nbrp*nbrp, MPI_INT, destB, rootp+l, srcB, rootp+l, MPI_COMM_WORLD, &rstatus[l+1]);
+
+		//	cout << myrank << " "<< destB << " "<< srcB << " "<< destA << " "<< srcA  << "\n";
                         //send(Bkj, up, j, myrank);
-			if (myrank != destB)
+/*			if (myrank != destB)
                 		MPI_Send(B, nbrp*nbrp, MPI_INT, destB, rootp+l ,MPI_COMM_WORLD);
 
        			if (myrank != srcB)
                			MPI_Recv(B, nbrp*nbrp, MPI_INT, srcB, rootp+l ,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                }
+  */              }
         }
-*/
+
+printMat(C,nbrp);
 
 /*	
 	send(B,up,j, myrank);
