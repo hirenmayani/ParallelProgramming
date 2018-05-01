@@ -18,6 +18,7 @@
 #include <queue>
 #include <set>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -96,23 +97,33 @@ void MM_rotateA_rotateB(int** A, int** B, int** C, int n, int p){
 
 }
 
-void send(int** mat, int i, int j, int rank){
-
+void send(int** mat, int i, int j, int rank ){
+	
 }
 
-void matmul(int** C, int** A, int** B){
+void matmul(int** Z, int** X, int** Y, int n){
+	int i, j, k;
+
+	for (i = 0; i < n; i++)
+		for (j = 0; j < n; j++)
+			for (k = 0; k < n; k++)
+				Z[i][j] = Z[i][j] + X[i][k] * Y[k][j];
 
 }
 int main(int argc,char* argv[])
 {
 
-	int myrank,n=0,p=0;
+	int myrank,n=0,p=4;
 	//int p=4;
+	int r = atoi("3");
+	n = pow(2,r);
 	MPI_Init(&argc, &argv);
-	int r = atoi("2");
-	int n = pow(2,r);
 	MPI_Comm_size(MPI_COMM_WORLD, &p );
 	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+        int rootp = sqrt(p*1.0);
+        MPI_Request sendreq[rootp], recvreq[rootp];
+
+
 
 //	int coords[2]; /* 2 Dimension topology so 2 coordinates */
 //	MPI_Cart_coords(cart_comm,rank,2,coords);
@@ -120,10 +131,9 @@ int main(int argc,char* argv[])
 	int i = floor(myrank/rootp);
 	int j = myrank%rootp;
 
-	int rootp = sqrt(p*1.0);
 	int nbrp = n/rootp;
 
-	cout << myrank << " out of "<< p << "\n";
+//	cout << myrank << ": rootp " << rootp << " i: " << i << " j: " << j << " nbrt:" << nbrp << "\n";
 	int** A;
 	int** B;
 	int** C;
@@ -133,16 +143,83 @@ int main(int argc,char* argv[])
 
 	int left = (rootp+j-i)%rootp;
 	int up = (rootp-j+i)%rootp;
+	int destA = i*rootp + left;
+	int destB = up*rootp + j;
 
-	send(A,i,left, myrank);
+	int right = (rootp+j+i)%rootp;
+        int down = (rootp+j+i)%rootp;
+	int srcA = i*rootp + right;
+        int srcB = down*rootp + j;
+
+//	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
+
+
+	if (myrank != destA)
+		MPI_Send(A, nbrp*nbrp, MPI_INT, destA, 0 ,MPI_COMM_WORLD);
+	if (myrank != srcA)
+		MPI_Recv(A, nbrp*nbrp, MPI_INT, srcA, 0,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	
+        if (myrank != destB)
+                MPI_Send(B, nbrp*nbrp, MPI_INT, destB, 0 ,MPI_COMM_WORLD);
+
+        if (myrank != srcB)
+                MPI_Recv(B, nbrp*nbrp, MPI_INT, srcB, 0,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+printMat(A,nbrp);
+printf("---");
+/*
+        int** Aik;
+        int** Bkj;
+
+        for (int l=0; l <rootp-1; l++){
+                int k = (j+i+l-1)%rootp;
+
+		left = (rootp+j-1)%rootp;
+	        up = (rootp-j+i-1)%rootp;
+        	destA = i*rootp + left;
+        	destB = up*rootp + j;
+
+        	right = (rootp+j+1)%rootp;
+        	down = (rootp+i+1)%rootp;
+        	srcA = i*rootp + right;
+        	srcB = down*rootp + j;
+
+		printMat(A,nbrp);
+
+                matmul(C, A, B, nbrp);
+
+}
+/*                if(l < rootp){
+                        send(Aik, i, left, myrank);
+			if (myrank != destA)
+               			MPI_Send(A, nbrp*nbrp, MPI_INT, destA, l ,MPI_COMM_WORLD);
+        		if (myrank != srcA)
+                		MPI_Recv(A, nbrp*nbrp, MPI_INT, srcA, l,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                }
+                if(l < rootp){
+cout << myrank << " "<< destB << " "<< srcB << "\n";
+                        //send(Bkj, up, j, myrank);
+			if (myrank != destB)
+                		MPI_Send(B, nbrp*nbrp, MPI_INT, destB, rootp+l ,MPI_COMM_WORLD);
+
+       			if (myrank != srcB)
+               			MPI_Recv(B, nbrp*nbrp, MPI_INT, srcB, rootp+l ,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                }
+        }
+*/
+
+/*	
 	send(B,up,j, myrank);
+
+        int** Aik;
+        int** Bkj;
 
 	for (int l=0; l <rootp; l++){
 		int k = (j+i+l-1)%rootp;
 		int left = (rootp+j-1)%rootp;
 		int up = (rootp+i-1)%rootp;
 
-		matmul(Cij, Aik, Bkj);
+		matmul(C, Aik, Bkj);
 		if(l < rootp){
 			send(Aik, i, left, myrank);
 		}
@@ -150,7 +227,7 @@ int main(int argc,char* argv[])
 			send(Bkj, up, j, myrank);
 		}
 	}
-
+*/
 	/*
  	for (int i=0; i <rootp; i++){//Par
 		for (int j=0; j <rootp; j++){//Par
@@ -190,6 +267,7 @@ int main(int argc,char* argv[])
 	}
 
 
+   sleep(20000);         // wait for 2 seconds before closing
 
 
 	MPI_Finalize();
@@ -201,7 +279,7 @@ int main(int argc,char* argv[])
 
   printf("\n-------------schedule Parallel---------------\n");
 */
-  MM_rotateA_rotateB(A,B, C, n, p);
+ // MM_rotateA_rotateB(A,B, C, n, p);
   //printMat(Zp,n);
 
   return 0;
