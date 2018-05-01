@@ -153,7 +153,11 @@ int main(int argc,char* argv[])
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 
-
+	MPI_Status status;
+	int q[2];
+	q[0]= myrank;
+	 MPI_Sendrecv_replace(A, nbrp*nbrp, MPI_INT, destA, 123, srcA, 123, MPI_COMM_WORLD, &status);
+	/*
 	if (myrank != destA)
 		MPI_Send(A, nbrp*nbrp, MPI_INT, destA, 0 ,MPI_COMM_WORLD);
 	if (myrank != srcA)
@@ -164,8 +168,9 @@ int main(int argc,char* argv[])
 
         if (myrank != srcB)
                 MPI_Recv(B, nbrp*nbrp, MPI_INT, srcB, 0,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-printMat(A,nbrp);
+*/
+cout << myrank << " " << A[0][0] << "\n ";
+//printMat(q,nbrp);
 printf("---");
 /*
         int** Aik;
@@ -189,6 +194,7 @@ printf("---");
                 matmul(C, A, B, nbrp);
 
 }
+*/
 /*                if(l < rootp){
                         send(Aik, i, left, myrank);
 			if (myrank != destA)
@@ -257,18 +263,14 @@ cout << myrank << " "<< destB << " "<< srcB << "\n";
 		}
 	}
 */
-
+/*
 	if(myrank  == 0){
-/*	    if((n/rootp)* (n/rootp)!=n) {
+	    if((n/rootp)* (n/rootp)!=n) {
 	    		printf(" of Proc must be equal to %d\nCode terminated",r);
 	    		exit(0);
 	    }
-*/
 	}
-
-
-   sleep(20000);         // wait for 2 seconds before closing
-
+*/
 
 	MPI_Finalize();
 
