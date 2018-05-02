@@ -19,6 +19,7 @@
 #include <set>
 #include <iostream>
 #include <unistd.h>
+#include<cilk/cilk.h>
 
 using namespace std;
 
@@ -146,20 +147,30 @@ void send(int** mat, int i, int j, int rank ){
 }
 
 void matmul(int** Z, int** X, int** Y, int n){
-	int i, j, k;
 
-	for (i = 0; i < n; i++)
-		for (j = 0; j < n; j++)
-			for (k = 0; k < n; k++)
+ #pragma cilk grainsize = 5
+  cilk_for(unsigned int i = 0; i < n; ++i){
+   for (unsigned int k = 0; k < n; ++k) {
+     for (unsigned int j = 0; j < n; ++j) {
+     //  Z[i*n + j] += X[i*n + k] * Y[k*n + j];
+      Z[i][j] = Z[i][j] + X[i][k] * Y[k][j];
+}
+    }
+ }
+/*
+	cilk_for (int i = 0; i < n; i++){
+		for (int k = 0; k < n; k++)
+			for (int j = 0; j < n; j++)
 				Z[i][j] = Z[i][j] + X[i][k] * Y[k][j];
-
+	}
+*/
 }
 int main(int argc,char* argv[])
 {
 
-	int myrank,n=0,p=4;
+	int myrank,n=0,p=64;
 	//int p=4;
-	int r = atoi("3");
+	int r = atoi("10");
 	n = pow(2,r);
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &p );
@@ -263,7 +274,7 @@ int main(int argc,char* argv[])
   */              }
         }
 
-printMat(C,nbrp);
+//printMat(C,nbrp);
 
 /*	
 	send(B,up,j, myrank);
