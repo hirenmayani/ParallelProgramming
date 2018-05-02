@@ -150,7 +150,7 @@ int main(int argc, char* argv[]) {
 	MPI_Comm_size(MPI_COMM_WORLD, &p);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
 	int rootp = sqrt(p * 1.0);
-	MPI_Request sendreq[rootp], recvreq[rootp];
+	MPI_Status sendreq[rootp], recvreq[rootp];
 
 	int i = floor(myrank / rootp);
 	int j = myrank % rootp;
@@ -164,47 +164,59 @@ int main(int argc, char* argv[]) {
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 
-	MPI_Status sstatus[rootp];
+	MPI_Status sstatus[rootp+1];
 
 	int color = myrank / rootp;
 	MPI_Comm row_comm;
-	MPI_Comm_split(MPI_COMM_WORLD, color, world_rank, &row_comm);
+	MPI_Comm_split(MPI_COMM_WORLD, color, myrank, &row_comm);
 
 	int ccolor = myrank % rootp;
 	MPI_Comm col_comm;
-	MPI_Comm_split(MPI_COMM_WORLD, ccolor, world_rank, &col_comm);
+	MPI_Comm_split(MPI_COMM_WORLD, ccolor, myrank, &col_comm);
 
 	int row_rank, row_size;
 	MPI_Comm_rank(row_comm, &row_rank);
 	MPI_Comm_size(row_comm, &row_size);
 
-//	printf("WORLD RANK/SIZE: %d/%d \t ROW RANK/SIZE: %d/%d\n", world_rank, world_size, row_rank, row_size);
+        int col_rank, col_size;
+        MPI_Comm_rank(col_comm, &col_rank);
+        MPI_Comm_size(col_comm, &col_size);
+
+	//printf("WORLD RANK/SIZE: %d/%d \t ROW RANK/SIZE: %d/%d\n", myrank, p, row_rank, row_size);
 
 	for (int l = 0; l < rootp; l++) {
 		int k = (j + l - 1) % rootp;
 
-		if(k==i){
+		//if(k==i){
 			//broadcast bij to grid column j
-			MPI_Bcast(&(B[0][0]), nbrp * nbrp, MPI_INT, 0, col_comm);
+			MPI_Bcast(&(B[0][0]), nbrp * nbrp, MPI_INT, col_rank, col_comm);
 			  // Synchronize again before obtaining final time
 			MPI_Barrier(col_comm);
-		}
+		//}
+//		else{
+	//		printf("WORLD RANK/SIZE: %d/%d \t col RANK/SIZE: %d/%d\n", myrank, p, col_rank, col_size);
+
+			//MPI_Bcast(&(B[0][0]), nbrp * nbrp, MPI_INT, , col_comm);
+//		}
+		MPI_Barrier(col_comm);
+
 		matmul(C, A, B, nbrp);
 
-		left = (rootp + j - 1) % rootp;
-		destA = i * rootp + left;
-		right = (rootp + j + 1) % rootp;
-		srcA = i * rootp + right;
+		int left = (rootp + j - 1) % rootp;
+		int destA = i * rootp + left;
+		int right = (rootp + j + 1) % rootp;
+		int srcA = i * rootp + right;
 
 
 		if (l < rootp) {
-			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l,
-					srcA, l, MPI_COMM_WORLD, &sstatus[l + 1]);
+			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l, srcA, l, MPI_COMM_WORLD, &sstatus[l]);
 		}
 	}
 
 	printMat(C, nbrp);
+//	cout << myrank << "\n";
 	MPI_Comm_free(&row_comm);
+	MPI_Comm_free(&col_comm);
 	MPI_Finalize();
 
 	return 0;
