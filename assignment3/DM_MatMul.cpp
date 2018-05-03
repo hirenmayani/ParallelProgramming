@@ -256,17 +256,17 @@ int main(int argc, char* argv[]) {
 			Ct[ii * nbrp + jj] =C[ii][jj];
 		}
 		MPI_Barrier (MPI_COMM_WORLD);
-
+}
 	MPI_Gatherv(Ct, nbrp * nbrp, MPI_INT, CC, counts, disps, blocktype, 0,
 			MPI_COMM_WORLD);
 
 	if (myrank == 0) {
 
 		for (ii = 0; ii < n * n; ii++) {
-			printf("%d ", CC[ii]);
 			if (ii % n == 0) {
 				printf("\n");
 			}
+printf("%d ", CC[ii]);
 		}
 //			printMat(C,n);
 
