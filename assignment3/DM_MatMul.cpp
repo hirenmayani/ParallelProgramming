@@ -146,9 +146,61 @@ int main(int argc, char* argv[]) {
 	int** A;
 	int** B;
 	int** C;
-	A = createContMatrix(nbrp, myrank);
-	B = createContMatrix(nbrp, myrank);
+	A = createContMatrix(nbrp, 0);
+	B = createContMatrix(nbrp, 0);
 	C = createContMatrix(nbrp, 0);
+
+	/*
+	 * divide A and B and send to all proc
+	 */
+	int AA[n*n];
+	int BB[n*n];
+	if (myrank == 0) {
+	        for(ii=0; ii<n*n; ii++) {
+	            AA[ii] = ii;
+	            BB[ii] = ii;
+	        }
+	    }
+
+		int a[nbrp*nbrp];
+		int b[nbrp*nbrp];
+	    for(ii=0; ii<nbrp*nbrp; ii++)
+	    		{
+				a[ii] = 0;
+				b[ii] = 0;
+			}
+
+	    MPI_Datatype blocktype;
+	    MPI_Datatype blocktype2;
+
+	    MPI_Type_vector(nbrp, nbrp, n, MPI_INT, &blocktype2);
+	    MPI_Type_create_resized( blocktype2, 0, sizeof(int), &blocktype);
+	    MPI_Type_commit(&blocktype);
+
+	    int disps[rootp*rootp];
+	    int counts[rootp*rootp];
+
+	    for (ii=0; ii<rootp; ii++) {
+	        for (jj=0; jj<rootp; jj++) {
+	            disps[ii*rootp+jj] = ii*n*nbrp+jj*nbrp;
+	            counts [ii*rootp+jj] = 1;
+	        }
+	    }
+
+	    MPI_Scatterv(AA, counts, disps, blocktype, a, nbrp*nbrp, MPI_INT, 0, MPI_COMM_WORLD);
+	    MPI_Scatterv(BB, counts, disps, blocktype, b, nbrp*nbrp, MPI_INT, 0, MPI_COMM_WORLD);
+
+		for(ii=0; ii<nbrp; ii++) {
+			for(jj=0; jj<nbrp; jj++) {
+				A[ii][jj]=a[ii*nbrp+jj];
+				B[ii][jj]=b[ii*nbrp+jj];
+			}
+	        MPI_Barrier(MPI_COMM_WORLD);
+	    }
+		/*
+		 * A and B created
+		 */
+
 
 	int left = (rootp + j - i) % rootp;
 	int up = (rootp - j + i) % rootp;
@@ -160,7 +212,6 @@ int main(int argc, char* argv[]) {
 	int srcA = i * rootp + right;
 	int srcB = down * rootp + j;
 
-//	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 
 	MPI_Status sstatus[rootp + 1];
 	MPI_Status rstatus[rootp + 1];
@@ -396,74 +447,12 @@ int rotateBoth(int argc, char* argv[]) {
 	int j = myrank % rootp;
 	int nbrp = n / rootp;
 
-	if( myrank ==0){
-		int** A;
-		int** B;
-		A = createContMatrix(n, myrank);
-		B = createContMatrix(n, myrank);
-	}
-
-
-	if (myrank == 0) {
-	        for (int ii=0; ii<n*n; ii++) {
-	            a[ii] = (char)ii;
-	        }
-	    }
-
-	    if (p != NPROWS*NPCOLS) {
-	        fprintf(stderr,"Error: number of PEs %d != %d x %d\n", p, NPROWS, NPCOLS);
-	        MPI_Finalize();
-	        exit(-1);
-	    }
-	    char b[BLOCKROWS*BLOCKCOLS];
-	    for (int ii=0; ii<BLOCKROWS*BLOCKCOLS; ii++) b[ii] = 0;
-
-	    MPI_Datatype blocktype;
-	    MPI_Datatype blocktype2;
-
-	    MPI_Type_vector(BLOCKROWS, BLOCKCOLS, COLS, MPI_CHAR, &blocktype2);
-	    MPI_Type_create_resized( blocktype2, 0, sizeof(char), &blocktype);
-	    MPI_Type_commit(&blocktype);
-
-	    int disps[NPROWS*NPCOLS];
-	    int counts[NPROWS*NPCOLS];
-	    for (int ii=0; ii<NPROWS; ii++) {
-	        for (int jj=0; jj<NPCOLS; jj++) {
-	            disps[ii*NPCOLS+jj] = ii*COLS*BLOCKROWS+jj*BLOCKCOLS;
-	            counts [ii*NPCOLS+jj] = 1;
-	        }
-	    }
-
-	    MPI_Scatterv(a, counts, disps, blocktype, b, BLOCKROWS*BLOCKCOLS, MPI_CHAR, 0, MPI_COMM_WORLD);
-	    /* each proc prints it's "b" out, in order */
-	    for (int proc=0; proc<p; proc++) {
-	        if (proc == rank) {
-	            printf("Rank = %d\n", rank);
-	            if (rank == 0) {
-	                printf("Global matrix: \n");
-	                for (int ii=0; ii<ROWS; ii++) {
-	                    for (int jj=0; jj<COLS; jj++) {
-	                        printf("%3d ",(int)a[ii*COLS+jj]);
-	                    }
-	                    printf("\n");
-	                }
-	            }
-	            printf("Local Matrix:\n");
-	            for (int ii=0; ii<BLOCKROWS; ii++) {
-	                for (int jj=0; jj<BLOCKCOLS; jj++) {
-	                    printf("%3d ",(int)b[ii*BLOCKCOLS+jj]);
-	                }
-	                printf("\n");
-	            }
-	            printf("\n");
-	        }
-	        MPI_Barrier(MPI_COMM_WORLD);
-	    }
-
+	if myrank ==0:
 	int** A;
 	int** B;
-
 	int** C;
+	A = createContMatrix(n, myrank);
+	B = createContMatrix(n, myrank);
 	C = createContMatrix(nbrp, 0);
 
 	int left = (rootp + j - i) % rootp;

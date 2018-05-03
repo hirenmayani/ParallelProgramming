@@ -110,29 +110,14 @@ int main(int argc, char *argv[])
 	    MPI_Scatterv(AA, counts, disps, blocktype, a, nbrp*nbrp, MPI_INT, 0, MPI_COMM_WORLD);
 	    MPI_Scatterv(BB, counts, disps, blocktype, b, nbrp*nbrp, MPI_INT, 0, MPI_COMM_WORLD);
 
-	    /* each proc prints it's "b" out, in order */
-	    for (proc=0; proc<p; proc++) {
-	        if (proc == myrank) {
-/*	            printf("Rank = %d\n", myrank);
-	            if (myrank == 0) {
-	                printf("Global matrix: \n");
-	                for(ii=0; ii<n; ii++) {
-	                    for(jj=0; jj<n; jj++) {
-	                        printf("%3d ",(int)AA[ii*n+jj]);
-	                    }
-	                    printf("\n");
-	                }
-	            }
-*/
-	            for(ii=0; ii<nbrp; ii++) {
-	                for(jj=0; jj<nbrp; jj++) {
-						A[ii][jj]=a[ii*nbrp+jj];
-						B[ii][jj]=b[ii*nbrp+jj];
-	                }
-	            }
-	        }
+		for(ii=0; ii<nbrp; ii++) {
+			for(jj=0; jj<nbrp; jj++) {
+				A[ii][jj]=a[ii*nbrp+jj];
+				B[ii][jj]=b[ii*nbrp+jj];
+			}
 	        MPI_Barrier(MPI_COMM_WORLD);
 	    }
+
         if (1 == myrank) {
 			printArr(A, nbrp);
 			printArr(B, nbrp);
