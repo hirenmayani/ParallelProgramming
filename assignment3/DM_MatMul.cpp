@@ -121,7 +121,7 @@ void send(int** mat, int i, int j, int rank) {
 }
 
 void matmul(int** Z, int** X, int** Y, int n){
-
+/*
  #pragma cilk grainsize = 5
   cilk_for(unsigned int i = 0; i < n; ++i){
    for (unsigned int k = 0; k < n; ++k) {
@@ -130,14 +130,14 @@ void matmul(int** Z, int** X, int** Y, int n){
       Z[i][j] = Z[i][j] + X[i][k] * Y[k][j];
 }
     }
- }
-/*
-	cilk_for (int i = 0; i < n; i++){
-		for (int k = 0; k < n; k++)
-			for (int j = 0; j < n; j++)
+ }*/
+
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < n; j++)
+			for (int k = 0; k < n; k++)
 				Z[i][j] = Z[i][j] + X[i][k] * Y[k][j];
 	}
-*/
+
 }
 
 int main(int argc, char* argv[]) {
@@ -161,6 +161,8 @@ int main(int argc, char* argv[]) {
 	A = createContMatrix(nbrp, myrank);
 	B = createContMatrix(nbrp, myrank);
 	C = createContMatrix(nbrp, 0);
+	int** Bt;
+	Bt = createContMatrix(nbrp, 0);
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 
@@ -182,39 +184,49 @@ int main(int argc, char* argv[]) {
         MPI_Comm_rank(col_comm, &col_rank);
         MPI_Comm_size(col_comm, &col_size);
 
-	//printf("WORLD RANK/SIZE: %d/%d \t ROW RANK/SIZE: %d/%d\n", myrank, p, row_rank, row_size);
-
-	for (int l = 0; l < rootp; l++) {
+//	printf("WORLD RANK/SIZE: %d/%d \t ROW RANK/SIZE: %d/%d\n", myrank, p, row_rank, row_size);
+	printf("\n");
+	for (int l = 1; l <= rootp; l++) {
 		int k = (j + l - 1) % rootp;
 
-		//if(k==i){
-			//broadcast bij to grid column j
-			MPI_Bcast(&(B[0][0]), nbrp * nbrp, MPI_INT, col_rank, col_comm);
+		if(k==i){
+			// TODO
+			memcpy(&(Bt[0][0]), &(B[0][0]), nbrp*nbrp*sizeof(int));
+//printMat(Bt,nbrp);
+//printMat(B,nbrp);
+}
+			int root = (l+j-1)%rootp;//TODO proper root
+			MPI_Bcast(&(Bt[0][0]), nbrp * nbrp, MPI_INT, root, col_comm);
 			  // Synchronize again before obtaining final time
 			MPI_Barrier(col_comm);
-		//}
+//		}
 //		else{
 	//		printf("WORLD RANK/SIZE: %d/%d \t col RANK/SIZE: %d/%d\n", myrank, p, col_rank, col_size);
 
 			//MPI_Bcast(&(B[0][0]), nbrp * nbrp, MPI_INT, , col_comm);
 //		}
-		MPI_Barrier(col_comm);
-
-		matmul(C, A, B, nbrp);
+//		MPI_Barrier(col_comm);
+		//printf("%d %d %d \n", myrank, A[0][0], Bt[0][0]);	
+		matmul(C, A, Bt, nbrp);
+	        //cout <<"in loop" << myrank << "\n";
 
 		int left = (rootp + j - 1) % rootp;
 		int destA = i * rootp + left;
 		int right = (rootp + j + 1) % rootp;
 		int srcA = i * rootp + right;
 
-
+//		cout << myrank << " "<< destA << " " << srcA << "\n"; 
 		if (l < rootp) {
+		//	if (myrank != destA)
+        //                         MPI_Send(&(A[0][0]), nbrp*nbrp, MPI_INT, destA, l ,MPI_COMM_WORLD);
+                  //       if (myrank != srcA)
+          //                       MPI_Recv(&(A[0][0]), nbrp*nbrp, MPI_INT, srcA, l,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l, srcA, l, MPI_COMM_WORLD, &sstatus[l]);
 		}
 	}
 
 	printMat(C, nbrp);
-//	cout << myrank << "\n";
+	//cout << myrank << "\n";
 	MPI_Comm_free(&row_comm);
 	MPI_Comm_free(&col_comm);
 	MPI_Finalize();
