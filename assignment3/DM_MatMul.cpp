@@ -107,26 +107,25 @@ void matMulijk(int** X, int** Y, int** Z, int n) {
 
 }
 
-void matmul(int** Z, int** X, int** Y, int n){
-/*
- #pragma cilk grainsize = 5
-  cilk_for(unsigned int i = 0; i < n; ++i){
-   for (unsigned int k = 0; k < n; ++k) {
-     for (unsigned int j = 0; j < n; ++j) {
-     //  Z[i*n + j] += X[i*n + k] * Y[k*n + j];
-      Z[i][j] = Z[i][j] + X[i][k] * Y[k][j];
-}
-    }
- }*/
+void matmul(int** Z, int** X, int** Y, int n) {
+	/*
+	 #pragma cilk grainsize = 5
+	 cilk_for(unsigned int i = 0; i < n; ++i){
+	 for (unsigned int k = 0; k < n; ++k) {
+	 for (unsigned int j = 0; j < n; ++j) {
+	 //  Z[i*n + j] += X[i*n + k] * Y[k*n + j];
+	 Z[i][j] = Z[i][j] + X[i][k] * Y[k][j];
+	 }
+	 }
+	 }*/
 
-	for (int i = 0; i < n; i++){
+	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++)
 			for (int k = 0; k < n; k++)
 				Z[i][j] = Z[i][j] + X[i][k] * Y[k][j];
 	}
 
 }
-
 
 int main(int argc, char* argv[]) {
 
@@ -146,6 +145,7 @@ int main(int argc, char* argv[]) {
 	int** A;
 	int** B;
 	int** C;
+
 	A = createContMatrix(nbrp, 0);
 	B = createContMatrix(nbrp, 0);
 	C = createContMatrix(nbrp, 0);
@@ -153,55 +153,58 @@ int main(int argc, char* argv[]) {
 	/*
 	 * divide A and B and send to all proc
 	 */
-	int ii,jj;
-	int AA[n*n];
-	int BB[n*n];
-	int CC[n*n];
+	int ii, jj;
+	int AA[n * n];
+	int BB[n * n];
+	int CC[n * n];
+	int Ct[nbrp * nbrp];
+
 	if (myrank == 0) {
-	        for(ii=0; ii<n*n; ii++) {
-	            AA[ii] = ii;
-	            BB[ii] = ii;
-	        }
-	    }
+		for (ii = 0; ii < n * n; ii++) {
+			AA[ii] = ii;
+			BB[ii] = ii;
+		}
+	}
 
-		int a[nbrp*nbrp];
-		int b[nbrp*nbrp];
-	    for(ii=0; ii<nbrp*nbrp; ii++)
-	    		{
-				a[ii] = 0;
-				b[ii] = 0;
-			}
+	int a[nbrp * nbrp];
+	int b[nbrp * nbrp];
+	for (ii = 0; ii < nbrp * nbrp; ii++) {
+		a[ii] = 0;
+		b[ii] = 0;
+	}
 
-	    MPI_Datatype blocktype;
-	    MPI_Datatype blocktype2;
+	MPI_Datatype blocktype;
+	MPI_Datatype blocktype2;
 
-	    MPI_Type_vector(nbrp, nbrp, n, MPI_INT, &blocktype2);
-	    MPI_Type_create_resized( blocktype2, 0, sizeof(int), &blocktype);
-	    MPI_Type_commit(&blocktype);
+	MPI_Type_vector(nbrp, nbrp, n, MPI_INT, &blocktype2);
+	MPI_Type_create_resized(blocktype2, 0, sizeof(int), &blocktype);
+	MPI_Type_commit(&blocktype);
 
-	    int disps[rootp*rootp];
-	    int counts[rootp*rootp];
+	int disps[rootp * rootp];
+	int counts[rootp * rootp];
 
-	    for (ii=0; ii<rootp; ii++) {
-	        for (jj=0; jj<rootp; jj++) {
-	            disps[ii*rootp+jj] = ii*n*nbrp+jj*nbrp;
-	            counts [ii*rootp+jj] = 1;
-	        }
-	    }
+	for (ii = 0; ii < rootp; ii++) {
+		for (jj = 0; jj < rootp; jj++) {
+			disps[ii * rootp + jj] = ii * n * nbrp + jj * nbrp;
+			counts[ii * rootp + jj] = 1;
+		}
+	}
 
-	    MPI_Scatterv(AA, counts, disps, blocktype, a, nbrp*nbrp, MPI_INT, 0, MPI_COMM_WORLD);
-	    MPI_Scatterv(BB, counts, disps, blocktype, b, nbrp*nbrp, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Scatterv(AA, counts, disps, blocktype, a, nbrp * nbrp, MPI_INT, 0,
+			MPI_COMM_WORLD);
+	MPI_Scatterv(BB, counts, disps, blocktype, b, nbrp * nbrp, MPI_INT, 0,
+			MPI_COMM_WORLD);
 
-		for(ii=0; ii<nbrp; ii++) {
-			for(jj=0; jj<nbrp; jj++) {
-				A[ii][jj]=a[ii*nbrp+jj];
-				B[ii][jj]=b[ii*nbrp+jj];
-			}
-	        MPI_Barrier(MPI_COMM_WORLD);
-	    }
-		/*
-		 * A and B created
-		 */
+	for (ii = 0; ii < nbrp; ii++) {
+		for (jj = 0; jj < nbrp; jj++) {
+			A[ii][jj] = a[ii * nbrp + jj];
+			B[ii][jj] = b[ii * nbrp + jj];
+		}
+		MPI_Barrier (MPI_COMM_WORLD);
+	}
+	/*
+	 * A and B created
+	 */
 
 	//printMat(A,nbrp);
 	//printMat(B, nbrp);
@@ -215,7 +218,6 @@ int main(int argc, char* argv[]) {
 	int srcA = i * rootp + right;
 	int srcB = down * rootp + j;
 
-
 	MPI_Status sstatus[rootp + 1];
 	MPI_Status rstatus[rootp + 1];
 
@@ -223,9 +225,6 @@ int main(int argc, char* argv[]) {
 			123, MPI_COMM_WORLD, &sstatus[0]);
 	MPI_Sendrecv_replace(&(B[0][0]), nbrp * nbrp, MPI_INT, destB, 23, srcB, 23,
 			MPI_COMM_WORLD, &rstatus[0]);
-
-	int** Aik;
-	int** Bkj;
 
 	for (int l = 0; l < rootp; l++) {
 		int k = (j + i + l - 1) % rootp;
@@ -241,7 +240,7 @@ int main(int argc, char* argv[]) {
 		srcB = down * rootp + j;
 
 		matmul(C, A, B, nbrp);
-	//	printMat(C, nbrp);
+		//	printMat(C, nbrp);
 		if (l < rootp) {
 			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l,
 					srcA, l, MPI_COMM_WORLD, &sstatus[l + 1]);
@@ -252,17 +251,23 @@ int main(int argc, char* argv[]) {
 					&rstatus[l + 1]);
 		}
 	}
+	for (ii = 0; ii < nbrp; ii++) {
+		for (jj = 0; jj < nbrp; jj++) {
+			Ct[ii * nbrp + jj] =C[ii][jj];
+		}
+		MPI_Barrier (MPI_COMM_WORLD);
 
-	MPI_Gatherv(C, nbrp*nbrp, MPI_INT, CC, counts, disps, blocktype, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(Ct, nbrp * nbrp, MPI_INT, CC, counts, disps, blocktype, 0,
+			MPI_COMM_WORLD);
 
 	if (myrank == 0) {
 
-	        for(ii=0; ii<n*n; ii++) {
-	        		printf("%d ", CC[ii]);
-	        		if (ii%n == 0){
-	        			printf("\n");
-	        		}
-	        }
+		for (ii = 0; ii < n * n; ii++) {
+			printf("%d ", CC[ii]);
+			if (ii % n == 0) {
+				printf("\n");
+			}
+		}
 //			printMat(C,n);
 
 	}
@@ -300,7 +305,7 @@ int broadcastAbroadcastB(int argc, char* argv[]) {
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 
-	MPI_Status sstatus[rootp+1];
+	MPI_Status sstatus[rootp + 1];
 
 	int color = myrank / rootp;
 	MPI_Comm row_comm;
@@ -320,23 +325,23 @@ int broadcastAbroadcastB(int argc, char* argv[]) {
 //	printMat(A,nbrp);
 //	printf("WORLD RANK/SIZE: %d/%d \t ROW RANK/SIZE: %d/%d\n", myrank, p, row_rank, row_size);
 	for (int l = 1; l <= rootp; l++) {
-		int k = l-1;
+		int k = l - 1;
 
-		if(k==i){
+		if (k == i) {
 			// TODO
-			memcpy(&(Bt[0][0]), &(B[0][0]), nbrp*nbrp*sizeof(int));
+			memcpy(&(Bt[0][0]), &(B[0][0]), nbrp * nbrp * sizeof(int));
 		}
-		if(k==j){
+		if (k == j) {
 			// TODO
-			memcpy(&(At[0][0]), &(A[0][0]), nbrp*nbrp*sizeof(int));
+			memcpy(&(At[0][0]), &(A[0][0]), nbrp * nbrp * sizeof(int));
 		}
 		//printMat(Bt,nbrp);
 
-		int rootB = (l-1)%rootp;//TODO proper root
+		int rootB = (l - 1) % rootp;	//TODO proper root
 		MPI_Bcast(&(Bt[0][0]), nbrp * nbrp, MPI_INT, rootB, col_comm);
 		MPI_Barrier(col_comm);
 
-		int rootA = (l-1)%rootp;//TODO proper root
+		int rootA = (l - 1) % rootp;	//TODO proper root
 		MPI_Bcast(&(At[0][0]), nbrp * nbrp, MPI_INT, rootA, row_comm);
 		MPI_Barrier(row_comm);
 		//printf("%d %d %d \n", myrank, At[0][0], Bt[0][0]);
@@ -378,7 +383,7 @@ int rotateAbroadcastB(int argc, char* argv[]) {
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 
-	MPI_Status sstatus[rootp+1];
+	MPI_Status sstatus[rootp + 1];
 
 	int color = myrank / rootp;
 	MPI_Comm row_comm;
@@ -392,35 +397,35 @@ int rotateAbroadcastB(int argc, char* argv[]) {
 	MPI_Comm_rank(row_comm, &row_rank);
 	MPI_Comm_size(row_comm, &row_size);
 
-        int col_rank, col_size;
-        MPI_Comm_rank(col_comm, &col_rank);
-        MPI_Comm_size(col_comm, &col_size);
+	int col_rank, col_size;
+	MPI_Comm_rank(col_comm, &col_rank);
+	MPI_Comm_size(col_comm, &col_size);
 
 //	printf("WORLD RANK/SIZE: %d/%d \t ROW RANK/SIZE: %d/%d\n", myrank, p, row_rank, row_size);
 	printf("\n");
 	for (int l = 1; l <= rootp; l++) {
 		int k = (j + l - 1) % rootp;
 
-		if(k==i){
+		if (k == i) {
 			// TODO
-			memcpy(&(Bt[0][0]), &(B[0][0]), nbrp*nbrp*sizeof(int));
+			memcpy(&(Bt[0][0]), &(B[0][0]), nbrp * nbrp * sizeof(int));
 //printMat(Bt,nbrp);
 //printMat(B,nbrp);
-}
-			int root = (l+j-1)%rootp;//TODO proper root
-			MPI_Bcast(&(Bt[0][0]), nbrp * nbrp, MPI_INT, root, col_comm);
-			  // Synchronize again before obtaining final time
-			MPI_Barrier(col_comm);
+		}
+		int root = (l + j - 1) % rootp;	//TODO proper root
+		MPI_Bcast(&(Bt[0][0]), nbrp * nbrp, MPI_INT, root, col_comm);
+		// Synchronize again before obtaining final time
+		MPI_Barrier(col_comm);
 //		}
 //		else{
-	//		printf("WORLD RANK/SIZE: %d/%d \t col RANK/SIZE: %d/%d\n", myrank, p, col_rank, col_size);
+		//		printf("WORLD RANK/SIZE: %d/%d \t col RANK/SIZE: %d/%d\n", myrank, p, col_rank, col_size);
 
-			//MPI_Bcast(&(B[0][0]), nbrp * nbrp, MPI_INT, , col_comm);
+		//MPI_Bcast(&(B[0][0]), nbrp * nbrp, MPI_INT, , col_comm);
 //		}
 //		MPI_Barrier(col_comm);
 		//printf("%d %d %d \n", myrank, A[0][0], Bt[0][0]);	
 		matmul(C, A, Bt, nbrp);
-	        //cout <<"in loop" << myrank << "\n";
+		//cout <<"in loop" << myrank << "\n";
 
 		int left = (rootp + j - 1) % rootp;
 		int destA = i * rootp + left;
@@ -429,11 +434,12 @@ int rotateAbroadcastB(int argc, char* argv[]) {
 
 //		cout << myrank << " "<< destA << " " << srcA << "\n"; 
 		if (l < rootp) {
-		//	if (myrank != destA)
-        //                         MPI_Send(&(A[0][0]), nbrp*nbrp, MPI_INT, destA, l ,MPI_COMM_WORLD);
-                  //       if (myrank != srcA)
-          //                       MPI_Recv(&(A[0][0]), nbrp*nbrp, MPI_INT, srcA, l,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l, srcA, l, MPI_COMM_WORLD, &sstatus[l]);
+			//	if (myrank != destA)
+			//                         MPI_Send(&(A[0][0]), nbrp*nbrp, MPI_INT, destA, l ,MPI_COMM_WORLD);
+			//       if (myrank != srcA)
+			//                       MPI_Recv(&(A[0][0]), nbrp*nbrp, MPI_INT, srcA, l,MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l,
+					srcA, l, MPI_COMM_WORLD, &sstatus[l]);
 		}
 	}
 
