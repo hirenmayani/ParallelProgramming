@@ -58,26 +58,77 @@ void printMat(int** mat,int size)
  
 int main(int argc, char *argv[])
 {
-    int myid, numprocs, left, right;
-    int** buffer;
-    buffer = createMatrix(2,1);
-    MPI_Request request;
-    MPI_Status status;
- 
-    MPI_Init(&argc,&argv);
-    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
- 
-    right = (myid + 1) % numprocs;
-    left = myid - 1;
-    if (left < 0)
-        left = numprocs - 1;
- 
-	buffer[0][0] = myid;
-  buffer[1][1] = myid;
-    MPI_Sendrecv_replace(buffer, 4, MPI_INT, left, 123, right, 123, MPI_COMM_WORLD, &status);
- 	printf("%d - %d \n", myid, buffer[1][1]);
-    MPI_Finalize();
-    return 0;
+	int myrank, n = 0, p = 4;
+	//int p=4;
+	int r = atoi("3");
+	n = pow(2, r);
+
+	MPI_Init(&argc, &argv);
+	MPI_Comm_size(MPI_COMM_WORLD, &p);
+	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+	int rootp = sqrt(p * 1.0);
+	MPI_Request sendreq[rootp], recvreq[rootp];
+
+	int i = floor(myrank / rootp);
+	int j = myrank % rootp;
+	int nbrp = n / rootp;
+
+    int A[n*n];
+	if (myrank == 0) {
+	        for (int ii=0; ii<n*n; ii++) {
+	            A[ii] = ii;
+	        }
+	    }
+
+	    int b[nbrp*nbrp];
+	    for (int ii=0; ii<nbrp*nbrp; ii++)
+	    		b[ii] = 0;
+
+	    MPI_Datatype blocktype;
+	    MPI_Datatype blocktype2;
+
+	    MPI_Type_vector(nbrp, nbrp, n, MPI_INT, &blocktype2);
+	    MPI_Type_create_resized( blocktype2, 0, sizeof(int), &blocktype);
+	    MPI_Type_commit(&blocktype);
+
+	    int disps[rootp*rootp];
+	    int counts[rootp*rootp];
+
+	    for (int ii=0; ii<rootp; ii++) {
+	        for (int jj=0; jj<rootp; jj++) {
+	            disps[ii*rootp+jj] = ii*n*nbrp+jj*nbrp;
+	            counts [ii*rootp+jj] = 1;
+	        }
+	    }
+
+	    MPI_Scatterv(A, counts, disps, blocktype, b, nbrp*nbrp, MPI_CHAR, 0, MPI_COMM_WORLD);
+
+	    /* each proc prints it's "b" out, in order */
+	    for (int proc=0; proc<p; proc++) {
+	        if (proc == rank) {
+	            printf("Rank = %d\n", rank);
+	            if (rank == 0) {
+	                printf("Global matrix: \n");
+	                for (int ii=0; ii<n; ii++) {
+	                    for (int jj=0; jj<n; jj++) {
+	                        printf("%3d ",(int)a[ii*n+jj]);
+	                    }
+	                    printf("\n");
+	                }
+	            }
+	            printf("Local Matrix:\n");
+	            for (int ii=0; ii<nbrp; ii++) {
+	                for (int jj=0; jj<nbrp; jj++) {
+	                    printf("%3d ",(int)b[ii*nbrp+jj]);
+	                }
+	                printf("\n");
+	            }
+	            printf("\n");
+	        }
+	        MPI_Barrier(MPI_COMM_WORLD);
+	    }
+
+		MPI_Finalize();
+		return 0;
 }
 

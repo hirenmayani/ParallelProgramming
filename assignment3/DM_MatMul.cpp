@@ -107,19 +107,6 @@ void matMulijk(int** X, int** Y, int** Z, int n) {
 
 }
 
-void MM_rotateA_rotateB(int** A, int** B, int** C, int n, int p) {
-	int numBlocks = sqrt(p * 1.0);
-	int blockSize = n / p;
-	// TODO consider non divisible results
-	cout << numBlocks << "\n";
-	cout << blockSize << "\n";
-
-}
-
-void send(int** mat, int i, int j, int rank) {
-
-}
-
 void matmul(int** Z, int** X, int** Y, int n){
 /*
  #pragma cilk grainsize = 5
@@ -139,12 +126,91 @@ void matmul(int** Z, int** X, int** Y, int n){
 	}
 
 }
+
+
 int main(int argc, char* argv[]) {
+
+	int myrank, n = 0, p = 4;
+
+	int r = atoi("3");
+	n = pow(2, r);
+	MPI_Init(&argc, &argv);
+	MPI_Comm_size(MPI_COMM_WORLD, &p);
+	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+	int rootp = sqrt(p * 1.0);
+	MPI_Request sendreq[rootp], recvreq[rootp];
+
+	int i = floor(myrank / rootp);
+	int j = myrank % rootp;
+	int nbrp = n / rootp;
+	int** A;
+	int** B;
+	int** C;
+	A = createContMatrix(nbrp, myrank);
+	B = createContMatrix(nbrp, myrank);
+	C = createContMatrix(nbrp, 0);
+
+	int left = (rootp + j - i) % rootp;
+	int up = (rootp - j + i) % rootp;
+	int destA = i * rootp + left;
+	int destB = up * rootp + j;
+
+	int right = (rootp + j + i) % rootp;
+	int down = (rootp + j + i) % rootp;
+	int srcA = i * rootp + right;
+	int srcB = down * rootp + j;
+
+//	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
+
+	MPI_Status sstatus[rootp + 1];
+	MPI_Status rstatus[rootp + 1];
+
+	MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, 123, srcA,
+			123, MPI_COMM_WORLD, &sstatus[0]);
+	MPI_Sendrecv_replace(&(B[0][0]), nbrp * nbrp, MPI_INT, destB, 23, srcB, 23,
+			MPI_COMM_WORLD, &rstatus[0]);
+
+	int** Aik;
+	int** Bkj;
+
+	for (int l = 0; l < rootp; l++) {
+		int k = (j + i + l - 1) % rootp;
+
+		left = (rootp + j - 1) % rootp;
+		up = (rootp + i - 1) % rootp;
+		destA = i * rootp + left;
+		destB = up * rootp + j;
+
+		right = (rootp + j + 1) % rootp;
+		down = (rootp + i + 1) % rootp;
+		srcA = i * rootp + right;
+		srcB = down * rootp + j;
+
+		matmul(C, A, B, nbrp);
+
+		if (l < rootp) {
+			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l,
+					srcA, l, MPI_COMM_WORLD, &sstatus[l + 1]);
+		}
+		if (l < rootp) {
+			MPI_Sendrecv_replace(&(B[0][0]), nbrp * nbrp, MPI_INT, destB,
+					rootp + l, srcB, rootp + l, MPI_COMM_WORLD,
+					&rstatus[l + 1]);
+		}
+	}
+
+	printMat(C, nbrp);
+	MPI_Finalize();
+
+	return 0;
+}
+
+int broadcastAbroadcastB(int argc, char* argv[]) {
 
 	int myrank, n = 0, p = 4;
 	int r = atoi("10");
 	n = pow(2, r);
-	
+
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &p);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
@@ -219,7 +285,7 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-int mainRotateABroadcastB(int argc, char* argv[]) {
+int rotateAbroadcastB(int argc, char* argv[]) {
 
 	int myrank, n = 0, p = 4;
 	//int p=4;
@@ -313,12 +379,13 @@ int mainRotateABroadcastB(int argc, char* argv[]) {
 	return 0;
 }
 
-int mainRotateBoth(int argc, char* argv[]) {
+int rotateBoth(int argc, char* argv[]) {
 
 	int myrank, n = 0, p = 4;
 	//int p=4;
 	int r = atoi("3");
 	n = pow(2, r);
+
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &p);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
@@ -328,11 +395,75 @@ int mainRotateBoth(int argc, char* argv[]) {
 	int i = floor(myrank / rootp);
 	int j = myrank % rootp;
 	int nbrp = n / rootp;
+
+	if( myrank ==0){
+		int** A;
+		int** B;
+		A = createContMatrix(n, myrank);
+		B = createContMatrix(n, myrank);
+	}
+
+
+	if (myrank == 0) {
+	        for (int ii=0; ii<n*n; ii++) {
+	            a[ii] = (char)ii;
+	        }
+	    }
+
+	    if (p != NPROWS*NPCOLS) {
+	        fprintf(stderr,"Error: number of PEs %d != %d x %d\n", p, NPROWS, NPCOLS);
+	        MPI_Finalize();
+	        exit(-1);
+	    }
+	    char b[BLOCKROWS*BLOCKCOLS];
+	    for (int ii=0; ii<BLOCKROWS*BLOCKCOLS; ii++) b[ii] = 0;
+
+	    MPI_Datatype blocktype;
+	    MPI_Datatype blocktype2;
+
+	    MPI_Type_vector(BLOCKROWS, BLOCKCOLS, COLS, MPI_CHAR, &blocktype2);
+	    MPI_Type_create_resized( blocktype2, 0, sizeof(char), &blocktype);
+	    MPI_Type_commit(&blocktype);
+
+	    int disps[NPROWS*NPCOLS];
+	    int counts[NPROWS*NPCOLS];
+	    for (int ii=0; ii<NPROWS; ii++) {
+	        for (int jj=0; jj<NPCOLS; jj++) {
+	            disps[ii*NPCOLS+jj] = ii*COLS*BLOCKROWS+jj*BLOCKCOLS;
+	            counts [ii*NPCOLS+jj] = 1;
+	        }
+	    }
+
+	    MPI_Scatterv(a, counts, disps, blocktype, b, BLOCKROWS*BLOCKCOLS, MPI_CHAR, 0, MPI_COMM_WORLD);
+	    /* each proc prints it's "b" out, in order */
+	    for (int proc=0; proc<p; proc++) {
+	        if (proc == rank) {
+	            printf("Rank = %d\n", rank);
+	            if (rank == 0) {
+	                printf("Global matrix: \n");
+	                for (int ii=0; ii<ROWS; ii++) {
+	                    for (int jj=0; jj<COLS; jj++) {
+	                        printf("%3d ",(int)a[ii*COLS+jj]);
+	                    }
+	                    printf("\n");
+	                }
+	            }
+	            printf("Local Matrix:\n");
+	            for (int ii=0; ii<BLOCKROWS; ii++) {
+	                for (int jj=0; jj<BLOCKCOLS; jj++) {
+	                    printf("%3d ",(int)b[ii*BLOCKCOLS+jj]);
+	                }
+	                printf("\n");
+	            }
+	            printf("\n");
+	        }
+	        MPI_Barrier(MPI_COMM_WORLD);
+	    }
+
 	int** A;
 	int** B;
+
 	int** C;
-	A = createContMatrix(nbrp, myrank);
-	B = createContMatrix(nbrp, myrank);
 	C = createContMatrix(nbrp, 0);
 
 	int left = (rootp + j - i) % rootp;
