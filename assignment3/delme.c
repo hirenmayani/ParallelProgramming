@@ -1,6 +1,51 @@
 #include "mpi.h"
 #include <stdio.h>
 
+int** createContMatrix(int size, int init) {
+	int rows = size;
+	int cols = size;
+	int *data = (int *) malloc(rows * cols * sizeof(int));
+	int **array = (int **) malloc(rows * sizeof(int*));
+	int i = 0, j = 0;
+	for (i = 0; i < rows; i++)
+		array[i] = &(data[cols * i]);
+
+	if (init == 0) {
+		for (i = 0; i < size; i++) {
+			for (j = 0; j < size; j++) {
+				array[i][j] = 0;
+
+			}
+		}
+	} else if (init == -1) {
+		for (i = 0; i < size; i++) {
+			for (j = 0; j < size; j++) {
+				array[i][j] = rand() % 30;
+
+			}
+		}
+	} else {
+		for (i = 0; i < size; i++) {
+			for (j = 0; j < size; j++) {
+				array[i][j] = init;
+
+			}
+		}
+	}
+	return array;
+
+}
+
+void printArr(int** mat, int size) {
+	int i, j;
+
+	for (i = 0; i < size; i++) {
+		for (j = 0; j < size; j++)
+			printf("%d ", mat[i][j]);
+		printf("\n");
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	int myrank, n = 0, p = 4;
@@ -88,7 +133,7 @@ int main(int argc, char *argv[])
 	        }
 	        MPI_Barrier(MPI_COMM_WORLD);
 	    }
-        if (5 == myrank) {
+        if (1 == myrank) {
 			printArr(A, nbrp);
 			printArr(B, nbrp);
         }
