@@ -183,29 +183,30 @@ int main(int argc, char* argv[]) {
 	int col_rank, col_size;
 	MPI_Comm_rank(col_comm, &col_rank);
 	MPI_Comm_size(col_comm, &col_size);
-
+//	printMat(A,nbrp);
 //	printf("WORLD RANK/SIZE: %d/%d \t ROW RANK/SIZE: %d/%d\n", myrank, p, row_rank, row_size);
 	for (int l = 1; l <= rootp; l++) {
 		int k = l-1;
 
-		if(k==i){
+		//if(k==i){
 			// TODO
 			memcpy(&(Bt[0][0]), &(B[0][0]), nbrp*nbrp*sizeof(int));
-}
-		if(k==j){
+//}
+//		if(k==j){
 			// TODO
 			memcpy(&(At[0][0]), &(A[0][0]), nbrp*nbrp*sizeof(int));
-}
+//}
+		//printMat(Bt,nbrp);
 
-		int rootB = (l+j-1)%rootp;//TODO proper root
+		int rootB = (l-1)%rootp;//TODO proper root
 		MPI_Bcast(&(Bt[0][0]), nbrp * nbrp, MPI_INT, rootB, col_comm);
 		MPI_Barrier(col_comm);
 
-		int rootA = (l+i-1)%rootp;//TODO proper root
+		int rootA = (l-1)%rootp;//TODO proper root
 		MPI_Bcast(&(At[0][0]), nbrp * nbrp, MPI_INT, rootA, row_comm);
-		MPI_Barrier(col_comm);
-
-		matmul(C, A, Bt, nbrp);
+		MPI_Barrier(row_comm);
+		//printf("%d %d %d \n", myrank, At[0][0], Bt[0][0]);
+		matmul(C, At, Bt, nbrp);
 	}
 
 	printMat(C, nbrp);
