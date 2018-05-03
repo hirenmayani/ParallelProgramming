@@ -153,6 +153,7 @@ int main(int argc, char* argv[]) {
 	/*
 	 * divide A and B and send to all proc
 	 */
+	int ii,jj;
 	int AA[n*n];
 	int BB[n*n];
 	if (myrank == 0) {
@@ -447,7 +448,6 @@ int rotateBoth(int argc, char* argv[]) {
 	int j = myrank % rootp;
 	int nbrp = n / rootp;
 
-	if myrank ==0:
 	int** A;
 	int** B;
 	int** C;
