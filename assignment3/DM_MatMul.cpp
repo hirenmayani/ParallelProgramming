@@ -142,8 +142,9 @@ void matmul(int** Z, int** X, int** Y, int n){
 int main(int argc, char* argv[]) {
 
 	int myrank, n = 0, p = 4;
-	int r = atoi("3");
+	int r = atoi("10");
 	n = pow(2, r);
+	
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &p);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
@@ -188,14 +189,14 @@ int main(int argc, char* argv[]) {
 	for (int l = 1; l <= rootp; l++) {
 		int k = l-1;
 
-		//if(k==i){
+		if(k==i){
 			// TODO
 			memcpy(&(Bt[0][0]), &(B[0][0]), nbrp*nbrp*sizeof(int));
-//}
-//		if(k==j){
+		}
+		if(k==j){
 			// TODO
 			memcpy(&(At[0][0]), &(A[0][0]), nbrp*nbrp*sizeof(int));
-//}
+		}
 		//printMat(Bt,nbrp);
 
 		int rootB = (l-1)%rootp;//TODO proper root
@@ -209,7 +210,7 @@ int main(int argc, char* argv[]) {
 		matmul(C, At, Bt, nbrp);
 	}
 
-	printMat(C, nbrp);
+	//printMat(C, nbrp);
 	//cout << myrank << "\n";
 	MPI_Comm_free(&row_comm);
 	MPI_Comm_free(&col_comm);
