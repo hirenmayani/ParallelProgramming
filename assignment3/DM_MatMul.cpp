@@ -145,11 +145,11 @@ int main(int argc, char* argv[]) {
 	int** A;
 	int** B;
 	int** C;
-
+	int** Cf;
 	A = createContMatrix(nbrp, 0);
 	B = createContMatrix(nbrp, 0);
 	C = createContMatrix(nbrp, 0);
-	Cf = createContMatrix(nbrp, 0);
+	Cf = createContMatrix(n, 0);
 
 	/*
 	 * divide A and B and send to all proc
@@ -270,7 +270,7 @@ int main(int argc, char* argv[]) {
 			printf("%d ", CC[ii]);*/
 			Cf[int(ii/n)][int(ii%n)] = CC[ii];
 		}
-			printMat(Cf,n);
+		printMat(Cf,n);
 
 	}
 //	printMat(C, nbrp);
