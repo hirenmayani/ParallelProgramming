@@ -156,6 +156,7 @@ int main(int argc, char* argv[]) {
 	int ii,jj;
 	int AA[n*n];
 	int BB[n*n];
+	int CC[n*n];
 	if (myrank == 0) {
 	        for(ii=0; ii<n*n; ii++) {
 	            AA[ii] = ii;
@@ -252,7 +253,20 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	printMat(C, nbrp);
+	MPI_Gatherv(C, nbrp*nbrp, MPI_INT, CC, counts, disps, blocktype, 0, MPI_COMM_WORLD);
+
+	if (myrank == 0) {
+
+	        for(ii=0; ii<n*n; ii++) {
+	        		printf("%d ", CC[ii]);
+	        		if (ii%n == 0){
+	        			printf("\n");
+	        		}
+	        }
+//			printMat(C,n);
+
+	}
+//	printMat(C, nbrp);
 	MPI_Finalize();
 
 	return 0;
