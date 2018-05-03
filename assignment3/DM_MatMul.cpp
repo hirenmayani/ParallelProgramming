@@ -149,6 +149,7 @@ int main(int argc, char* argv[]) {
 	A = createContMatrix(nbrp, 0);
 	B = createContMatrix(nbrp, 0);
 	C = createContMatrix(nbrp, 0);
+	Cf = createContMatrix(nbrp, 0);
 
 	/*
 	 * divide A and B and send to all proc
@@ -263,12 +264,13 @@ int main(int argc, char* argv[]) {
 	if (myrank == 0) {
 
 		for (ii = 0; ii < n * n; ii++) {
-			if (ii % n == 0) {
+			/*if (ii % n == 0) {
 				printf("\n");
 			}
-printf("%d ", CC[ii]);
+			printf("%d ", CC[ii]);*/
+			Cf[int(ii/n)][int(ii%n)] = CC[ii];
 		}
-//			printMat(C,n);
+			printMat(Cf,n);
 
 	}
 //	printMat(C, nbrp);
