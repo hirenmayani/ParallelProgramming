@@ -15,20 +15,35 @@ int main(int argc, char *argv[])
 	int rootp = sqrt(p * 1.0);
 	MPI_Request sendreq[rootp], recvreq[rootp];
 
-	//int i = floor(myrank / rootp);
-	//int j = myrank % rootp;
+	int i ;
+	int j ;
+	i = floor(myrank / rootp);
+	j = myrank % rootp;
 	int nbrp = n / rootp;
+	int** A;
+	int** B;
+	int** C;
+	A = createContMatrix(nbrp, 0);
+	B = createContMatrix(nbrp, 0);
+	C = createContMatrix(nbrp, 0);
 
-    	int A[n*n];
+
+	int AA[n*n];
+	int BB[n*n];
 	if (myrank == 0) {
 	        for(ii=0; ii<n*n; ii++) {
-	            A[ii] = ii;
+	            AA[ii] = ii;
+	            BB[ii] = ii;
 	        }
 	    }
 
-	    int b[nbrp*nbrp];
+		int a[nbrp*nbrp];
+		int b[nbrp*nbrp];
 	    for(ii=0; ii<nbrp*nbrp; ii++)
-	    		b[ii] = 0;
+	    		{
+				a[ii] = 0;
+				b[ii] = 0;
+			}
 
 	    MPI_Datatype blocktype;
 	    MPI_Datatype blocktype2;
@@ -47,34 +62,37 @@ int main(int argc, char *argv[])
 	        }
 	    }
 
-	    MPI_Scatterv(A, counts, disps, blocktype, b, nbrp*nbrp, MPI_INT, 0, MPI_COMM_WORLD);
+	    MPI_Scatterv(AA, counts, disps, blocktype, a, nbrp*nbrp, MPI_INT, 0, MPI_COMM_WORLD);
+	    MPI_Scatterv(BB, counts, disps, blocktype, b, nbrp*nbrp, MPI_INT, 0, MPI_COMM_WORLD);
 
 	    /* each proc prints it's "b" out, in order */
 	    for (proc=0; proc<p; proc++) {
 	        if (proc == myrank) {
-	            printf("Rank = %d\n", myrank);
+/*	            printf("Rank = %d\n", myrank);
 	            if (myrank == 0) {
 	                printf("Global matrix: \n");
 	                for(ii=0; ii<n; ii++) {
 	                    for(jj=0; jj<n; jj++) {
-	                        printf("%3d ",(int)A[ii*n+jj]);
+	                        printf("%3d ",(int)AA[ii*n+jj]);
 	                    }
 	                    printf("\n");
 	                }
 	            }
-	            printf("Local Matrix:\n");
+*/
 	            for(ii=0; ii<nbrp; ii++) {
 	                for(jj=0; jj<nbrp; jj++) {
-	                    printf("%3d ",(int)b[ii*nbrp+jj]);
+						A[ii][jj]=a[ii*nbrp+jj];
+						B[ii][jj]=b[ii*nbrp+jj];
 	                }
-	                printf("\n");
 	            }
-	            printf("\n");
 	        }
 	        MPI_Barrier(MPI_COMM_WORLD);
 	    }
-
-		MPI_Finalize();
+        if (5 == myrank) {
+			printArr(A, nbrp);
+			printArr(B, nbrp);
+        }
+        MPI_Finalize();
 		return 0;
 }
 
