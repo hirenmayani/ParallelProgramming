@@ -202,7 +202,8 @@ int main(int argc, char* argv[]) {
 		 * A and B created
 		 */
 
-
+	//printMat(A,nbrp);
+	//printMat(B, nbrp);
 	int left = (rootp + j - i) % rootp;
 	int up = (rootp - j + i) % rootp;
 	int destA = i * rootp + left;
@@ -239,7 +240,7 @@ int main(int argc, char* argv[]) {
 		srcB = down * rootp + j;
 
 		matmul(C, A, B, nbrp);
-
+	//	printMat(C, nbrp);
 		if (l < rootp) {
 			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l,
 					srcA, l, MPI_COMM_WORLD, &sstatus[l + 1]);
@@ -435,7 +436,7 @@ int rotateBoth(int argc, char* argv[]) {
 
 	int myrank, n = 0, p = 4;
 	//int p=4;
-	int r = atoi("3");
+	int r = atoi("1");
 	n = pow(2, r);
 
 	MPI_Init(&argc, &argv);
