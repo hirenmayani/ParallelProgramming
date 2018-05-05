@@ -143,29 +143,10 @@ void matmul(int** Z, int** X, int** Y, int n) {
 
 }
 
-int main(int argc, char* argv[]) {
-	int algo = atoi(argv[1]);
-	int r = atoi(argv[2]);
-
-	if(algo==1){
-		rotateBoth(argc, argv);
-	}else if(algo == 2){
-		rotateAbroadcastB(argc, argv);
-	}else if(algo == 3){
-		broadcastAbroadcastB(argc, argv);
-	}else if(algo == 4){
-		scatterABgatherC(argc, argv);
-	}else{
-		printf("invalid");
-	}
-
-}
-
-int scatterABgatherC(int argc, char* argv[]) {
+int scatterABgatherC(int argc, char* argv[], int r) {
 
 	int myrank, n = 0, p = 4;
 
-	int r = atoi("3");
 	n = pow(2, r);
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &p);
@@ -307,7 +288,7 @@ int scatterABgatherC(int argc, char* argv[]) {
 		printMat(Cf, n);
 
 	}
-//	printMat(C, nbrp);
+	printMat(C, nbrp);
 	MPI_Finalize();
 
 	return 0;
@@ -383,7 +364,7 @@ int broadcastAbroadcastB(int argc, char* argv[],int r) {
 		matmul(C, At, Bt, nbrp);
 	}
 
-	//printMat(C, nbrp);
+	printMat(C, nbrp);
 	//cout << myrank << "\n";
 	MPI_Comm_free(&row_comm);
 	MPI_Comm_free(&col_comm);
@@ -561,3 +542,106 @@ int rotateBoth(int argc, char* argv[], int r) {
 
 	return 0;
 }
+
+
+
+int rotateAB(int argc, char* argv[], int r) {
+
+	int myrank, n = 0, p = 4;
+	n = pow(2, r);
+	MPI_Init(&argc, &argv);
+	MPI_Comm_size(MPI_COMM_WORLD, &p);
+	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+	int rootp = sqrt(p * 1.0);
+	MPI_Request sendreq[rootp], recvreq[rootp];
+
+	int i = floor(myrank / rootp);
+	int j = myrank % rootp;
+
+	int nbrp = n / rootp;
+
+	int** A;
+	int** B;
+	int** C;
+	A = createContMatrix(nbrp, myrank);
+	B = createContMatrix(nbrp, myrank);
+	C = createContMatrix(nbrp, 0);
+
+	int left = (rootp + j - i) % rootp;
+	int up = (rootp - j + i) % rootp;
+	int destA = i * rootp + left;
+	int destB = up * rootp + j;
+
+	int right = (rootp + j + i) % rootp;
+	int down = (rootp + j + i) % rootp;
+	int srcA = i * rootp + right;
+	int srcB = down * rootp + j;
+
+
+	MPI_Status sstatus[rootp + 1];
+	MPI_Status rstatus[rootp + 1];
+
+
+	MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, 123, srcA,
+			123, MPI_COMM_WORLD, &sstatus[0]);
+	MPI_Sendrecv_replace(&(B[0][0]), nbrp * nbrp, MPI_INT, destB, 23, srcB, 23,
+			MPI_COMM_WORLD, &rstatus[0]);
+
+	int** Aik;
+	int** Bkj;
+
+	for (int l = 0; l < rootp; l++) {
+		int k = (j + i + l - 1) % rootp;
+
+		left = (rootp + j - 1) % rootp;
+		up = (rootp + i - 1) % rootp;
+		destA = i * rootp + left;
+		destB = up * rootp + j;
+
+		right = (rootp + j + 1) % rootp;
+		down = (rootp + i + 1) % rootp;
+		srcA = i * rootp + right;
+		srcB = down * rootp + j;
+
+
+		matmul(C, A, B, nbrp);
+
+		if (l < rootp) {
+			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l,
+					srcA, l, MPI_COMM_WORLD, &sstatus[l + 1]);
+			}
+		if (l < rootp) {
+			MPI_Sendrecv_replace(&(B[0][0]), nbrp * nbrp, MPI_INT, destB,
+					rootp + l, srcB, rootp + l, MPI_COMM_WORLD,
+					&rstatus[l + 1]);
+
+}
+	}
+
+	printMat(C, nbrp);
+
+
+	MPI_Finalize();
+
+	return 0;
+}
+
+int main(int argc, char* argv[]) {
+        int algo = atoi(argv[1]);
+        int r = atoi(argv[2]);
+
+        if(algo==1){
+                rotateAB(argc, argv, r);
+        }else if(algo == 2){
+                rotateAbroadcastB(argc, argv, r);
+        }else if(algo == 3){
+                broadcastAbroadcastB(argc, argv,r);
+        }else if(algo == 4){
+                scatterABgatherC(argc, argv, r);
+        }else{
+                printf("invalid");
+        }
+
+}
+
+
