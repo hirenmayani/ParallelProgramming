@@ -134,8 +134,6 @@ void parmatmul(int** Z, int** X, int** Y, int n) {
 		}
 	}
 
-}
-
 void matmul(int** Z, int** X, int** Y, int n) {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++)
@@ -147,7 +145,7 @@ void matmul(int** Z, int** X, int** Y, int n) {
 
 int main(int argc, char* argv[]) {
 	int algo = atoi(argv[1]);
-	int r = atoi(args[2]);
+	int r = atoi(argv[2]);
 
 	if(algo==1){
 		rotateBoth(argc, argv);
