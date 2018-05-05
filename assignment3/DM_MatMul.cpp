@@ -20,6 +20,7 @@
 #include <iostream>
 #include <unistd.h>
 #include<cilk/cilk.h>
+#include<fstream>
 
 using namespace std;
 
@@ -320,6 +321,9 @@ int broadcastAbroadcastB(int argc, char* argv[],int r) {
 	At = createContMatrix(nbrp, 0);
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
+	double start, end;
+        MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+        start = MPI_Wtime();
 
 	MPI_Status sstatus[rootp + 1];
 
@@ -364,12 +368,19 @@ int broadcastAbroadcastB(int argc, char* argv[],int r) {
 		matmul(C, At, Bt, nbrp);
 	}
 
-	printMat(C, nbrp);
+//	printMat(C, nbrp);
 	//cout << myrank << "\n";
 	MPI_Comm_free(&row_comm);
 	MPI_Comm_free(&col_comm);
-	MPI_Finalize();
+	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+        end = MPI_Wtime();
+        MPI_Finalize();
 
+        if (myrank == 0) { /* use time on master node */
+            printf("Runtime = %f\n", end-start);
+                ofstream myfile ("1.csv",ios::app);
+                myfile<< "3" << "," << n << "," << p << "," <<end-start<<"\n";
+}
 	return 0;
 }
 
@@ -394,6 +405,9 @@ int rotateAbroadcastB(int argc, char* argv[], int r) {
 	C = createContMatrix(nbrp, 0);
 	int** Bt;
 	Bt = createContMatrix(nbrp, 0);
+	double start, end;
+        MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+        start = MPI_Wtime();
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 
@@ -457,12 +471,19 @@ int rotateAbroadcastB(int argc, char* argv[], int r) {
 		}
 	}
 
-	printMat(C, nbrp);
+//	printMat(C, nbrp);
 	//cout << myrank << "\n";
 	MPI_Comm_free(&row_comm);
 	MPI_Comm_free(&col_comm);
-	MPI_Finalize();
+	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+        end = MPI_Wtime();
+        MPI_Finalize();
 
+        if (myrank == 0) { /* use time on master node */
+            printf("Runtime = %f\n", end-start);
+                ofstream myfile ("1.csv",ios::app);
+                myfile<< "2" << "," << n << "," << p << "," <<end-start<<"\n";
+}
 	return 0;
 }
 
@@ -487,6 +508,9 @@ int rotateBoth(int argc, char* argv[], int r) {
 	A = createContMatrix(n, myrank);
 	B = createContMatrix(n, myrank);
 	C = createContMatrix(nbrp, 0);
+	double start, end;
+        MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+        start = MPI_Wtime();
 
 	int left = (rootp + j - i) % rootp;
 	int up = (rootp - j + i) % rootp;
@@ -536,9 +560,17 @@ int rotateBoth(int argc, char* argv[], int r) {
 					&rstatus[l + 1]);
 		}
 	}
-
-	printMat(C, nbrp);
 	MPI_Finalize();
+	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+        end = MPI_Wtime();
+        MPI_Finalize();
+
+        if (myrank == 0) { /* use time on master node */
+            printf("Runtime = %f\n", end-start);
+                ofstream myfile ("1.csv",ios::app);
+                myfile<< "1" << "," << n << "," << p << "," <<end-start<<"\n";
+}
+//	printMat(C, nbrp);
 
 	return 0;
 }
@@ -566,6 +598,10 @@ int rotateAB(int argc, char* argv[], int r) {
 	A = createContMatrix(nbrp, myrank);
 	B = createContMatrix(nbrp, myrank);
 	C = createContMatrix(nbrp, 0);
+
+	double start, end;
+	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+	start = MPI_Wtime();
 
 	int left = (rootp + j - i) % rootp;
 	int up = (rootp - j + i) % rootp;
@@ -618,11 +654,17 @@ int rotateAB(int argc, char* argv[], int r) {
 }
 	}
 
-	printMat(C, nbrp);
-
-
+	//printMat(C, nbrp);
+	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+	end = MPI_Wtime();
 	MPI_Finalize();
 
+	if (myrank == 0) { /* use time on master node */
+	    printf("Runtime = %f\n", end-start);
+		ofstream myfile ("1.csv",ios::app);
+	  	myfile<< "1" << "," << n << "," << p << "," <<end-start<<"\n";
+
+	}
 	return 0;
 }
 
