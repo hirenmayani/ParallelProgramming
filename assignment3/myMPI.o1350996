@@ -1,0 +1,15 @@
+Runtime = 22.628520
+
+Runtime = 22.607687
+Runtime = 22.555210
+Runtime = 176.977091
+
+Runtime = 175.447759
+Runtime = 175.701521
+Runtime = 1401.736847
+
+Runtime = 1391.284712
+Runtime = 1384.067267
+Runtime = 11379.934758
+
+slurmstepd: error: *** JOB 1350996 ON c402-002 CANCELLED AT 2018-05-05T19:12:42 DUE TO TIME LIMIT ***
