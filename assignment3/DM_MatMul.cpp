@@ -314,8 +314,8 @@ int broadcastAbroadcastB(int argc, char* argv[],int r) {
 	int** C;
 	int** At;
 	int** Bt;
-	A = createContMatrix(nbrp, myrank);
-	B = createContMatrix(nbrp, myrank);
+	A = createContMatrix(nbrp, -2);
+	B = createContMatrix(nbrp, -2);
 	C = createContMatrix(nbrp, 0);
 	Bt = createContMatrix(nbrp, 0);
 	At = createContMatrix(nbrp, 0);
@@ -400,8 +400,8 @@ int rotateAbroadcastB(int argc, char* argv[], int r) {
 	int** A;
 	int** B;
 	int** C;
-	A = createContMatrix(nbrp, myrank);
-	B = createContMatrix(nbrp, myrank);
+	A = createContMatrix(nbrp, -2);
+	B = createContMatrix(nbrp, -2);
 	C = createContMatrix(nbrp, 0);
 	int** Bt;
 	Bt = createContMatrix(nbrp, 0);
@@ -505,8 +505,8 @@ int rotateBoth(int argc, char* argv[], int r) {
 	int** A;
 	int** B;
 	int** C;
-	A = createContMatrix(n, myrank);
-	B = createContMatrix(n, myrank);
+	A = createContMatrix(n, -2);
+	B = createContMatrix(n, -2);
 	C = createContMatrix(nbrp, 0);
 	double start, end;
         MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
@@ -595,8 +595,8 @@ int rotateAB(int argc, char* argv[], int r) {
 	int** A;
 	int** B;
 	int** C;
-	A = createContMatrix(nbrp, myrank);
-	B = createContMatrix(nbrp, myrank);
+	A = createContMatrix(nbrp, -2);
+	B = createContMatrix(nbrp, -2);
 	C = createContMatrix(nbrp, 0);
 
 	double start, end;
