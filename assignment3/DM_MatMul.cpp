@@ -21,8 +21,9 @@
 #include <unistd.h>
 #include<cilk/cilk.h>
 #include<fstream>
-#define FAME "1be.csv" 
+
 using namespace std;
+string fname;
 
 int** createMatrix(int size, int init) {
 	int i = 0;
@@ -48,8 +49,7 @@ int** createMatrix(int size, int init) {
 
 			}
 		}
-	}
-	else {
+	} else {
 		for (i = 0; i < size; i++) {
 			for (j = 0; j < size; j++) {
 				mat[i][j] = 0;
@@ -123,16 +123,14 @@ void matMulijk(int** X, int** Y, int** Z, int n) {
 
 }
 
-void parmatmul(int* X,int* Y,int* Z,int n)
-{
-  #pragma cilk grainsize = 5
-  for(unsigned int i = 0; i < n; ++i){
-   for (unsigned int k = 0; k < n; ++k) {
-     for (unsigned int j = 0; j < n; ++j) {
-       Z[i*n + j] += X[i*n + k] * Y[k*n + j];
-      }
-    }
- }
+void parmatmul(int* X, int* Y, int* Z, int n) {
+	for (unsigned int i = 0; i < n; ++i) {
+		for (unsigned int k = 0; k < n; ++k) {
+			for (unsigned int j = 0; j < n; ++j) {
+				Z[i * n + j] += X[i * n + k] * Y[k * n + j];
+			}
+		}
+	}
 
 }
 
@@ -145,7 +143,7 @@ void matmul(int** Z, int** X, int** Y, int n) {
 
 }
 
-int scatterABgatherC(int argc, char* argv[], int r) {
+int scatterABgatherC(int argc, char* argv[], int r, int ispar, string fname) {
 
 	int myrank, n = 0, p = 4;
 
@@ -168,9 +166,9 @@ int scatterABgatherC(int argc, char* argv[], int r) {
 	C = createContMatrix(nbrp, 0);
 	Cf = createContMatrix(n, 0);
 
-double start, end;
-        MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
-        start = MPI_Wtime();
+	double start, end;
+	MPI_Barrier (MPI_COMM_WORLD); /* IMPORTANT */
+	start = MPI_Wtime();
 	/*
 	 * divide A and B and send to all proc
 	 */
@@ -221,7 +219,7 @@ double start, end;
 			A[ii][jj] = a[ii * nbrp + jj];
 			B[ii][jj] = b[ii * nbrp + jj];
 		}
-		MPI_Barrier (MPI_COMM_WORLD);
+		MPI_Barrier(MPI_COMM_WORLD);
 	}
 	/*
 	 * A and B created
@@ -260,8 +258,12 @@ double start, end;
 		srcA = i * rootp + right;
 		srcB = down * rootp + j;
 
-		matmul(C, A, B, nbrp);
-		//	printMat(C, nbrp);
+		if(ispar == 0)
+			matmul(C, A, B, nbrp);
+		else
+			parmatmul(C, A, B, nbrp);
+
+
 		if (l < rootp) {
 			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l,
 					srcA, l, MPI_COMM_WORLD, &sstatus[l + 1]);
@@ -276,7 +278,7 @@ double start, end;
 		for (jj = 0; jj < nbrp; jj++) {
 			Ct[ii * nbrp + jj] = C[ii][jj];
 		}
-		MPI_Barrier (MPI_COMM_WORLD);
+		MPI_Barrier(MPI_COMM_WORLD);
 	}
 	MPI_Gatherv(Ct, nbrp * nbrp, MPI_INT, CC, counts, disps, blocktype, 0,
 			MPI_COMM_WORLD);
@@ -294,20 +296,21 @@ double start, end;
 
 	}
 //	printMat(C, nbrp);
-end = MPI_Wtime();
-        MPI_Finalize();
+	end = MPI_Wtime();
+	MPI_Finalize();
 
-        if (myrank == 0) { /* use time on master node */
-            printf("Runtime = %f\n", end-start);
-                ofstream myfile (FAME,ios::app);
-                myfile<< "1" << "," << n << "," << p << "," <<end-start<<"\n";
+	if (myrank == 0) { /* use time on master node */
+		printf("Runtime = %f\n", end - start);
+		ofstream myfile(fname, ios::app);
+		myfile << "1" << "," << n << "," << p << "," << end - start << "\n";
 
-        }
+	}
 
 	return 0;
 }
 
-int broadcastAbroadcastB(int argc, char* argv[],int r) {
+int broadcastAbroadcastB(int argc, char* argv[], int r, int ispar,
+		string fname) {
 
 	int myrank, n = 0, p = 4;
 	n = pow(2, r);
@@ -334,8 +337,8 @@ int broadcastAbroadcastB(int argc, char* argv[],int r) {
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 	double start, end;
-        MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
-        start = MPI_Wtime();
+	MPI_Barrier (MPI_COMM_WORLD); /* IMPORTANT */
+	start = MPI_Wtime();
 
 	MPI_Status sstatus[rootp + 1];
 
@@ -377,7 +380,12 @@ int broadcastAbroadcastB(int argc, char* argv[],int r) {
 		MPI_Bcast(&(At[0][0]), nbrp * nbrp, MPI_INT, rootA, row_comm);
 		MPI_Barrier(row_comm);
 		//printf("%d %d %d \n", myrank, At[0][0], Bt[0][0]);
-		matmul(C, At, Bt, nbrp);
+		if(ispar == 0)
+			matmul(C, A, B, nbrp);
+		else
+			parmatmul(C, A, B, nbrp);
+
+
 	}
 
 //	printMat(C, nbrp);
@@ -385,18 +393,18 @@ int broadcastAbroadcastB(int argc, char* argv[],int r) {
 	MPI_Comm_free(&row_comm);
 	MPI_Comm_free(&col_comm);
 	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
-        end = MPI_Wtime();
-        MPI_Finalize();
+	end = MPI_Wtime();
+	MPI_Finalize();
 
-        if (myrank == 0) { /* use time on master node */
-            printf("Runtime = %f\n", end-start);
-                ofstream myfile (FAME,ios::app);
-                myfile<< "3" << "," << n << "," << p << "," <<end-start<<"\n";
-}
+	if (myrank == 0) { /* use time on master node */
+		printf("Runtime = %f\n", end - start);
+		ofstream myfile(fname, ios::app);
+		myfile << "3" << "," << n << "," << p << "," << end - start << "\n";
+	}
 	return 0;
 }
 
-int rotateAbroadcastB(int argc, char* argv[], int r) {
+int rotateAbroadcastB(int argc, char* argv[], int r, ,int ispar,string fname) {
 
 	int myrank, n = 0, p = 4;
 	n = pow(2, r);
@@ -418,8 +426,8 @@ int rotateAbroadcastB(int argc, char* argv[], int r) {
 	int** Bt;
 	Bt = createContMatrix(nbrp, 0);
 	double start, end;
-        MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
-        start = MPI_Wtime();
+	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+	start = MPI_Wtime();
 
 //	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
 
@@ -464,8 +472,14 @@ int rotateAbroadcastB(int argc, char* argv[], int r) {
 //		}
 //		MPI_Barrier(col_comm);
 		//printf("%d %d %d \n", myrank, A[0][0], Bt[0][0]);	
-		matmul(C, A, Bt, nbrp);
 		//cout <<"in loop" << myrank << "\n";
+
+
+		if(ispar == 0)
+			matmul(C, A, B, nbrp);
+		else
+			parmatmul(C, A, B, nbrp);
+
 
 		int left = (rootp + j - 1) % rootp;
 		int destA = i * rootp + left;
@@ -488,108 +502,18 @@ int rotateAbroadcastB(int argc, char* argv[], int r) {
 	MPI_Comm_free(&row_comm);
 	MPI_Comm_free(&col_comm);
 	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
-        end = MPI_Wtime();
-        MPI_Finalize();
-
-        if (myrank == 0) { /* use time on master node */
-            printf("Runtime = %f\n", end-start);
-                ofstream myfile (FAME,ios::app);
-                myfile<< "2" << "," << n << "," << p << "," <<end-start<<"\n";
-}
-	return 0;
-}
-
-int rotateBoth(int argc, char* argv[], int r) {
-
-	int myrank, n = 0, p = 4;
-	n = pow(2, r);
-
-	MPI_Init(&argc, &argv);
-	MPI_Comm_size(MPI_COMM_WORLD, &p);
-	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
-	int rootp = sqrt(p * 1.0);
-	MPI_Request sendreq[rootp], recvreq[rootp];
-
-	int i = floor(myrank / rootp);
-	int j = myrank % rootp;
-	int nbrp = n / rootp;
-
-	int** A;
-	int** B;
-	int** C;
-	A = createContMatrix(n, -2);
-	B = createContMatrix(n, -2);
-	C = createContMatrix(nbrp, 0);
-	double start, end;
-        MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
-        start = MPI_Wtime();
-
-	int left = (rootp + j - i) % rootp;
-	int up = (rootp - j + i) % rootp;
-	int destA = i * rootp + left;
-	int destB = up * rootp + j;
-
-	int right = (rootp + j + i) % rootp;
-	int down = (rootp + j + i) % rootp;
-	int srcA = i * rootp + right;
-	int srcB = down * rootp + j;
-
-//	cout << myrank << " left: " << left << " right:" << right << ": sending to: " << destA << "  receive from:" << srcA << "\n";
-
-	MPI_Status sstatus[rootp + 1];
-	MPI_Status rstatus[rootp + 1];
-
-	MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, 123, srcA,
-			123, MPI_COMM_WORLD, &sstatus[0]);
-	MPI_Sendrecv_replace(&(B[0][0]), nbrp * nbrp, MPI_INT, destB, 23, srcB, 23,
-			MPI_COMM_WORLD, &rstatus[0]);
-
-	int** Aik;
-	int** Bkj;
-
-	for (int l = 0; l < rootp; l++) {
-		int k = (j + i + l - 1) % rootp;
-
-		left = (rootp + j - 1) % rootp;
-		up = (rootp + i - 1) % rootp;
-		destA = i * rootp + left;
-		destB = up * rootp + j;
-
-		right = (rootp + j + 1) % rootp;
-		down = (rootp + i + 1) % rootp;
-		srcA = i * rootp + right;
-		srcB = down * rootp + j;
-
-		matmul(C, A, B, nbrp);
-
-		if (l < rootp) {
-			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l,
-					srcA, l, MPI_COMM_WORLD, &sstatus[l + 1]);
-		}
-		if (l < rootp) {
-			MPI_Sendrecv_replace(&(B[0][0]), nbrp * nbrp, MPI_INT, destB,
-					rootp + l, srcB, rootp + l, MPI_COMM_WORLD,
-					&rstatus[l + 1]);
-		}
-	}
+	end = MPI_Wtime();
 	MPI_Finalize();
-	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
-        end = MPI_Wtime();
-        MPI_Finalize();
 
-        if (myrank == 0) { /* use time on master node */
-            printf("Runtime = %f\n", end-start);
-                ofstream myfile (FAME,ios::app);
-                myfile<< "1" << "," << n << "," << p << "," <<end-start<<"\n";
-}
-//	printMat(C, nbrp);
-
+	if (myrank == 0) { /* use time on master node */
+		printf("Runtime = %f\n", end-start);
+		ofstream myfile (fname,ios::app);
+		myfile<< "2" << "," << n << "," << p << "," <<end-start<<"\n";
+	}
 	return 0;
 }
 
-
-
-int rotateAB(int argc, char* argv[], int r) {
+int rotateAB(int argc, char* argv[], int r, int ispar, string fname) {
 
 	int myrank, n = 0, p = 4;
 	n = pow(2, r);
@@ -612,7 +536,7 @@ int rotateAB(int argc, char* argv[], int r) {
 	C = createContMatrix(nbrp, 0);
 
 	double start, end;
-	MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
+	MPI_Barrier (MPI_COMM_WORLD); /* IMPORTANT */
 	start = MPI_Wtime();
 
 	int left = (rootp + j - i) % rootp;
@@ -625,10 +549,8 @@ int rotateAB(int argc, char* argv[], int r) {
 	int srcA = i * rootp + right;
 	int srcB = down * rootp + j;
 
-
 	MPI_Status sstatus[rootp + 1];
 	MPI_Status rstatus[rootp + 1];
-
 
 	MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, 123, srcA,
 			123, MPI_COMM_WORLD, &sstatus[0]);
@@ -651,19 +573,21 @@ int rotateAB(int argc, char* argv[], int r) {
 		srcA = i * rootp + right;
 		srcB = down * rootp + j;
 
-
-		matmul(C, A, B, nbrp);
+		if(ispar == 0)
+			matmul(C, A, B, nbrp);
+		else
+			parmatmul(C, A, B, nbrp);
 
 		if (l < rootp) {
 			MPI_Sendrecv_replace(&(A[0][0]), nbrp * nbrp, MPI_INT, destA, l,
 					srcA, l, MPI_COMM_WORLD, &sstatus[l + 1]);
-			}
+		}
 		if (l < rootp) {
 			MPI_Sendrecv_replace(&(B[0][0]), nbrp * nbrp, MPI_INT, destB,
 					rootp + l, srcB, rootp + l, MPI_COMM_WORLD,
 					&rstatus[l + 1]);
 
-}
+		}
 	}
 
 	//printMat(C, nbrp);
@@ -672,30 +596,31 @@ int rotateAB(int argc, char* argv[], int r) {
 	MPI_Finalize();
 
 	if (myrank == 0) { /* use time on master node */
-	    printf("Runtime = %f\n", end-start);
-		ofstream myfile (FAME,ios::app);
-	  	myfile<< "1" << "," << n << "," << p << "," <<end-start<<"\n";
+		printf("Runtime = %f\n", end - start);
+		ofstream myfile(fname, ios::app);
+		myfile << "1" << "," << n << "," << p << "," << end - start << "\n";
 
 	}
 	return 0;
 }
 
 int main(int argc, char* argv[]) {
-        int algo = atoi(argv[1]);
-        int r = atoi(argv[2]);
+	int algo = atoi(argv[1]);
+	int r = atoi(argv[2]);
+	int ispar = atoi(argv[3]);
+	string fname = argv[4];
 
-        if(algo==1){
-                rotateAB(argc, argv, r);
-        }else if(algo == 2){
-                rotateAbroadcastB(argc, argv, r);
-        }else if(algo == 3){
-                broadcastAbroadcastB(argc, argv,r);
-        }else if(algo == 4){
-                scatterABgatherC(argc, argv, r);
-        }else{
-                printf("invalid");
-        }
+	if (algo == 1) {
+		rotateAB(argc, argv, r, ispar, fname);
+	} else if (algo == 2) {
+		rotateAbroadcastB(argc, argv, r, ispar, fname);
+	} else if (algo == 3) {
+		broadcastAbroadcastB(argc, argv, r, ispar, fname);
+	} else if (algo == 4) {
+		scatterABgatherC(argc, argv, r, ispar, fname);
+	} else {
+		printf("invalid");
+	}
 
 }
-
 
