@@ -16,21 +16,20 @@
 #./radixC 25
 
 #icpc -std=c++11 ParQuickSort.cpp -o quick
-
-#!/bin/bash
 module purge
 module load gnutools
 module load gnu openmpi_ib
 
-mpicxx --std=c++11 DM_MatMul.cpp -o task1b
+mpicxx --std=c++11 DM_MatMul1.cpp -o task1c
 
+#!/bin/bash
 for n in 1 4 16
 do
 for i in 10 11 12 13 14 
 do
 		for algo in 1 2 3 4
 		do
-			 mpiexec -n $n -ppn 1 task1b $algo $i	
+			 mpirun -n $n -ppn 24 task1c $algo $i	
 		done
 done
 done

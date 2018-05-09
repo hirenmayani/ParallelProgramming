@@ -1,5 +1,0 @@
-slurmstepd: error: *** JOB 1348556 ON c402-051 CANCELLED AT 2018-05-05T08:49:27 DUE TO TIME LIMIT ***
-[mpiexec@c402-051.stampede2.tacc.utexas.edu] control_cb (../../pm/pmiserv/pmiserv_cb.c:857): assert (!closed) failed
-[mpiexec@c402-051.stampede2.tacc.utexas.edu] HYDT_dmxu_poll_wait_for_event (../../tools/demux/demux_poll.c:76): callback returned error status
-[mpiexec@c402-051.stampede2.tacc.utexas.edu] HYD_pmci_wait_for_completion (../../pm/pmiserv/pmiserv_pmci.c:501): error waiting for event
-[mpiexec@c402-051.stampede2.tacc.utexas.edu] main (../../ui/mpich/mpiexec.c:1147): process manager error waiting for completion

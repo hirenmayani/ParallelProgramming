@@ -21,7 +21,7 @@
 #include <unistd.h>
 #include<cilk/cilk.h>
 #include<fstream>
-#define FAME "1be.csv" 
+#define FAME "1cf.csv" 
 using namespace std;
 
 int** createMatrix(int size, int init) {

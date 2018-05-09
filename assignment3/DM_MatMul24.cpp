@@ -21,7 +21,7 @@
 #include <unistd.h>
 #include<cilk/cilk.h>
 #include<fstream>
-#define FAME "1be.csv" 
+#define FNAME "1cf.csv"
 using namespace std;
 
 int** createMatrix(int size, int init) {
@@ -123,18 +123,17 @@ void matMulijk(int** X, int** Y, int** Z, int n) {
 
 }
 
-void parmatmul(int* X,int* Y,int* Z,int n)
-{
-  #pragma cilk grainsize = 5
-  for(unsigned int i = 0; i < n; ++i){
-   for (unsigned int k = 0; k < n; ++k) {
-     for (unsigned int j = 0; j < n; ++j) {
-       Z[i*n + j] += X[i*n + k] * Y[k*n + j];
-      }
-    }
- }
-
-}
+void parmatmul(int** Z, int** X, int** Y, int n) {
+	cilk_for(unsigned int i = 0; i < n;
+			++i
+		) {
+			for (unsigned int k = 0; k < n; ++k) {
+				for (unsigned int j = 0; j < n; ++j) {
+					Z[i][j] = Z[i][j] + X[i][k] * Y[k][j];
+				}
+			}
+		}
+	}
 
 void matmul(int** Z, int** X, int** Y, int n) {
 	for (int i = 0; i < n; i++) {
@@ -168,9 +167,6 @@ int scatterABgatherC(int argc, char* argv[], int r) {
 	C = createContMatrix(nbrp, 0);
 	Cf = createContMatrix(n, 0);
 
-double start, end;
-        MPI_Barrier(MPI_COMM_WORLD); /* IMPORTANT */
-        start = MPI_Wtime();
 	/*
 	 * divide A and B and send to all proc
 	 */
@@ -290,19 +286,11 @@ double start, end;
 			 printf("%d ", CC[ii]);*/
 			Cf[int(ii / n)][int(ii % n)] = CC[ii];
 		}
-//		printMat(Cf, n);
+		printMat(Cf, n);
 
 	}
-//	printMat(C, nbrp);
-end = MPI_Wtime();
-        MPI_Finalize();
-
-        if (myrank == 0) { /* use time on master node */
-            printf("Runtime = %f\n", end-start);
-                ofstream myfile (FAME,ios::app);
-                myfile<< "1" << "," << n << "," << p << "," <<end-start<<"\n";
-
-        }
+	printMat(C, nbrp);
+	MPI_Finalize();
 
 	return 0;
 }
@@ -390,7 +378,7 @@ int broadcastAbroadcastB(int argc, char* argv[],int r) {
 
         if (myrank == 0) { /* use time on master node */
             printf("Runtime = %f\n", end-start);
-                ofstream myfile (FAME,ios::app);
+                ofstream myfile ("1.csv",ios::app);
                 myfile<< "3" << "," << n << "," << p << "," <<end-start<<"\n";
 }
 	return 0;
@@ -493,7 +481,7 @@ int rotateAbroadcastB(int argc, char* argv[], int r) {
 
         if (myrank == 0) { /* use time on master node */
             printf("Runtime = %f\n", end-start);
-                ofstream myfile (FAME,ios::app);
+                ofstream myfile ("1.csv",ios::app);
                 myfile<< "2" << "," << n << "," << p << "," <<end-start<<"\n";
 }
 	return 0;
@@ -579,7 +567,7 @@ int rotateBoth(int argc, char* argv[], int r) {
 
         if (myrank == 0) { /* use time on master node */
             printf("Runtime = %f\n", end-start);
-                ofstream myfile (FAME,ios::app);
+                ofstream myfile ("1.csv",ios::app);
                 myfile<< "1" << "," << n << "," << p << "," <<end-start<<"\n";
 }
 //	printMat(C, nbrp);
@@ -673,7 +661,7 @@ int rotateAB(int argc, char* argv[], int r) {
 
 	if (myrank == 0) { /* use time on master node */
 	    printf("Runtime = %f\n", end-start);
-		ofstream myfile (FAME,ios::app);
+		ofstream myfile (FNAME,ios::app);
 	  	myfile<< "1" << "," << n << "," << p << "," <<end-start<<"\n";
 
 	}
