@@ -123,11 +123,11 @@ void matMulijk(int** X, int** Y, int** Z, int n) {
 
 }
 
-void parmatmul(int* X, int* Y, int* Z, int n) {
+void parmatmul(int** X, int** Y, int** Z, int n) {
 	for (unsigned int i = 0; i < n; ++i) {
 		for (unsigned int k = 0; k < n; ++k) {
 			for (unsigned int j = 0; j < n; ++j) {
-				Z[i * n + j] += X[i * n + k] * Y[k * n + j];
+				Z[i][j] += X[i][k] * Y[k][j];
 			}
 		}
 	}
@@ -404,7 +404,7 @@ int broadcastAbroadcastB(int argc, char* argv[], int r, int ispar,
 	return 0;
 }
 
-int rotateAbroadcastB(int argc, char* argv[], int r, ,int ispar,string fname) {
+int rotateAbroadcastB(int argc, char* argv[], int r ,int ispar,string fname) {
 
 	int myrank, n = 0, p = 4;
 	n = pow(2, r);
