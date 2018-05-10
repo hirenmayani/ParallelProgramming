@@ -129,10 +129,10 @@ struct map_Monoid:cilk::monoid_base<mr>
 struct hist_Monoid:cilk::monoid_base<uint64_t[768]>
 {
 	typedef uint64_t value_type[768];
-  static void reduce(value_type* left, value_type* right)
+  static void reduce(value_type *left, value_type *right)
   {
 	  for(size_t i=0;i<768;i++)
-		  (*left)[i] = (*right)[i];
+		  (*left)[i] += (*right)[i];
   }
 
   };
@@ -195,7 +195,7 @@ struct pixel
 /*HISTOGRAM MAPPER*/
 struct histogram_map
 {
-	void operator()(pixel pix, uint64_t* histogram[768]) const
+	void operator()(pixel pix, uint64_t histogram[768]) const
 	{
 		histogram[(size_t)pix.arr[0]]++;
 		histogram[256+(size_t)pix.arr[1]]++;
@@ -302,17 +302,24 @@ int i;
       //dprintf("%d - %d\n", i, red[i]);
    }
 */
-   cilk_for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
-		{
+//   cilk_for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
+//		{
 //			cout<<*it;
+//
+//
+//		}
+histogram_map mapper;
+cilk::reducer<hist_Monoid> redr;
+cilk_for(auto it=pixelData.begin(), ed = pixelData.end(); it!=ed; ++it)
+{
+	pixel pix = *it;
+	mapper(pix,redr.view());
+}
 
-
-		}
-histogram_map hm;
-auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
+//auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
 
 for(size_t i=0;i<768;i++)
-		  cout<<hist[i];
+		  cout<<hist[i]<<endl;
 
 }
 
