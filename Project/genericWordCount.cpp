@@ -4,6 +4,7 @@
 #include<vector>
 #include<cilk/cilk.h>
 #include<cilk/reducer.h>
+#include<cilk/cilk_api.h>
 #include <fstream>
 #include <cstdint>
 #include <chrono>
@@ -178,7 +179,7 @@ int main(int argc,char* argv[])
 {
 	cout<<"enter file name and number of processors"<<endl;
 string fname = argv[1];
-int p = argv[2];
+int p = atoi(argv[2]);
 if (0!= __cilkrts_set_param("nworkers",argv[3]))
 	 {
 	    printf("Failed to set worker count\n");
