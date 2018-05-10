@@ -317,7 +317,7 @@ cilk_for(auto it=pixelData.begin(), ed = pixelData.end(); it!=ed; ++it)
 }
 
 //auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
-
+auto hist = redr.get_value();
 for(size_t i=0;i<768;i++)
 		  cout<<hist[i]<<endl;
 
