@@ -1,0 +1,143 @@
+Runtime = 0.106142
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Runtime = 0.080213
+Runtime = 0.079841
+Runtime = 0.128655
+Runtime = 4.066212
+Runtime = 0.104831
+Runtime = 0.895223
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Runtime = 0.557094
+Runtime = 0.556183
+Runtime = 0.742204
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: got SIGCONT
+slurmstepd: error: *** JOB 1384899 ON c455-101 CANCELLED AT 2018-05-09T17:57:34 ***
+srun: forcing job termination
+slurmstepd: error: *** STEP 1384899.10 ON c455-101 CANCELLED AT 2018-05-09T17:57:34 ***

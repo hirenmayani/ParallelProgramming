@@ -1,0 +1,230 @@
+Runtime = 28.989069
+Runtime = 0.107696
+
+Runtime = 22.319622
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Runtime = 0.084964
+Runtime = 22.713017
+Runtime = 0.084321
+Runtime = 22.490501
+Runtime = 0.148118
+Runtime = 4.190778
+Runtime = 0.119586
+Runtime = 227.691331
+Runtime = 0.992235
+
+Runtime = 180.032424
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Runtime = 0.656212
+Runtime = 177.937348
+Runtime = 0.705915
+Runtime = 178.893001
+Runtime = 0.873028
+Runtime = 33.344285
+Runtime = 0.546210
+Runtime = 1782.817895
+Runtime = 27.266739
+
+Runtime = 1376.697299
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Runtime = 20.788761
+Runtime = 1407.655326
+Runtime = 21.646554
+Runtime = 1393.110492
+Runtime = 22.390935
+Runtime = 266.069537
+Runtime = 3.989358
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: got SIGCONT
+slurmstepd: error: *** JOB 1385348 ON c466-132 CANCELLED AT 2018-05-09T22:27:38 ***
+srun: forcing job termination
+slurmstepd: error: *** STEP 1385348.30 ON c466-132 CANCELLED AT 2018-05-09T22:27:38 ***

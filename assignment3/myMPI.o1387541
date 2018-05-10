@@ -1,0 +1,5 @@
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 1387541 ON c434-074 CANCELLED AT 2018-05-10T01:36:14 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 1387541.0 ON c434-074 CANCELLED AT 2018-05-10T01:36:14 DUE TO TIME LIMIT ***
+srun: got SIGCONT
+srun: forcing job termination
