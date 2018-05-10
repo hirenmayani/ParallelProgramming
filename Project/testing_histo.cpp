@@ -310,11 +310,22 @@ int i;
 //		}
 histogram_map mapper;
 cilk::reducer<hist_Monoid> redr;
+auto start = std::chrono::system_clock::now();
+
 cilk_for(auto it=pixelData.begin(), ed = pixelData.end(); it!=ed; ++it)
 {
 	pixel pix = *it;
 	mapper(pix,redr.view());
 }
+auto end = std::chrono::system_clock::now();
+auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+std::cout << "nano seconds = "<<elapsed.count();
+auto nns = elapsed.count();
+elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+std::cout << ","<<elapsed.count();
+ofstream myfile ("time.txt",ios::app);
+myfile<<"Histo_cilk_for"<<","<<fname<<","<<p<<","<<nns<<endl;
+myfile.close();
 
 //auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
 auto hist = redr.get_value();
