@@ -302,7 +302,7 @@ int scatterABgatherC(int argc, char* argv[], int r, int ispar, string fname) {
 	if (myrank == 0) { /* use time on master node */
 		printf("Runtime = %f\n", end - start);
 		ofstream myfile(fname, ios::app);
-		myfile << "1" << "," << n << "," << p << "," << end - start << "\n";
+		myfile << "4" << "," << n << "," << p << "," << end - start << "\n";
 
 	}
 

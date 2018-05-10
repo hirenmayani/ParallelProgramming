@@ -7,8 +7,8 @@
 #SBATCH --mail-type=begin  # email me when the job starts
 #SBATCH --mail-type=end    # email me when the job finishes
 #SBATCH --ntasks-per-node=64
-#SBATCH --nodes=1
-#SBATCH -n 64
+#SBATCH --nodes=4
+#SBATCH -n 256
 
 #icpc -std=c++11 ParRadixCount.cpp -o radixC
 #./radixC 25
@@ -17,7 +17,7 @@
 
 #!/bin/bash
 
-mpiicc --std=c++11 DM_MatMul.cpp -o task1
+mpiicc --std=c++11 DM_MatMul.cpp -o task1_4
 
 n1=1
 n2=64
@@ -26,9 +26,9 @@ for i in 10 11 12 13 14
 do
 		for algo in 1 2 3 4
 		do
-			mpirun -n $n1 task1 $algo $i 0  "1be.data" 
-			mpirun -n $n2 task1 $algo $i 0  "1cf.data" 
+			mpirun -n $n1 task1_4 $algo $i 0 "1be.data"
+			mpirun -n $n2 task1_4 $algo $i 0 "1cf.data" 
 		done
-	mpirun -n $n1 task1 1 $i 1 "2be.data" 
-        mpirun -n $n2 task1 4 $i 1 "2cf.data" 
+	mpirun -n $n1 task1_4 1 $i 1 "2be.data" 
+        mpirun -n $n2 task1_4 4 $i 1 "2cf.data" 
 done
