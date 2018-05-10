@@ -7,11 +7,8 @@
 #include <typeinfo>
 #include <fstream>
 #include <cstdint>
-#include "CImg.h"
-using namespace cimg_library;
-
+#include <sstream> 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
-//icpc -o h.out genericWordCount.cpp -O2 -lm -lpthread -I/usr/X11R6/include -L/usr/X11R6/lib -lm -lpthread -lX11 -std=c++11 -nostartfiles
 using namespace std;
 
 
@@ -31,7 +28,7 @@ using namespace std;
 template <class mr>
 //using Value_Type = typedef value_type<mr>::type;
 
-struct map_Monoid:cilk::monoid_base<mr>
+struct Monoid:cilk::monoid_base<mr>
 {
   static void reduce(mr* left, mr* right)
   {
@@ -71,18 +68,6 @@ struct map_Monoid:cilk::monoid_base<mr>
   }
 };
 
-/*HISTOGTRAM REDUCER*/
-struct hist_Monoid:cilk::monoid_base<uint64_t[768]>
-{
-	typedef uint64_t value_type[768];
-  static void reduce(value_type* left, value_type* right)
-  {
-	  for(size_t i=0;i<768;i++)
-		  (*left)[i] = (*right)[i];
-  }
-
-  };
-
 
 /* this class is the backend of mr sys
  * it takes a map func, a reducing monoid and an iterator on the input
@@ -96,9 +81,9 @@ here flatten is used for optimizing, so that all functions are inline if possibl
  * We can most probably get rid of value_type, it just talks about the type of template in Monoid
  * */
 
-template <typename InputIterator,typename Monoid,class Mapper>
+template <typename InputIterator,typename Monoid,class MapFun>
 //void __attribute__((flatten))
- typename Monoid::value_type  map_reduce(InputIterator ibegin,InputIterator iend, Monoid m1,Mapper mapper)
+ typename Monoid::value_type  map_reduce(InputIterator ibegin,InputIterator iend, Monoid m1,MapFun mapper)
 	{
 //cilk::reducer<Monoid<unordered_map<string,int>>> redr;
 	cilk::reducer<Monoid> redr;
@@ -131,23 +116,10 @@ class MapFun
 {
 public:
 	void operator()(keys it,Monoid* v) const {
-		v->insert({{it,1}});
+		
+		//v->insert({{it,1}});
+		(*v)[it] +=1;
 	    }
-};
-struct pixel
-{
-	int arr[3];
-};
-/*HISTOGRAM MAPPER*/
-struct histogram_map
-{
-	void operator()(pixel pix, uint64_t* histogram[768]) const
-	{
-		histogram[(size_t)pix.arr[0]]++;
-		histogram[256+(size_t)pix.arr[1]]++;
-		histogram[512+(size_t)pix.arr[2]]++;
-
-	}
 };
 
 void readFile(string path,vector<string> &words){
@@ -160,48 +132,30 @@ void readFile(string path,vector<string> &words){
 
 	    for(std::string line; iss >> line; )
 	    		words.push_back(line);
-	  }
+	}
 }
+
 int main()
 {
 	vector<string> words;
 	readFile("corpus", words);
-	/*vector<string> words;
+/*
+for(int i=0; i<words.size(); ++i)
+  std::cout << words[i] << ' ';
+
 	words.push_back("a");
 	words.push_back("b");
 	words.push_back("a");
-	words.push_back("b");*/
- map_Monoid<unordered_map<string,int> > m1;
-MapFun<string,unordered_map<string,int>>  mf;
+	words.push_back("b");
+*/
+ Monoid<unordered_map<string,int> > m1;	
+MapFun<string,unordered_map<string,int>>  mf;// MapFun<int,m1.type()> mf;
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
-	cout<<u1["a"];
-//	cout<<u1["b"]; 
-hist_Monoid m2;
-CImg<unsigned char> src("poster.jpg");
-int width = src.width();
-int height = src.height();
-vector<pixel> pixelData;
-pixel pix;
-for (int r = 0; r < height; r++)
-        for (int c = 0; c < width; c++){
-        		pix.arr[0] = (int)src(c,r,0,0);
-			pix.arr[1] = (int)src(c,r,0,1);
-			pix.arr[2] = (int)src(c,r,0,2);
-			pixelData.push_back(pix);
-        }
-cout<<width<<endl;
-cout<<height<<endl;
-cilk_for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
-		{
-			cout<<*it;
+
+cout <<u1["the"];
+//auto hist = map_reduce(byte_array,byte_array_len/3,m2,histogram_map);
 
 
-		}
-histogram_map hm;
-auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
-
-for(size_t i=0;i<768;i++)
-		  cout<<hist[i];
 }
 
 
