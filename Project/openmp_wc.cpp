@@ -2,9 +2,14 @@
 #include<string>
 #include<unordered_map>
 #include<vector>
-#include <typeinfo>
+#include<cilk/cilk.h>
+#include<cilk/reducer.h>
 #include <fstream>
 #include <cstdint>
+#include <chrono>
+#include <sstream>
+#include <iterator>
+
 //#include<omp.h>
 using namespace std;
 
