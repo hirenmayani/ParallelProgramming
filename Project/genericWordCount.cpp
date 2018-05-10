@@ -150,35 +150,31 @@ struct histogram_map
 	}
 };
 
-void readFile(string path,vector<string> &words){
-		/*std::ifstream mfile(path);
-	    if(!myfile) //Always test the file open.
-	    {
-	        std::cout<<"Error opening output file"<< std::endl;
-	        system("pause");
-	        return -1;
-	    }
-	    std::string line;
-	    std::vector<std::string> myLines;
-	    while (std::getline(myfile, line))
-	    {
-	       myLines.push_back(line);
-	    }
-	    return myLines
-	*/
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iterator>
+
+template<typename Out>
+void split(const std::string &s, char delim, Out result) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        *(result++) = item;
+    }
+}
+void readFile(path,words)
+{
 	std::ifstream dict_file(path);
 	std::string line;
 
 	while(std::getline(dict_file, line))
-	{
-	    std::istringstream iss(line);
+		{
+			split(s, delim, std::back_inserter(words));
+		}
 
-	    for(std::string line; iss >> line; )
-	    		words.push_back(line);
-	  }
-	  */
 }
-int main()
+}int main()
 {
 	vector<string> words;
 	readFile("corpus", words);
