@@ -7,6 +7,7 @@
 #SBATCH --mail-user=hmayani@cs.stonybrook.edu
 #SBATCH --mail-type=begin  # email me when the job starts
 #SBATCH --mail-type=end    # email me when the job finishes
+#SBATCH -N 64
 ./cilk_wc.out test_data/word_10MB.txt 1
 ./cilk_wc.out test_data/word_10MB.txt 2
 ./cilk_wc.out test_data/word_10MB.txt 4
