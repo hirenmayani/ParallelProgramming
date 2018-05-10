@@ -17,7 +17,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <ctype.h>
-
+#include <chrono>
 
 #define IMG_DATA_OFFSET_POS 10
 #define BITS_PER_PIXEL_POS 28
@@ -207,20 +207,16 @@ struct histogram_map
 
 int main(int argc,char*argv[])
 {
+	cout<<"enter file name and number of processors"<<endl;
 
-	vector<string> words;
-	words.push_back("a");
-	words.push_back("b");
-	words.push_back("a");
-	words.push_back("b");
- map_Monoid<unordered_map<string,int> > m1;
-MapFun<string,unordered_map<string,int>>  mf;
-auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
-	cout<<u1["a"];
+	int p = atoi(argv[2]);
+	if (0!= __cilkrts_set_param("nworkers",argv[2]))
+	 {
+	    printf("Failed to set worker count\n");
+	    return 1;
+	 }
 
-//	cout<<u1["b"]; 
-
-hist_Monoid m2;
+	hist_Monoid m2;
 int i;
    int fd;
    char *fdata;
