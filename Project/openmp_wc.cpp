@@ -2,20 +2,34 @@
 #include<string>
 #include<unordered_map>
 #include<vector>
-#include <typeinfo>
+#include<cilk/cilk.h>
+#include<cilk/reducer.h>
 #include <fstream>
 #include <cstdint>
+#include <chrono>
+#include <sstream>
+#include <iterator>
+
 //#include<omp.h>
 using namespace std;
 
 /*WORD COUNT REDUCER*/
+/*template <class mr>
+  mr reduce(mr left, mr right)
+  {
+	  for(auto start=right.begin(),end = right.end();start != end;++start)
+		  left[start->first] += start->second;
+	  right.clear();
+return left;
+}*/
 template <class mr>
- void reduce(mr* left, mr* right)
+ mr reduce(mr* left, mr* right)
   {
 	  for(typename mr::const_iterator start=right->cbegin(),end = right->cend();start != end;++start)
 		  (*left)[start->first] += start->second;
 	  right->clear();
-  }
+return *left;  
+}
 
 
 ///*HISTOGTRAM REDUCER*/
@@ -40,14 +54,13 @@ template <typename InputIterator,typename Monoid,class Mapper>
  Monoid result;
  Monoid m;
 #pragma omp declare reduction \
-  (rwz:Monoid:reduce(omp_out,omp_in)) \
-  initializer(omp_priv=m)
-
+  (rwz:Monoid:omp_out=reduce<Monoid>(&omp_out,&omp_in)) \
+//  initializer(omp_priv=m)
 
 #pragma omp parallel for reduction(rwz:m)
   for(InputIterator it=ibegin, ed = iend; it!=ed; ++it)
   {  	  mapper(&m,*it);
-  	  	  reduce(&result,&m);
+  	  	 result= reduce<Monoid>(&result,&m);
   }
 
 
@@ -83,48 +96,54 @@ struct histogram_map
 	}
 };
 
-
-int main()
+template<typename Out>
+void split(const std::string &s, char delim, Out result) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+std::transform(item.begin(), item.end(), item.begin(), ::tolower);
+*(result++) = item;
+cout<<item<<endl;
+    }
+}
+void readFile(string path,vector<string>*words)
 {
-	vector<string> words;
-	words.push_back("a");
-	words.push_back("b");
-	words.push_back("a");
-	words.push_back("b");
-	words.push_back("b");
- unordered_map<string,int>  m1;
-MapFun<  unordered_map<string,int>,string >   mf;
-auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
-	cout<<u1["a"]<<endl;
-	cout<<u1["b"]<<endl;
-/*hist_Monoid m2;
-CImg<unsigned char> src("poster.jpg");
-int width = src.width();
-int height = src.height();
-vector<pixel> pixelData;
-pixel pix;
-for (int r = 0; r < height; r++)
-        for (int c = 0; c < width; c++){
-        		pix.arr[0] = (int)src(c,r,0,0);
-			pix.arr[1] = (int)src(c,r,0,1);
-			pix.arr[2] = (int)src(c,r,0,2);
-			pixelData.push_back(pix);
-        }
-cout<<width<<endl;
-cout<<height<<endl;
-#pragma omp parallel for
-for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
+
+	std::ifstream dict_file(path);
+	std::string line;
+char delim = ' ';
+	while(std::getline(dict_file, line))
 		{
-			cout<<*it;
-
-
+			split(line,delim, std::back_inserter(*words));
 		}
-histogram_map hm;
-auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
 
-for(size_t i=0;i<768;i++)
-		  cout<<hist[i];
-*/
+
+}
+int main(int argc,char* argv[])
+{
+	cout<<"enter file name"<<endl;
+string fname = argv[1];
+vector<string>words ;
+		readFile("corpus",&words);
+/*	vector<string> words;
+	words.push_back("a");
+	words.push_back("b");
+	words.push_back("a");
+	words.push_back("b");
+	words.push_back("b");*/
+
+	unordered_map<string,int>  m1;
+	auto start = std::chrono::system_clock::now();
+	MapFun<  unordered_map<string,int>,string >   mf;
+	auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
+	auto end = std::chrono::system_clock::now();
+	auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+	std::cout << "nano seconds = "<<elapsed.count();
+	auto nns = elapsed.count();
+	elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+	std::cout << ","<<elapsed.count();
+cout<<u1["the"];
+
 }
 
 
