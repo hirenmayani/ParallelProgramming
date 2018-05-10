@@ -7,6 +7,17 @@
 #include <typeinfo>
 #include <fstream>
 #include <cstdint>
+#include <stdio.h>
+#include <strings.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <assert.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <ctype.h>
+
 
 #define IMG_DATA_OFFSET_POS 10
 #define BITS_PER_PIXEL_POS 28
@@ -16,15 +27,33 @@
       perror("Error at line\n\t" #a "\nSystem Msg");         \
       exit(1);                                               \
    }
+int swap1;      // to indicate if we need to swap byte order of header information
+void test_endianess() {
+   unsigned int num = 0x12345678;
+   char *low = (char *)(&(num));
+   if (*low ==  0x78) {
+      //dprintf("No need to swap\n");
+      swap1 = 0;
+   }
+   else if (*low == 0x12) {
+      //dprintf("Need to swap\n");
+      swap1 = 1;
+   }
+   else {
+      printf("Error: Invalid value found in memory\n");
+      exit(1);
+   }
+}
 
-int swap;      // to indicate if we need to swap byte order of header information
+
+
 
 void swap_bytes(char *bytes, int num_bytes) {
    int i;
    char tmp;
 
    for (i = 0; i < num_bytes/2; i++) {
-//      dprintf("Swapping %d and %d\n", bytes[i], bytes[num_bytes - i - 1]);
+//      //dprintf("Swapping %d and %d\n", bytes[i], bytes[num_bytes - i - 1]);
       tmp = bytes[i];
       bytes[i] = bytes[num_bytes - i - 1];
       bytes[num_bytes - i - 1] = tmp;
@@ -176,7 +205,7 @@ struct histogram_map
 };
 
 
-int main()
+int main(int argc,char*argv[])
 {
 
 	vector<string> words;
@@ -215,8 +244,7 @@ int i;
    // Get the file info (for file length)
    CHECK_ERROR(fstat(fd, &finfo) < 0);
    // Memory map the file
-   CHECK_ERROR((fdata = mmap(0, finfo.st_size + 1,
-      PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0)) == NULL);
+   CHECK_ERROR((fdata = (char*)mmap(0, finfo.st_size + 1,  PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0)) == NULL);
 
    if ((fdata[0] != 'B') || (fdata[1] != 'M')) {
       printf("File is not a valid bitmap file. Exiting\n");
@@ -226,7 +254,7 @@ int i;
    test_endianess();    // will set the variable "swap"
 
    unsigned short *bitsperpixel = (unsigned short *)(&(fdata[BITS_PER_PIXEL_POS]));
-   if (swap) {
+   if (swap1) {
       swap_bytes((char *)(bitsperpixel), sizeof(*bitsperpixel));
    }
    if (*bitsperpixel != 24) {    // ensure its 3 bytes per pixel
@@ -236,7 +264,7 @@ int i;
    }
 
    unsigned short *data_pos = (unsigned short *)(&(fdata[IMG_DATA_OFFSET_POS]));
-   if (swap) {
+   if (swap1) {
       swap_bytes((char *)(data_pos), sizeof(*data_pos));
    }
 
@@ -244,45 +272,39 @@ int i;
    printf("This file has %d bytes of image data, %d pixels\n", imgdata_bytes,
                                                             imgdata_bytes / 3);
 
-   printf("Starting sequential histogram\n");
-
-
-   memset(&(red[0]), 0, sizeof(int) * 256);
-   memset(&(green[0]), 0, sizeof(int) * 256);
-   memset(&(blue[0]), 0, sizeof(int) * 256);
-   vector pixelData<pixel>;
+   vector<pixel> pixelData;
    pixel pix;
    for (i=*data_pos; i < finfo.st_size; i+=3) {
       unsigned char *val = (unsigned char *)&(fdata[i]);
-      pix[0] = *val;
+      pix.arr[0] = *val;
       val = (unsigned char *)&(fdata[i+1]);
-      pix[1] = *val;
+      pix.arr[1] = *val;
       val = (unsigned char *)&(fdata[i+2]);
-      pix[2] = *val;
+      pix.arr[2] = *val;
       pixelData.push_back(pix);
    }
 
-   /*dprintf("\n\nBlue\n");
-   dprintf("----------\n\n");
+   /*//dprintf("\n\nBlue\n");
+   //dprintf("----------\n\n");
    for (i = 0; i < 256; i++) {
-      dprintf("%d - %d\n", i, blue[i]);
+      //dprintf("%d - %d\n", i, blue[i]);
    }
 
-   dprintf("\n\nGreen\n");
-   dprintf("----------\n\n");
+   //dprintf("\n\nGreen\n");
+   //dprintf("----------\n\n");
    for (i = 0; i < 256; i++) {
-      dprintf("%d - %d\n", i, green[i]);
+      //dprintf("%d - %d\n", i, green[i]);
    }
 
-   dprintf("\n\nRed\n");
-   dprintf("----------\n\n");
+   //dprintf("\n\nRed\n");
+   //dprintf("----------\n\n");
    for (i = 0; i < 256; i++) {
-      dprintf("%d - %d\n", i, red[i]);
+      //dprintf("%d - %d\n", i, red[i]);
    }
 */
    cilk_for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
 		{
-			cout<<*it;
+//			cout<<*it;
 
 
 		}
