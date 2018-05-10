@@ -4,10 +4,11 @@
 #include<vector>
 #include<cilk/cilk.h>
 #include<cilk/reducer.h>
-#include <typeinfo>
 #include <fstream>
 #include <cstdint>
 #include <chrono>
+#include <sstream>
+#include <iterator>
 
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
@@ -150,10 +151,6 @@ struct histogram_map
 	}
 };
 
-#include <string>
-#include <sstream>
-#include <vector>
-#include <iterator>
 
 template<typename Out>
 void split(const std::string &s, char delim, Out result) {
@@ -179,8 +176,15 @@ return words;
 }
 int main(int argc,char* argv[])
 {
-	cout<<"enter file name";
+	cout<<"enter file name and number of processors"<<endl;
 string fname = argv[1];
+int p = argv[2];
+if (0!= __cilkrts_set_param("nworkers",argv[3]))
+	 {
+	    printf("Failed to set worker count\n");
+	    return 1;
+	 }
+
 vector<string>words =readFile("corpus");
 cout<<words[0];	
 /*vector<string> words;
@@ -198,8 +202,12 @@ std::cout << "nano seconds = "<<elapsed.count();
 auto nns = elapsed.count();
 elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start);
 std::cout << ","<<elapsed.count();
+ofstream myfile ("time.txt",ios::app);
+myfile<<"cilk_for"<<","<<fname<<","<<p<<","<<nns<<endl;
+myfile.close();
 
-	cout<<u1["the"];
+
+//	cout<<u1["the"];
 }
 
 
