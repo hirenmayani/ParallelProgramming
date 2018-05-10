@@ -151,7 +151,22 @@ struct histogram_map
 };
 
 void readFile(string path,vector<string> &words){
-	std::ifstream dict_file(path);
+	std::ifstream qfile(path);
+
+	    if(!myfile) //Always test the file open.
+	    {
+	        std::cout<<"Error opening output file"<< std::endl;
+	        system("pause");
+	        return -1;
+	    }
+	    std::string line;
+	    std::vector<std::string> myLines;
+	    while (std::getline(myfile, line))
+	    {
+	       myLines.push_back(line);
+	    }
+	    return myLines
+	/*std::ifstream dict_file(path);
 	std::string line;
 
 	while(std::getline(dict_file, line))
@@ -161,6 +176,7 @@ void readFile(string path,vector<string> &words){
 	    for(std::string line; iss >> line; )
 	    		words.push_back(line);
 	  }
+	  */
 }
 int main()
 {
@@ -175,33 +191,7 @@ int main()
 MapFun<string,unordered_map<string,int>>  mf;
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 	cout<<u1["a"];
-//	cout<<u1["b"]; 
-hist_Monoid m2;
-CImg<unsigned char> src("poster.jpg");
-int width = src.width();
-int height = src.height();
-vector<pixel> pixelData;
-pixel pix;
-for (int r = 0; r < height; r++)
-        for (int c = 0; c < width; c++){
-        		pix.arr[0] = (int)src(c,r,0,0);
-			pix.arr[1] = (int)src(c,r,0,1);
-			pix.arr[2] = (int)src(c,r,0,2);
-			pixelData.push_back(pix);
-        }
-cout<<width<<endl;
-cout<<height<<endl;
-cilk_for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
-		{
-			cout<<*it;
-
-
-		}
-histogram_map hm;
-auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
-
-for(size_t i=0;i<768;i++)
-		  cout<<hist[i];
+	cout<<u1["b"]; 
 }
 
 
