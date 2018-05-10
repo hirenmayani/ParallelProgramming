@@ -9,13 +9,22 @@
 using namespace std;
 
 /*WORD COUNT REDUCER*/
+/*template <class mr>
+  mr reduce(mr left, mr right)
+  {
+	  for(auto start=right.begin(),end = right.end();start != end;++start)
+		  left[start->first] += start->second;
+	  right.clear();
+return left;
+}*/
 template <class mr>
- void reduce(mr* left, mr* right)
+ mr reduce(mr* left, mr* right)
   {
 	  for(typename mr::const_iterator start=right->cbegin(),end = right->cend();start != end;++start)
 		  (*left)[start->first] += start->second;
 	  right->clear();
-  }
+return *left;  
+}
 
 
 ///*HISTOGTRAM REDUCER*/
@@ -40,14 +49,13 @@ template <typename InputIterator,typename Monoid,class Mapper>
  Monoid result;
  Monoid m;
 #pragma omp declare reduction \
-  (rwz:Monoid:reduce(omp_out,omp_in)) \
-  initializer(omp_priv=m)
-
+  (rwz:Monoid:omp_out=reduce<Monoid>(&omp_out,&omp_in)) \
+//  initializer(omp_priv=m)
 
 #pragma omp parallel for reduction(rwz:m)
   for(InputIterator it=ibegin, ed = iend; it!=ed; ++it)
   {  	  mapper(&m,*it);
-  	  	  reduce(&result,&m);
+  	  	 result= reduce<Monoid>(&result,&m);
   }
 
 
