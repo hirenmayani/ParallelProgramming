@@ -177,8 +177,10 @@ char delim = ' ';
 
 return words;
 }
-int main()
+int main(int argc,char* argv[])
 {
+	cout<<"enter file name";
+string fname = argv[1];
 vector<string>words =readFile("corpus");
 cout<<words[0];	
 /*vector<string> words;
