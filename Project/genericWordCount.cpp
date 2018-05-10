@@ -7,8 +7,8 @@
 #include <typeinfo>
 #include <fstream>
 #include <cstdint>
-#include "CImg.h"
-using namespace cimg_library;
+#include <chrono>
+
 
 ///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
 //icpc -o h.out genericWordCount.cpp -O2 -lm -lpthread -I/usr/X11R6/include -L/usr/X11R6/lib -lm -lpthread -lX11 -std=c++11 -nostartfiles
