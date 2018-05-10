@@ -160,25 +160,28 @@ void split(const std::string &s, char delim, Out result) {
     std::stringstream ss(s);
     std::string item;
     while (std::getline(ss, item, delim)) {
-        *(result++) = item;
+std::transform(item.begin(), item.end(), item.begin(), ::tolower);        
+*(result++) = item;
     }
 }
-void readFile(path,words)
+vector<string> readFile(string path)
 {
+vector<string> words;
 	std::ifstream dict_file(path);
 	std::string line;
-
+char delim = ' ';
 	while(std::getline(dict_file, line))
 		{
-			split(s, delim, std::back_inserter(words));
+			split(line,delim, std::back_inserter(words));
 		}
 
+return words;
 }
-}int main()
+int main()
 {
-	vector<string> words;
-	readFile("corpus", words);
-	/*vector<string> words;
+vector<string>words =readFile("corpus");
+cout<<words[0];	
+/*vector<string> words;
 	words.push_back("a");
 	words.push_back("b");
 	words.push_back("a");
@@ -186,8 +189,7 @@ void readFile(path,words)
  map_Monoid<unordered_map<string,int> > m1;
 MapFun<string,unordered_map<string,int>>  mf;
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
-	cout<<u1["a"];
-	cout<<u1["b"]; 
+	cout<<u1["the"];
 }
 
 
