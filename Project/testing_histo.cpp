@@ -1,9 +1,11 @@
+//icpc -qopenmp testing_histo.cpp -std=c++11 -o hist.out
 #include<iostream>
 #include<string>
 #include<unordered_map>
 #include<vector>
 #include<cilk/cilk.h>
 #include<cilk/reducer.h>
+#include<cilk/cilk_api.h>
 #include <typeinfo>
 #include <fstream>
 #include <cstdint>
