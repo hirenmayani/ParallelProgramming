@@ -131,10 +131,17 @@ vector<string>words =readFile("corpus");
 	words.push_back("b");*/
 
 	unordered_map<string,int>  m1;
+	auto start = std::chrono::system_clock::now();
 	MapFun<  unordered_map<string,int>,string >   mf;
 	auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
-	cout<<u1["a"]<<endl;
-	cout<<u1["b"]<<endl;
+	auto end = std::chrono::system_clock::now();
+	auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+	std::cout << "nano seconds = "<<elapsed.count();
+	auto nns = elapsed.count();
+	elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+	std::cout << ","<<elapsed.count();
+
+
 }
 
 
