@@ -1,11 +1,9 @@
-//icpc -qopenmp testing_histo.cpp -std=c++11 -o hist.out
 #include<iostream>
 #include<string>
 #include<unordered_map>
 #include<vector>
 #include<cilk/cilk.h>
 #include<cilk/reducer.h>
-#include<cilk/cilk_api.h>
 #include <typeinfo>
 #include <fstream>
 #include <cstdint>
@@ -19,7 +17,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <ctype.h>
-#include <chrono>
+
 
 #define IMG_DATA_OFFSET_POS 10
 #define BITS_PER_PIXEL_POS 28
@@ -209,16 +207,20 @@ struct histogram_map
 
 int main(int argc,char*argv[])
 {
-	cout<<"enter file name and number of processors"<<endl;
 
-	int p = atoi(argv[2]);
-	if (0!= __cilkrts_set_param("nworkers",argv[2]))
-	 {
-	    printf("Failed to set worker count\n");
-	    return 1;
-	 }
+	vector<string> words;
+	words.push_back("a");
+	words.push_back("b");
+	words.push_back("a");
+	words.push_back("b");
+ map_Monoid<unordered_map<string,int> > m1;
+MapFun<string,unordered_map<string,int>>  mf;
+auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
+	cout<<u1["a"];
 
-	hist_Monoid m2;
+//	cout<<u1["b"]; 
+
+hist_Monoid m2;
 int i;
    int fd;
    char *fdata;
@@ -308,22 +310,11 @@ int i;
 //		}
 histogram_map mapper;
 cilk::reducer<hist_Monoid> redr;
-auto start = std::chrono::system_clock::now();
-
 cilk_for(auto it=pixelData.begin(), ed = pixelData.end(); it!=ed; ++it)
 {
 	pixel pix = *it;
 	mapper(pix,redr.view());
 }
-auto end = std::chrono::system_clock::now();
-auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-std::cout << "nano seconds = "<<elapsed.count();
-auto nns = elapsed.count();
-elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start);
-std::cout << ","<<elapsed.count();
-ofstream myfile ("time.txt",ios::app);
-myfile<<"Histo_cilk_for"<<","<<fname<<","<<p<<","<<nns<<endl;
-myfile.close();
 
 //auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
 auto hist = redr.get_value();
