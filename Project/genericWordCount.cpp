@@ -188,7 +188,15 @@ cout<<words[0];
 	words.push_back("b");*/
  map_Monoid<unordered_map<string,int> > m1;
 MapFun<string,unordered_map<string,int>>  mf;
+auto start = std::chrono::system_clock::now();
 auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
+auto end = std::chrono::system_clock::now();
+auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+std::cout << "nano seconds = "<<elapsed.count();
+auto nns = elapsed.count();
+elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+std::cout << ","<<elapsed.count();
+
 	cout<<u1["the"];
 }
 
