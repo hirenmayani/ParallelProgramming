@@ -151,8 +151,7 @@ struct histogram_map
 };
 
 void readFile(string path,vector<string> &words){
-	std::ifstream qfile(path);
-
+		/*std::ifstream mfile(path);
 	    if(!myfile) //Always test the file open.
 	    {
 	        std::cout<<"Error opening output file"<< std::endl;
@@ -166,7 +165,8 @@ void readFile(string path,vector<string> &words){
 	       myLines.push_back(line);
 	    }
 	    return myLines
-	/*std::ifstream dict_file(path);
+	*/
+	std::ifstream dict_file(path);
 	std::string line;
 
 	while(std::getline(dict_file, line))
