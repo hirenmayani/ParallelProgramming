@@ -1,0 +1,6 @@
+Runtime = 28.845853
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: got SIGCONT
+slurmstepd: error: *** JOB 1384841 ON c455-071 CANCELLED AT 2018-05-09T17:50:50 ***
+srun: forcing job termination
+slurmstepd: error: *** STEP 1384841.1 ON c455-071 CANCELLED AT 2018-05-09T17:50:50 ***

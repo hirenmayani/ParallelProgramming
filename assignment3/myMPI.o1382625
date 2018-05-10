@@ -1,0 +1,40 @@
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+task1b: error while loading shared libraries: libmpi_cxx.so.1: cannot open shared object file: No such file or directory
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+slurmstepd: error: *** JOB 1382625 ON c406-051 CANCELLED AT 2018-05-09T12:33:48 ***
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] ui_cmd_cb (../../pm/pmiserv/pmiserv_pmci.c:174): unable to send signal downstream
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYDT_dmxu_poll_wait_for_event (../../tools/demux/demux_poll.c:76): callback returned error status
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] HYD_pmci_wait_for_completion (../../pm/pmiserv/pmiserv_pmci.c:501): error waiting for event
+[mpiexec@c406-051.stampede2.tacc.utexas.edu] main (../../ui/mpich/mpiexec.c:1147): process manager error waiting for completion

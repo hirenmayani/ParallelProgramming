@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -J myMPI           # job name
 #SBATCH -o myMPI.o%j       # output and error file name (%j expands to jobID)
-#SBATCH -p development     # queue (partition) -- normal, development, etc.
-#SBATCH -t 01:30:00        # run time (hh:mm:ss) - 1.5 hours
+#SBATCH -p normal     # queue (partition) -- normal, development, etc.
+#SBATCH -t 02:30:00        # run time (hh:mm:ss) - 1.5 hours
 #SBATCH --mail-user=hmayani@cs.stonybrook.edu
 #SBATCH --mail-type=begin  # email me when the job starts
 #SBATCH --mail-type=end    # email me when the job finishes
@@ -20,5 +20,12 @@ mpiicc --std=c++11 DM_MatMul.cpp -o task1
 n1=1
 n2=64
 
-mpirun task1 1 11 0  "t.data"
-
+for i in 10 11 12 13 14 
+do
+		for algo in 1 2 3 4
+		do
+			mpirun task1 $algo $i 0  "1be1.data" 
+		done
+	mpirun  task1 1 $i 1 "2be1.data" 
+        mpirun  task1 4 $i 1 "2cf1.data" 
+done

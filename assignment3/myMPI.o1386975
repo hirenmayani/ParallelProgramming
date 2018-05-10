@@ -1,0 +1,93 @@
+Runtime = 0.448388
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Runtime = 0.305528
+Runtime = 0.304716
+Runtime = 0.426885
+Runtime = 0.254228
+Runtime = 0.271506
+Runtime = 11.977731
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Runtime = 9.531047
+Runtime = 10.411493
+Runtime = 9.521470
+Runtime = 2.103118
+Runtime = 1.711825
+Runtime = 117.355231
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Runtime = 92.232926
+Runtime = 94.027939
+Runtime = 92.086681
+Runtime = 17.036128
+Runtime = 12.458071
+Runtime = 913.466125
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Runtime = 707.590941
+Runtime = 710.264148
+Runtime = 712.435068
+Runtime = 133.933748
+Runtime = 97.417681
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 1386975 ON c436-103 CANCELLED AT 2018-05-10T01:13:40 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 1386975.24 ON c436-103 CANCELLED AT 2018-05-10T01:13:40 DUE TO TIME LIMIT ***
+srun: got SIGCONT
+srun: forcing job termination
