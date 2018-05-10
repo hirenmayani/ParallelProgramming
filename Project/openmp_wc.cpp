@@ -103,9 +103,10 @@ void split(const std::string &s, char delim, Out result) {
     while (std::getline(ss, item, delim)) {
 std::transform(item.begin(), item.end(), item.begin(), ::tolower);
 *(result++) = item;
+cout<<item<<endl;
     }
 }
-void readFile(string path,vector<string>words)
+void readFile(string path,vector<string>*words)
 {
 
 	std::ifstream dict_file(path);
@@ -113,7 +114,7 @@ void readFile(string path,vector<string>words)
 char delim = ' ';
 	while(std::getline(dict_file, line))
 		{
-			split(line,delim, std::back_inserter(words));
+			split(line,delim, std::back_inserter(*words));
 		}
 
 
@@ -123,7 +124,7 @@ int main(int argc,char* argv[])
 	cout<<"enter file name"<<endl;
 string fname = argv[1];
 vector<string>words ;
-		readFile("corpus",words);
+		readFile("corpus",&words);
 /*	vector<string> words;
 	words.push_back("a");
 	words.push_back("b");
@@ -141,7 +142,7 @@ vector<string>words ;
 	auto nns = elapsed.count();
 	elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start);
 	std::cout << ","<<elapsed.count();
-
+cout<<u1["the"];
 
 }
 
