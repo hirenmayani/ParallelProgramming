@@ -91,48 +91,45 @@ struct histogram_map
 	}
 };
 
-
-int main()
+template<typename Out>
+void split(const std::string &s, char delim, Out result) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+std::transform(item.begin(), item.end(), item.begin(), ::tolower);
+*(result++) = item;
+    }
+}
+vector<string> readFile(string path)
 {
-	vector<string> words;
+vector<string> words;
+	std::ifstream dict_file(path);
+	std::string line;
+char delim = ' ';
+	while(std::getline(dict_file, line))
+		{
+			split(line,delim, std::back_inserter(words));
+		}
+
+return words;
+}
+int main(int argc,char* argv[])
+{
+	cout<<"enter file name"<<endl;
+string fname = argv[1];
+vector<string>words =readFile("corpus");
+/*	vector<string> words;
 	words.push_back("a");
 	words.push_back("b");
 	words.push_back("a");
 	words.push_back("b");
-	words.push_back("b");
- unordered_map<string,int>  m1;
-MapFun<  unordered_map<string,int>,string >   mf;
-auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
+	words.push_back("b");*/
+
+	unordered_map<string,int>  m1;
+	MapFun<  unordered_map<string,int>,string >   mf;
+	auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 	cout<<u1["a"]<<endl;
 	cout<<u1["b"]<<endl;
-/*hist_Monoid m2;
-CImg<unsigned char> src("poster.jpg");
-int width = src.width();
-int height = src.height();
-vector<pixel> pixelData;
-pixel pix;
-for (int r = 0; r < height; r++)
-        for (int c = 0; c < width; c++){
-        		pix.arr[0] = (int)src(c,r,0,0);
-			pix.arr[1] = (int)src(c,r,0,1);
-			pix.arr[2] = (int)src(c,r,0,2);
-			pixelData.push_back(pix);
-        }
-cout<<width<<endl;
-cout<<height<<endl;
-#pragma omp parallel for
-for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
-		{
-			cout<<*it;
-
-
-		}
-histogram_map hm;
-auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
-
-for(size_t i=0;i<768;i++)
-		  cout<<hist[i];
-*/
 }
 
 
