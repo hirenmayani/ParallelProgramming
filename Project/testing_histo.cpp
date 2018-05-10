@@ -178,6 +178,7 @@ struct histogram_map
 
 int main()
 {
+
 	vector<string> words;
 	words.push_back("a");
 	words.push_back("b");
@@ -191,18 +192,14 @@ auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
 //	cout<<u1["b"]; 
 
 hist_Monoid m2;
-int i, j;
+int i;
    int fd;
    char *fdata;
    struct stat finfo;
    char * fname;
-
    int red[256];
    int green[256];
    int blue[256];
-   int num_procs;
-   int num_per_thread;
-   int excess;
 
 
    // Make sure a filename is specified
@@ -213,25 +210,25 @@ int i, j;
 
    fname = argv[1];
 
-//   // Read in the file
+   // Read in the file
    CHECK_ERROR((fd = open(fname, O_RDONLY)) < 0);
-//   // Get the file info (for file length)
+   // Get the file info (for file length)
    CHECK_ERROR(fstat(fd, &finfo) < 0);
-//   // Memory map the file
-   CHECK_ERROR((fdata = (char*)mmap(0, finfo.st_size + 1, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0)) == NULL);
+   // Memory map the file
+   CHECK_ERROR((fdata = mmap(0, finfo.st_size + 1,
+      PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0)) == NULL);
 
    if ((fdata[0] != 'B') || (fdata[1] != 'M')) {
       printf("File is not a valid bitmap file. Exiting\n");
       exit(1);
    }
-//
-//   test_endianess();    // will set the variable "swap"
-//
+
+   test_endianess();    // will set the variable "swap"
+
    unsigned short *bitsperpixel = (unsigned short *)(&(fdata[BITS_PER_PIXEL_POS]));
    if (swap) {
       swap_bytes((char *)(bitsperpixel), sizeof(*bitsperpixel));
    }
-   printf("This 4-bit pictures. \n");
    if (*bitsperpixel != 24) {    // ensure its 3 bytes per pixel
       printf("Error: Invalid bitmap format - ");
       printf("This application only accepts 24-bit pictures. Exiting\n");
@@ -244,24 +241,46 @@ int i, j;
    }
 
    int imgdata_bytes = (int)finfo.st_size - (int)(*(data_pos));
-   int num_pixels = ((int)finfo.st_size - (int)(*(data_pos))) / 3;
    printf("This file has %d bytes of image data, %d pixels\n", imgdata_bytes,
-                                                            num_pixels);
+                                                            imgdata_bytes / 3);
 
-int width = src.width();
-int height = src.height();
-vector<pixel> pixelData;
-pixel pix;
-for (int r = 0; r < height; r++)
-        for (int c = 0; c < width; c++){
-        		pix.arr[0] = (int)src(c,r,0,0);
-			pix.arr[1] = (int)src(c,r,0,1);
-			pix.arr[2] = (int)src(c,r,0,2);
-			pixelData.push_back(pix);
-        }
-cout<<width<<endl;
-cout<<height<<endl;
-cilk_for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
+   printf("Starting sequential histogram\n");
+
+
+   memset(&(red[0]), 0, sizeof(int) * 256);
+   memset(&(green[0]), 0, sizeof(int) * 256);
+   memset(&(blue[0]), 0, sizeof(int) * 256);
+   vector pixelData<pixel>;
+   pixel pix;
+   for (i=*data_pos; i < finfo.st_size; i+=3) {
+      unsigned char *val = (unsigned char *)&(fdata[i]);
+      pix[0] = *val;
+      val = (unsigned char *)&(fdata[i+1]);
+      pix[1] = *val;
+      val = (unsigned char *)&(fdata[i+2]);
+      pix[2] = *val;
+      pixelData.push_back(pix);
+   }
+
+   /*dprintf("\n\nBlue\n");
+   dprintf("----------\n\n");
+   for (i = 0; i < 256; i++) {
+      dprintf("%d - %d\n", i, blue[i]);
+   }
+
+   dprintf("\n\nGreen\n");
+   dprintf("----------\n\n");
+   for (i = 0; i < 256; i++) {
+      dprintf("%d - %d\n", i, green[i]);
+   }
+
+   dprintf("\n\nRed\n");
+   dprintf("----------\n\n");
+   for (i = 0; i < 256; i++) {
+      dprintf("%d - %d\n", i, red[i]);
+   }
+*/
+   cilk_for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
 		{
 			cout<<*it;
 
