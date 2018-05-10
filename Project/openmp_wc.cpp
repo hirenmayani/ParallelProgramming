@@ -105,9 +105,9 @@ std::transform(item.begin(), item.end(), item.begin(), ::tolower);
 *(result++) = item;
     }
 }
-vector<string> readFile(string path)
+void readFile(string path,vector<string>words)
 {
-vector<string> words;
+
 	std::ifstream dict_file(path);
 	std::string line;
 char delim = ' ';
@@ -116,13 +116,14 @@ char delim = ' ';
 			split(line,delim, std::back_inserter(words));
 		}
 
-return words;
+
 }
 int main(int argc,char* argv[])
 {
 	cout<<"enter file name"<<endl;
 string fname = argv[1];
-vector<string>words =readFile("corpus");
+vector<string>words ;
+		readFile("corpus",words);
 /*	vector<string> words;
 	words.push_back("a");
 	words.push_back("b");
