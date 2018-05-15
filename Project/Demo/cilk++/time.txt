@@ -1,0 +1,3 @@
+cilk_for,test_data/word_100MB.txt,16,19950
+Histo_cilk_for,../data/histogram_datafiles/small.bmp,24,13108833
+Histo_cilk_for,../data/histogram_datafiles/small.bmp,24,11156985

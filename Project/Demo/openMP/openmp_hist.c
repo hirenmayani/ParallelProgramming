@@ -43,7 +43,6 @@ int main(int argc,char* argv[])
 	string fname = argv[1];
 	int p = atoi(argv[2]);
 vector<string>words =readFile(fname);
-cout<<words.size();
 unordered_map<string,int> m,map;
  m = map;
  auto start = std::chrono::system_clock::now();
@@ -68,7 +67,5 @@ m = mymax(m,map);
   myfile<<"OMP"<<","<<fname<<","<<p<<","<<nns<<endl;
   myfile.close();
 
-cout<<m["a"]<<endl;
-cout<<m["b"]<<endl;
 return 0;
 }

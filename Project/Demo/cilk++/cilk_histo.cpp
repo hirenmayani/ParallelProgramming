@@ -325,10 +325,6 @@ ofstream myfile ("time.txt",ios::app);
 myfile<<"Histo_cilk_for"<<","<<fname<<","<<p<<","<<nns<<endl;
 myfile.close();
 
-//auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
-auto hist = redr.get_value();
-for(size_t i=0;i<768;i++)
-		  cout<<hist[i]<<endl;
 
 }
 

@@ -123,7 +123,7 @@ template <typename InputIterator,typename Monoid,class Mapper>
 		}
 //		std::swap(op,redr.view());
 cilk_sync;
-		return redr.view();
+		return redr.get_value();//view();
 
 	}
 /*WORD COUNT MAPPER*/
@@ -180,14 +180,14 @@ int main(int argc,char* argv[])
 	cout<<"enter file name and number of processors"<<endl;
 string fname = argv[1];
 int p = atoi(argv[2]);
-if (0!= __cilkrts_set_param("nworkers",argv[3]))
+if (0!= __cilkrts_set_param("nworkers",argv[2]))
 	 {
 	    printf("Failed to set worker count\n");
 	    return 1;
 	 }
 
-vector<string>words =readFile("corpus");
-cout<<words[0];	
+vector<string>words =readFile(fname);
+//cout<<words[0];	
 /*vector<string> words;
 	words.push_back("a");
 	words.push_back("b");
