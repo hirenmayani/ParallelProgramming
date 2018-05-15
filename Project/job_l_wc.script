@@ -1,4 +1,3 @@
-#!/bin/bash
 #SBATCH -J wordcount           # job name
 #SBATCH -o wc.o%j       # output and error file name (%j expands to jobID)
 #SBATCH -n 24              # total number of mpi tasks requested
@@ -8,24 +7,17 @@
 #SBATCH --mail-type=begin  # email me when the job starts
 #SBATCH --mail-type=end    # email me when the job finishes
 #SBATCH -N 2
-./cilk_wc.out test_data/word_10MB.txt 1
+./cilk_wc.out test_data/enwiki-latest-abstract.xml 1
+./cilk_wc.out test_data/enwiki-latest-abstract.xml 2
+./cilk_wc.out test_data/enwiki-latest-abstract.xml 4
+./cilk_wc.out test_data/enwiki-latest-abstract.xml 6
+./cilk_wc.out test_data/enwiki-latest-abstract.xml 8
+./cilk_wc.out test_data/enwiki-latest-abstract.xml 12
+./cilk_wc.out test_data/enwiki-latest-abstract.xml 16
+./cilk_wc.out test_data/enwiki-latest-abstract.xml 24
 ./cilk_wc.out test_data/word_10MB.txt 2
 ./cilk_wc.out test_data/word_10MB.txt 4
 ./cilk_wc.out test_data/word_10MB.txt 8
 ./cilk_wc.out test_data/word_10MB.txt 16
 ./cilk_wc.out test_data/word_10MB.txt 32
 ./cilk_wc.out test_data/word_10MB.txt 64
-./cilk_wc.out test_data/word_50MB.txt 1
-./cilk_wc.out test_data/word_50MB.txt 2
-./cilk_wc.out test_data/word_50MB.txt 4
-./cilk_wc.out test_data/word_50MB.txt 8
-./cilk_wc.out test_data/word_50MB.txt 16
-./cilk_wc.out test_data/word_50MB.txt 32
-./cilk_wc.out test_data/word_50MB.txt 64
-./cilk_wc.out test_data/word_100MB.txt 1
-./cilk_wc.out test_data/word_100MB.txt 2
-./cilk_wc.out test_data/word_100MB.txt 4
-./cilk_wc.out test_data/word_100MB.txt 8
-./cilk_wc.out test_data/word_100MB.txt 16
-./cilk_wc.out test_data/word_100MB.txt 32
-./cilk_wc.out test_data/word_100MB.txt 64

@@ -1,0 +1,32 @@
+#!/bin/bash
+#SBATCH -J wordcount           # job name
+#SBATCH -o wc.o%j       # output and error file name (%j expands to jobID)
+#SBATCH -n 24              # total number of mpi tasks requested
+#SBATCH -p compute     # queue (partition) -- normal, development, etc.
+#SBATCH -t 01:30:00        # run time (hh:mm:ss) - 1.5 hours
+#SBATCH --mail-user=hmayani@cs.stonybrook.edu
+#SBATCH --mail-type=begin  # email me when the job starts
+#SBATCH --mail-type=end    # email me when the job finishes
+#SBATCH -N 2
+./omp_wc.out test_data/word_10MB.txt 1
+./omp_wc.out test_data/word_10MB.txt 2
+./omp_wc.out test_data/word_10MB.txt 3
+./omp_wc.out test_data/word_10MB.txt 4
+./omp_wc.out test_data/word_10MB.txt 8
+./omp_wc.out test_data/word_10MB.txt 16
+./omp_wc.out test_data/word_10MB.txt 24
+./omp_wc.out test_data/word_50MB.txt 1
+./omp_wc.out test_data/word_50MB.txt 2
+./omp_wc.out test_data/word_50MB.txt 3
+./omp_wc.out test_data/word_50MB.txt 4
+./omp_wc.out test_data/word_50MB.txt 8
+./omp_wc.out test_data/word_50MB.txt 16
+./omp_wc.out test_data/word_50MB.txt 24
+./omp_wc.out test_data/word_100MB.txt 1
+./omp_wc.out test_data/word_100MB.txt 2
+./omp_wc.out test_data/word_100MB.txt 3
+./omp_wc.out test_data/word_100MB.txt 4
+./omp_wc.out test_data/word_100MB.txt 8
+./omp_wc.out test_data/word_100MB.txt 16
+./omp_wc.out test_data/word_100MB.txt 24
+
