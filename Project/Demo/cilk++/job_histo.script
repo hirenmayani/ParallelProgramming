@@ -1,0 +1,31 @@
+#!/bin/bash
+#SBATCH -J wordcount           # job name
+#SBATCH -o wc.o%j       # output and error file name (%j expands to jobID)
+#SBATCH -n 68              # total number of mpi tasks requested
+#SBATCH -p development     # queue (partition) -- normal, development, etc.
+#SBATCH -t 01:30:00        # run time (hh:mm:ss) - 1.5 hours
+#SBATCH --mail-user=hmayani@cs.stonybrook.edu
+#SBATCH --mail-type=begin  # email me when the job starts
+#SBATCH --mail-type=end    # email me when the job finishes
+#SBATCH -N 64
+./cilk_hist.out ../data/histogram_datafiles/small.bmp 1
+./cilk_hist.out ../data/histogram_datafiles/small.bmp 2
+./cilk_hist.out ../data/histogram_datafiles/small.bmp 4
+./cilk_hist.out ../data/histogram_datafiles/small.bmp 8
+./cilk_hist.out ../data/histogram_datafiles/small.bmp 12
+./cilk_hist.out ../data/histogram_datafiles/small.bmp 16
+./cilk_hist.out ../data/histogram_datafiles/small.bmp 24
+./cilk_hist.out ../data/histogram_datafiles/med.bmp 1
+./cilk_hist.out ../data/histogram_datafiles/med.bmp 2
+./cilk_hist.out ../data/histogram_datafiles/med.bmp 4
+./cilk_hist.out ../data/histogram_datafiles/med.bmp 8
+./cilk_hist.out ../data/histogram_datafiles/med.bmp 12
+./cilk_hist.out ../data/histogram_datafiles/med.bmp 16
+./cilk_hist.out ../data/histogram_datafiles/med.bmp 24
+./cilk_hist.out ../data/histogram_datafiles/large.bmp 1
+./cilk_hist.out ../data/histogram_datafiles/large.bmp 2
+./cilk_hist.out ../data/histogram_datafiles/large.bmp 4
+./cilk_hist.out ../data/histogram_datafiles/large.bmp 8
+./cilk_hist.out ../data/histogram_datafiles/large.bmp 12
+./cilk_hist.out ../data/histogram_datafiles/large.bmp 16
+./cilk_hist.out ../data/histogram_datafiles/large.bmp 24

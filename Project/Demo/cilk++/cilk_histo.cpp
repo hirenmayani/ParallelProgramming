@@ -1,9 +1,11 @@
+//icpc -qopenmp testing_histo.cpp -std=c++11 -o hist.out
 #include<iostream>
 #include<string>
 #include<unordered_map>
 #include<vector>
 #include<cilk/cilk.h>
 #include<cilk/reducer.h>
+#include<cilk/cilk_api.h>
 #include <typeinfo>
 #include <fstream>
 #include <cstdint>
@@ -17,7 +19,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <ctype.h>
-
+#include <chrono>
 
 #define IMG_DATA_OFFSET_POS 10
 #define BITS_PER_PIXEL_POS 28
@@ -27,16 +29,16 @@
       perror("Error at line\n\t" #a "\nSystem Msg");         \
       exit(1);                                               \
    }
-int swap1;
+int swap1;      // to indicate if we need to swap byte order of header information
 void test_endianess() {
    unsigned int num = 0x12345678;
    char *low = (char *)(&(num));
    if (*low ==  0x78) {
-
+      //dprintf("No need to swap\n");
       swap1 = 0;
    }
    else if (*low == 0x12) {
-
+      //dprintf("Need to swap\n");
       swap1 = 1;
    }
    else {
@@ -53,7 +55,7 @@ void swap_bytes(char *bytes, int num_bytes) {
    char tmp;
 
    for (i = 0; i < num_bytes/2; i++) {
-
+//      //dprintf("Swapping %d and %d\n", bytes[i], bytes[num_bytes - i - 1]);
       tmp = bytes[i];
       bytes[i] = bytes[num_bytes - i - 1];
       bytes[num_bytes - i - 1] = tmp;
@@ -61,6 +63,11 @@ void swap_bytes(char *bytes, int num_bytes) {
 }
 
 
+/*#include "CImg.h"
+using namespace cimg_library;
+*/
+///g++ -I/Users/krishnasharma/Downloads/cilkplus-rtl-src-004516/include mr2.cpp
+//icpc -o h.out genericWordCount.cpp -O2 -lm -lpthread -I/usr/X11R6/include -L/usr/X11R6/lib -lm -lpthread -lX11 -std=c++11 -nostartfiles
 using namespace std;
 
 
@@ -78,6 +85,7 @@ using namespace std;
  * */
 /*WORD COUNT REDUCER*/
 template <class mr>
+//using Value_Type = typedef value_type<mr>::type;
 
 struct map_Monoid:cilk::monoid_base<mr>
 {
@@ -145,8 +153,10 @@ here flatten is used for optimizing, so that all functions are inline if possibl
  * */
 
 template <typename InputIterator,typename Monoid,class Mapper>
+//void __attribute__((flatten))
  typename Monoid::value_type  map_reduce(InputIterator ibegin,InputIterator iend, Monoid m1,Mapper mapper)
 	{
+//cilk::reducer<Monoid<unordered_map<string,int>>> redr;
 	cilk::reducer<Monoid> redr;
 /*Yey..mapping begins
 		 * note that iterators are always pointers
@@ -160,10 +170,12 @@ template <typename InputIterator,typename Monoid,class Mapper>
 				 The views are combined by the Cilk runtime by calling the reduce() function of the reducer's
 				 monoid when views sync.
 				*/
+	//redr->insert({{*it,1}});
 			mapper(*it,&redr.view());
 
 
 		}
+//		std::swap(op,redr.view());
 cilk_sync;
 		return redr.view();
 
@@ -197,19 +209,16 @@ struct histogram_map
 
 int main(int argc,char*argv[])
 {
+	cout<<"enter file name and number of processors"<<endl;
 
-	vector<string> words;
-	words.push_back("a");
-	words.push_back("b");
-	words.push_back("a");
-	words.push_back("b");
- map_Monoid<unordered_map<string,int> > m1;
-MapFun<string,unordered_map<string,int>>  mf;
-auto u1 = map_reduce(words.begin(),words.end(),m1,mf);
-	cout<<u1["a"];
+	int p = atoi(argv[2]);
+	if (0!= __cilkrts_set_param("nworkers",argv[2]))
+	 {
+	    printf("Failed to set worker count\n");
+	    return 1;
+	 }
 
-
-hist_Monoid m2;
+	hist_Monoid m2;
 int i;
    int fd;
    char *fdata;
@@ -220,6 +229,7 @@ int i;
    int blue[256];
 
 
+   // Make sure a filename is specified
    if (argv[1] == NULL) {
       printf("USAGE: %s <bitmap filename>\n", argv[0]);
       exit(1);
@@ -227,8 +237,11 @@ int i;
 
    fname = argv[1];
 
+   // Read in the file
    CHECK_ERROR((fd = open(fname, O_RDONLY)) < 0);
+   // Get the file info (for file length)
    CHECK_ERROR(fstat(fd, &finfo) < 0);
+   // Memory map the file
    CHECK_ERROR((fdata = (char*)mmap(0, finfo.st_size + 1,  PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0)) == NULL);
 
    if ((fdata[0] != 'B') || (fdata[1] != 'M')) {
@@ -236,13 +249,13 @@ int i;
       exit(1);
    }
 
-   test_endianess();
+   test_endianess();    // will set the variable "swap"
 
    unsigned short *bitsperpixel = (unsigned short *)(&(fdata[BITS_PER_PIXEL_POS]));
    if (swap1) {
       swap_bytes((char *)(bitsperpixel), sizeof(*bitsperpixel));
    }
-   if (*bitsperpixel != 24) {
+   if (*bitsperpixel != 24) {    // ensure its 3 bytes per pixel
       printf("Error: Invalid bitmap format - ");
       printf("This application only accepts 24-bit pictures. Exiting\n");
       exit(1);
@@ -269,14 +282,50 @@ int i;
       pixelData.push_back(pix);
    }
 
+   /*//dprintf("\n\nBlue\n");
+   //dprintf("----------\n\n");
+   for (i = 0; i < 256; i++) {
+      //dprintf("%d - %d\n", i, blue[i]);
+   }
+
+   //dprintf("\n\nGreen\n");
+   //dprintf("----------\n\n");
+   for (i = 0; i < 256; i++) {
+      //dprintf("%d - %d\n", i, green[i]);
+   }
+
+   //dprintf("\n\nRed\n");
+   //dprintf("----------\n\n");
+   for (i = 0; i < 256; i++) {
+      //dprintf("%d - %d\n", i, red[i]);
+   }
+*/
+//   cilk_for(auto it=pixelData.begin(), ed = pixelData.begin(); it!=ed; ++it)
+//		{
+//			cout<<*it;
+//
+//
+//		}
 histogram_map mapper;
 cilk::reducer<hist_Monoid> redr;
+auto start = std::chrono::system_clock::now();
+
 cilk_for(auto it=pixelData.begin(), ed = pixelData.end(); it!=ed; ++it)
 {
 	pixel pix = *it;
 	mapper(pix,redr.view());
 }
+auto end = std::chrono::system_clock::now();
+auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+std::cout << "nano seconds = "<<elapsed.count();
+auto nns = elapsed.count();
+elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+std::cout << ","<<elapsed.count();
+ofstream myfile ("time.txt",ios::app);
+myfile<<"Histo_cilk_for"<<","<<fname<<","<<p<<","<<nns<<endl;
+myfile.close();
 
+//auto hist = map_reduce(pixelData.begin(),pixelData.end(),m2,hm);
 auto hist = redr.get_value();
 for(size_t i=0;i<768;i++)
 		  cout<<hist[i]<<endl;

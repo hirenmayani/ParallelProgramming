@@ -1,0 +1,6 @@
+sbatch -N 1 task1.script
+sbatch -N 1 task64.script
+sbatch -N 4 task1.script
+sbatch -N 4 task64.script
+sbatch -N 16 task1.script
+sbatch -N 16 task64.script
